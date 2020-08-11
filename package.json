@@ -1,0 +1,66 @@
+{
+  "name": "wdio-rerun-service",
+  "version": "1.0.0-alpha.0",
+  "description": "A WebdriverIO service to track and prepare for re-run of failing or flakey tests or scenarios.",
+  "author": "Mike Salvia <msalvia@jwplayer.com>",
+  "homepage": "https://github.com/jwplayer/wdio-rerun-service",
+  "license": "Apache-2.0",
+  "main": "./build/index",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "build": "run-s clean compile",
+    "clean": "rimraf ./build",
+    "compile": "babel src/ -d build/ --config-file ../../babel.config.js",
+    "test": "run-s test:*",
+    "test:eslint": "eslint src test",
+    "test:unit": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jwplayer/wdio-rerun-service.git"
+  },
+  "keywords": [
+    "webdriver",
+    "webdriverio",
+    "wdio",
+    "wdio-service",
+    "rerun",
+    "tests",
+    "scenario",
+    "cucumber",
+    "mocha",
+    "jasmine"
+  ],
+  "bugs": {
+    "url": "https://github.com/jwplayer/wdio-rerun-service/issues"
+  },
+  "dependencies": {
+    "@wdio/logger": "6.0.0-alpha.0"
+  },
+  "peerDependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^26.0.1",
+    "babel-plugin-source-map-support": "^2.1.1",
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/plugin-proposal-optional-catch-binding": "^7.2.0",
+    "@babel/plugin-syntax-export-default-from": "^7.2.0",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/register": "^7.6.2",
+    "babel-cli": "^6.26.0",
+    "minimist": "^1.2.5",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "uuid": "^8.3.0"
+  }
+}
