@@ -43,7 +43,7 @@ class RerunService {
 
     after(result, capabilities, specs) {
         if (this.nonPassingScenarios.length > 0) {
-            fs.writeFileSync(`${this.rerunDataDir}/rerun-${serviceWorkerId}.json`, JSON.stringify(this.nonPassingScenarios));
+            fs.writeFileSync(`${this.rerunDataDir}/rerun-${this.serviceWorkerId}.json`, JSON.stringify(this.nonPassingScenarios));
         } else {
             console.log('Re-run service did not detect any non-passing scenarios.');
         }
