@@ -27,7 +27,7 @@ class RerunService {
     afterScenario(uri, feature, scenario, result, sourceLocation, context) {
         if (result.status !== 'passed') {
             console.log(`Re-run service is inspecting non-passing scnario.`);
-            let scenarioLocation = `${uri}:${scenario.locations[0].line}`;
+            let scenarioLocation = `${uri}:${locations[0].line}`;
             console.log(`Scenario location: ${scenarioLocation}`);
             let tagsList = scenario.tags.map(tag => tag.name);
             let service = this;
