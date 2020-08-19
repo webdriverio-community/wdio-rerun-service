@@ -6,14 +6,13 @@ const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
 
-    constructor(options) {
-        this.options = options;
+    constructor({ nonPassingScenarios, ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix }) {
         this.nonPassingScenarios = [];
         this.serviceWorkerId;
-        this.ignoredTags = this.options.ignoredTags ? this.options.ignoredTags : [];
-        this.rerunDataDir = this.options.rerunDataDir ? this.options.rerunDataDir : "./results/rerun";
-        this.rerunScriptPath = this.options.rerunScriptPath ? this.options.rerunScriptPath : "./rerun.sh";
-        this.commandPrefix = this.options.commandPrefix ? this.options.commandPrefix : "";
+        this.ignoredTags = ignoredTags ? ignoredTags : [];
+        this.rerunDataDir = rerunDataDir ? rerunDataDir : "./results/rerun";
+        this.rerunScriptPath = rerunScriptPath ? rerunScriptPath : "./rerun.sh";
+        this.commandPrefix = commandPrefix ? commandPrefix : "";
     }
 
     before(capabilities, specs) {
@@ -28,9 +27,10 @@ class RerunService {
     afterScenario(uri, feature, scenario, result, sourceLocation, context) {
         if (result.status !== 'passed') {
             console.log(`Re-run service is inspecting non-passing scnario.`);
-            let scenarioLocation = `${uri}:${scenario.locations[0].line}`;
+            const { tag, locations } = scenario;
+            let scenarioLocation = `${uri}:${locations[0].line}`;
             console.log(`Scenario location: ${scenarioLocation}`);
-            let tagsList = scenario.tags.map(tag => tag.name);
+            let tagsList = tags.map(tag => tag.name);
             console.log(`Scenario location: ${scenarioLocation}`);
             let service = this;
             if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
