@@ -6,14 +6,13 @@ const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
 
-    constructor(options) {
-        this.options = options;
-        this.nonPassingItems = [];
+    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix }) {
+        this.nonPassingScenarios = [];
         this.serviceWorkerId;
-        this.ignoredTags = this.options.ignoredTags ? this.options.ignoredTags : [];
-        this.rerunDataDir = this.options.rerunDataDir ? this.options.rerunDataDir : "./results/rerun";
-        this.rerunScriptPath = this.options.rerunScriptPath ? this.options.rerunScriptPath : "./rerun.sh";
-        this.commandPrefix = this.options.commandPrefix ? this.options.commandPrefix : "";
+        this.ignoredTags = ignoredTags ? ignoredTags : [];
+        this.rerunDataDir = rerunDataDir ? rerunDataDir : "./results/rerun";
+        this.rerunScriptPath = rerunScriptPath ? rerunScriptPath : "./rerun.sh";
+        this.commandPrefix = commandPrefix ? commandPrefix : "";
         this.specFile = "";
     }
 
