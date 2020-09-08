@@ -8,15 +8,17 @@ class RerunService {
 
     constructor(options) {
         this.options = options;
-        this.nonPassingScenarios = [];
+        this.nonPassingItems = [];
         this.serviceWorkerId;
         this.ignoredTags = this.options.ignoredTags ? this.options.ignoredTags : [];
         this.rerunDataDir = this.options.rerunDataDir ? this.options.rerunDataDir : "./results/rerun";
         this.rerunScriptPath = this.options.rerunScriptPath ? this.options.rerunScriptPath : "./rerun.sh";
         this.commandPrefix = this.options.commandPrefix ? this.options.commandPrefix : "";
+        this.specFile = "";
     }
 
     before(capabilities, specs) {
+        this.specFile = specs[0];
         console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
         fs.mkdir(this.rerunDataDir, { recursive: true }, err => {
             if (err) throw err;
@@ -25,27 +27,35 @@ class RerunService {
         this.serviceWorkerId = uuidv5(`${Date.now()}`, '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
     }
 
+    afterTest(test, context, { error, result, duration, passed, retries }) {
+        if (browser.config.framework !== 'cucumber' && !passed) {
+            console.log(`Re-run service is inspecting non-passing test.`);
+            console.log(`Test location: ${this.specFile}`);
+            this.nonPassingItems.push({ location: this.specFile, failure: test.failedExpectations[0].message });
+        }
+    }
+
     afterScenario(uri, feature, scenario, result, sourceLocation, context) {
-        if (result.status !== 'passed') {
-            console.log(`Re-run service is inspecting non-passing scnario.`);
+        if (browser.config.framework === 'cucumber' && result.status !== 'passed') {
+            console.log(`Re-run service is inspecting non-passing scenario.`);
             let scenarioLocation = `${uri}:${scenario.locations[0].line}`;
             console.log(`Scenario location: ${scenarioLocation}`);
             let tagsList = scenario.tags.map(tag => tag.name);
-            console.log(`Scenario location: ${scenarioLocation}`);
+            console.log(`Scenario tags: ${tagsList}`);
             let service = this;
             if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
                 console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
-                this.nonPassingScenarios.push({ location: scenarioLocation, failure: result.exception.message });
+                this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception.message });
             }
         }
     }
 
     after(result, capabilities, specs) {
-        if (this.nonPassingScenarios.length > 0) {
-            fs.writeFileSync(`${this.rerunDataDir}/rerun-${this.serviceWorkerId}.json`, JSON.stringify(this.nonPassingScenarios));
+        if (this.nonPassingItems.length > 0) {
+            fs.writeFileSync(`${this.rerunDataDir}/rerun-${this.serviceWorkerId}.json`, JSON.stringify(this.nonPassingItems));
         } else {
-            console.log('Re-run service did not detect any non-passing scenarios.');
+            console.log('Re-run service did not detect any non-passing scenarios or tests.');
         }
     }
 
@@ -68,7 +78,7 @@ class RerunService {
                 console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
             }
         } else {
-            console.log('Re-run service did not detect any failing or flakey scenarios during the entire test execution.');
+            console.log('Re-run service did not detect any failing or flakey tests during the entire test execution.');
         }
     }
 };
