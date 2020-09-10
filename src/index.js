@@ -30,12 +30,11 @@ class RerunService {
         if (browser.config.framework !== 'cucumber' && !passed) {
             console.log(`Re-run service is inspecting non-passing test.`);
             console.log(`Test location: ${this.specFile}`);
-            if (test.failedExpectations && test.failedExpectations.length > 0) {
-                this.nonPassingItems.push({ location: this.specFile, failure: test.failedExpectations[0].message });
+            if (error && error.message) {
+                this.nonPassingItems.push({ location: this.specFile, failure: error.message });
             } else {
-                console.log("The non-passing test did not contain any failed expectations.")
+                console.log("The non-passing test did not contain any error message, it could not be added for re-run.")
             }
-            
         }
     }
 
