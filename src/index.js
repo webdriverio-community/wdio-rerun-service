@@ -7,7 +7,7 @@ const argv = require('minimist')(process.argv.slice(2));
 class RerunService {
 
     constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix }) {
-        this.nonPassingScenarios = [];
+        this.nonPassingItems = [];
         this.serviceWorkerId;
         this.ignoredTags = ignoredTags ? ignoredTags : [];
         this.rerunDataDir = rerunDataDir ? rerunDataDir : "./results/rerun";
