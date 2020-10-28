@@ -18,7 +18,7 @@ class RerunService {
 
     before(capabilities, specs) {
         this.specFile = specs[0];
-        console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
+        // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
         fs.mkdir(this.rerunDataDir, { recursive: true }, err => {
             if (err) throw err;
         });
@@ -33,21 +33,21 @@ class RerunService {
             if (error && error.message) {
                 this.nonPassingItems.push({ location: this.specFile, failure: error.message });
             } else {
-                console.log("The non-passing test did not contain any error message, it could not be added for re-run.")
+                // console.log("The non-passing test did not contain any error message, it could not be added for re-run.")
             }
         }
     }
 
     afterScenario(uri, feature, scenario, result, sourceLocation, context) {
         if (browser.config.framework === 'cucumber' && result.status !== 'passed') {
-            console.log(`Re-run service is inspecting non-passing scenario.`);
+            // console.log(`Re-run service is inspecting non-passing scenario.`);
             let scenarioLocation = `${uri}:${scenario.locations[0].line}`;
-            console.log(`Scenario location: ${scenarioLocation}`);
+            // console.log(`Scenario location: ${scenarioLocation}`);
             let tagsList = scenario.tags.map(tag => tag.name);
-            console.log(`Scenario tags: ${tagsList}`);
+            // console.log(`Scenario tags: ${tagsList}`);
             let service = this;
             if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
-                console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
+                // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
                 this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception.message });
             }
@@ -58,7 +58,7 @@ class RerunService {
         if (this.nonPassingItems.length > 0) {
             fs.writeFileSync(`${this.rerunDataDir}/rerun-${this.serviceWorkerId}.json`, JSON.stringify(this.nonPassingItems));
         } else {
-            console.log('Re-run service did not detect any non-passing scenarios or tests.');
+            // console.log('Re-run service did not detect any non-passing scenarios or tests.');
         }
     }
 
