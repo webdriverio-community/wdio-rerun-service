@@ -5,14 +5,14 @@ This service tracks failing tests and scenarios, allowing failing or unstable te
 
 ## Re-run vs. Retry
 
-The `retry` logic built into WDIO for Cucumber and Mocha/Jasmine is helpful for handling flakey steps in Cucumber and flakey tests in Mocha/Jasmine. However, for Cucumber this does not into account that some steps may not be able to be retried and running them 2x could break the rest of your Scenario. Mocha/Jasmine is another story as the `retry` logic can be applied to an entire test, however, this is still done real-time and perhaps does not account for temporal issues or netework connectivity problems.
+The `retry` logic built into WDIO for Cucumber and Mocha/Jasmine is helpful for handling flaky steps in Cucumber and flaky tests in Mocha/Jasmine. However, for Cucumber this does not take into account that some steps may not be able to retry and running them 2x could break the rest of the Scenario. Mocha/Jasmine is another story as the `retry` logic can be applied to an entire test, however, this is still done real-time and perhaps does not account for temporal issues or netework connectivity problems.
 
 The main distinctions of the `re-run`:
-* will re-run an entire Cucumber Sceanrio by line number and not just the step
+* will re-run an entire Cucumber Scenario by line number and not just the step
 * allows for an entire Spec file to be re-run after a main test execution is complete
 * can be copied and executed locally (`retry` cannot)
 * can be used in conjuction with `retry` methods
-* does not require code changes to apply `retry` method to flakey or problematic tests
+* does not require code changes to apply `retry` method to flaky or problematic tests
 
 It is recommended to take some time to evaluate the options available, often times, a mixed solution maybe the solution which will provide the best real and actionable results to developers.
 
@@ -34,7 +34,7 @@ You can simple do it by:
 npm install wdio-rerun-service
 ```
 
-After package installation is complet, add it to `services` array:
+After package installation is complete, add it to `services` array:
 
 ```js
 // wdio.conf.js
