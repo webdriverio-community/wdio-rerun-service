@@ -13,9 +13,10 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
-## v1.6.0 (2021-03-01)
+## v1.6.0 (2021-02-26)
 
 #### :rocket: New Feature
+* [#11](https://github.com/jwplayer/wdio-rerun-service/pull/11) Fix issue with Windows-style separators, add CHANGELOG.md ([@mikesalvia](https://github.com/mikesalvia))*
 #### :bug: Bug Fix
 * [#10](https://github.com/jwplayer/wdio-rerun-service/pull/10) Ensure failure locations are unique so there are no duplicates created in re-run.sh ([@mikesalvia](https://github.com/mikesalvia))
 #### :memo: Documentation
