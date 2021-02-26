@@ -65,17 +65,22 @@ class RerunService {
     onComplete(exitCode, config, capabilities, results) {
         const directoryPath = path.join(process.cwd(), `${this.rerunDataDir}`);
         if (fs.existsSync(directoryPath)) {
-            let rerunFiles = fs.readdirSync(directoryPath);
+            const rerunFiles = fs.readdirSync(directoryPath);
             if (rerunFiles.length > 0) {
                 let rerunCommand = `DISABLE_RERUN=true wdio ${argv._[0]} `;
                 if (this.commandPrefix) {
                     rerunCommand = `${this.commandPrefix} ${rerunCommand}`;
                 }
+                let failureLocations = [];
                 rerunFiles.forEach(file => {
-                    let json = JSON.parse(fs.readFileSync(`${this.rerunDataDir}/${file}`));
+                    const json = JSON.parse(fs.readFileSync(`${this.rerunDataDir}/${file}`));
                     json.forEach(failure => {
-                        rerunCommand += ` --spec=${failure.location}`;
+                        failureLocations.push(failure.location);
                     });
+                });
+                const failureLocationsUnique = [...new Set(failureLocations)];
+                failureLocationsUnique.forEach(failure => {
+                    rerunCommand += ` --spec=${failure.location}`;
                 });
                 fs.writeFileSync(this.rerunScriptPath, rerunCommand);
                 console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
