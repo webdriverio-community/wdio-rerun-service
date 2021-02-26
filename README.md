@@ -1,22 +1,22 @@
 WebdriverIO Re-run Service
 ==========================
 
-This service tracks failing tests and scenarios, allowing failing or unstable tests or scenarios to be re-run.
-
-NOTE: Currently only Webdriver.io versions 5.x and 6.x are supported. Support for version 7.x coming shortly.
+This service tracks failing Mocha or Jasmine tests and Cucumber scenarios. It will allow failing or unstable tests or scenarios to be re-run.
 
 ## Re-run vs. Retry
 
-The `retry` logic built into WDIO for Cucumber and Mocha/Jasmine is helpful for handling flaky steps in Cucumber and flaky tests in Mocha/Jasmine. However, for Cucumber this does not take into account that some steps may not be able to retry and running them 2x could break the rest of the Scenario. Mocha/Jasmine is another story as the `retry` logic can be applied to an entire test, however, this is still done real-time and perhaps does not account for temporal issues or netework connectivity problems.
+The `retry` logic built into WebdriverIO for Cucumber and Mocha/Jasmine is helpful for handling flaky steps in Cucumber and Mocha/Jasmine. Retrying in each framework has caveats: 
+* Cucumber: It does not take into account that some steps may not be able to be retried in the middle of a test. Running a step twice may break the rest of the Scenario or it may not be possible in the test context. 
+* Mocha/Jasmine: The `retry` logic may be applied to an individual test, however, this is still done in real-time and perhaps does not account for temporal issues or network connectivity problems.
 
 The main distinctions of the `re-run`:
-* will re-run an entire Cucumber Scenario by line number and not just the step
-* allows for an entire Spec file to be re-run after a main test execution is complete
-* can be copied and executed locally (`retry` cannot)
-* can be used in conjuction with `retry` methods
-* does not require code changes to apply `retry` method to flaky or problematic tests
+* Will re-run an entire individual Cucumber Scenario by line number and not just the step
+* Enables an entire spec file to be re-run after a main test execution is complete
+* May be copied and executed locally (`retry` cannot)
+* Can still be used in conjuction with `retry` methods
+* Does not require any code change to apply `retry` logic to flaky or problematic tests
 
-It is recommended to take some time to evaluate the options available, often times, a mixed solution maybe the solution which will provide the best real and actionable results to developers.
+It is recommended to take some time to evaluate the options available. Often, a mixed solution may be the solution which will provide the best real and actionable results to developers.
 
 ## Installation
 
@@ -30,13 +30,13 @@ The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `pac
 }
 ```
 
-You can simple do it by:
+It can be installed simply using `nvm`:
 
 ```bash
 npm install wdio-rerun-service
 ```
 
-After package installation is complete, add it to `services` array:
+After package installation is complete, add it to `services` array in `wdio.conf.js`:
 
 ```js
 // wdio.conf.js
@@ -52,7 +52,7 @@ Instructions on how to install `WebdriverIO` can be found [here.](https://webdri
 
 ## Configuration
 
-The following options can be added to the wdio.conf.js file. To define options for the service you need to add the service to the `services` list in the following way:
+The following options may be added to the wdio.conf.js file. To define options for the service you need to add the service to the `services` list in the following way:
 
 ```js
 // wdio.conf.js
@@ -111,7 +111,7 @@ export.config = {
 ```
 
 ### ignoredTags
-(Cucumber-only) Set of Cucumber tags, if scenario contains tag re-run service skip analysis.
+(Cucumber-only) Set of Cucumber tags to exclude. If scenario contains a tag, the re-run service will skip analysis.
 
 Type: `Array`
 

@@ -1,7 +1,8 @@
+import { CUCUMBER_STATUS_MAP } from './constants'
+
 const fs = require('fs');
 const path = require('path');
 const { v5: uuidv5 } = require('uuid');
-
 const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
@@ -16,7 +17,7 @@ class RerunService {
         this.specFile = "";
     }
 
-    before(capabilities, specs) {
+    before(capabilities, specs, browser) {
         this.specFile = specs[0];
         // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
         fs.mkdir(this.rerunDataDir, { recursive: true }, err => {
@@ -26,6 +27,7 @@ class RerunService {
         this.serviceWorkerId = uuidv5(`${Date.now()}`, '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
     }
 
+    // Executed after a test (in Mocha/Jasmine) ends.
     afterTest(test, context, { error, result, duration, passed, retries }) {
         if (browser.config.framework !== 'cucumber' && !passed) {
             console.log(`Re-run service is inspecting non-passing test.`);
@@ -38,18 +40,24 @@ class RerunService {
         }
     }
 
-    afterScenario(uri, feature, scenario, result, sourceLocation, context) {
-        if (browser.config.framework === 'cucumber' && result.status !== 'passed') {
+    // Executed after a Cucumber scenario ends.
+    afterScenario(world) {
+        const status = CUCUMBER_STATUS_MAP[world.result.status || 0].toLowerCase()
+        const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
+            return world.pickle.astNodeIds.includes(child.scenario.id);
+        })[0].scenario.location.line;
+
+        if (browser.config.framework === 'cucumber' && (status !== 'passed' && status !== 'skipped')) {
             // console.log(`Re-run service is inspecting non-passing scenario.`);
-            let scenarioLocation = `${uri}:${scenario.locations[0].line}`;
+            let scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
             // console.log(`Scenario location: ${scenarioLocation}`);
-            let tagsList = scenario.tags.map(tag => tag.name);
+            let tagsList = world.pickle.tags.map(tag => tag.name);
             // console.log(`Scenario tags: ${tagsList}`);
             let service = this;
-            if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
+            if (this.ignoredTags && tagsList.some(ignoredTag => service.ignoredTags.includes(ignoredTag))) {
                 // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
-                this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception.message });
+                this.nonPassingItems.push({ location: scenarioLocation, failure: world.result.message });
             }
         }
     }
@@ -89,6 +97,6 @@ class RerunService {
             console.log('Re-run service did not detect any failing or flakey tests during the entire test execution.');
         }
     }
-};
+}
 
 module.exports = RerunService;
