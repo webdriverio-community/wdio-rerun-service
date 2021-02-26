@@ -1,1 +1,1 @@
-export const CUCUMBER_STATUS_MAP = ['UNKNOWN', 'PASSED', 'SKIPPED', 'PENDING', 'UNDEFINED', 'AMBIGUOUS', 'FAILED']
+export const CUCUMBER_STATUS_MAP = ['unknown', 'passed', 'skipped', 'pending', 'undefined', 'ambiguous', 'failed']

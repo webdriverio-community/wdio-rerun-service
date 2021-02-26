@@ -42,7 +42,7 @@ class RerunService {
 
     // Executed after a Cucumber scenario ends.
     afterScenario(world) {
-        const status = CUCUMBER_STATUS_MAP[world.result.status || 0].toLowerCase()
+        const status = CUCUMBER_STATUS_MAP[world.result.status || 0]
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
             return world.pickle.astNodeIds.includes(child.scenario.id);
         })[0].scenario.location.line;
