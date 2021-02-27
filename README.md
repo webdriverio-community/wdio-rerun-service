@@ -84,7 +84,7 @@ export.config = {
     // ...
     services: [
         [RerunService', {
-            rerunDataDir : './custom-rerun-directory'
+            rerunDataDir: './custom-rerun-directory'
         }]
     ],
     // ...
@@ -105,7 +105,7 @@ export.config = {
     // ...
     services: [
         [RerunService', {
-            rerunDataDir : './custom-path-for-rerun.sh'
+            rerunScriptPath: './custom-path-for-rerun.sh'
         }]
     ],
     // ...
