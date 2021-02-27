@@ -3,7 +3,7 @@ WebdriverIO Re-run Service
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
-_NOTE_: Cucumber Framework users running WebdriverIO versions `5.x` and `6.x` users should use version `1.6.0`. If you are on the latest major version of `7.x`, use latest version.
+_NOTE_: Cucumber Framework users running WebdriverIO versions `5.x` and `6.x` should use version `1.6.0`. If you are on the latest major version of `7.x`, use the latest version of this service.
 
 ## Re-run vs. Retry
 
