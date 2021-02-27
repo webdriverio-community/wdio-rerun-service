@@ -94,7 +94,7 @@ class RerunService {
                 console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
             }
         } else {
-            console.log('Re-run service did not detect any failing or flakey tests during the entire test execution.');
+            console.log('Re-run service did not detect any failing tests during the entire test execution.');
         }
     }
 }

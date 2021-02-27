@@ -1,7 +1,7 @@
 WebdriverIO Re-run Service
 ==========================
 
-This service tracks failing Mocha or Jasmine tests and Cucumber scenarios. It will allow failing or unstable tests or scenarios to be re-run.
+This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
 _NOTE_: Cucumber Framework users running WebdriverIO versions `5.x` and `6.x` users should use version `1.6.0`. If you are on the latest major version of `7.x`, use latest version.
 
@@ -12,13 +12,13 @@ The `retry` logic built into WebdriverIO for Cucumber and Mocha/Jasmine is helpf
 * Mocha/Jasmine: The `retry` logic may be applied to an individual test, however, this is still done in real-time and perhaps does not account for temporal issues or network connectivity problems.
 
 The main distinctions of the `re-run`:
-* Will re-run an entire individual Cucumber Scenario by line number and not just the step
+* Will re-run an entire individual Cucumber Scenario and not just a single step
 * Enables an entire spec file to be re-run after a main test execution is complete
 * May be copied and executed locally (`retry` cannot)
-* Can still be used in conjuction with `retry` methods
+* Can still be used in conjunction with `retry` methods
 * Does not require any code change to apply `retry` logic to flaky or problematic tests
 
-It is recommended to take some time to evaluate the options available. Often, a mixed solution may be the solution which will provide the best real and actionable results to developers.
+It is recommended to take some time to evaluate the options available. A hybrid solution may be the best solution to provide the best real and actionable test results.
 
 ## Installation
 
@@ -27,12 +27,12 @@ The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `pac
 ```json
 {
     "devDependencies": {
-        "wdio-rerun-service": "^0.0.10"
+        "wdio-rerun-service": "^1.7.0"
     }
 }
 ```
 
-It can be installed simply using `nvm`:
+It can be installed by using `npm`:
 
 ```bash
 npm install wdio-rerun-service
@@ -155,5 +155,3 @@ export.config = {
 ```
 
 ----
-
-For more information on WebdriverIO see the [homepage](https://webdriver.io).
