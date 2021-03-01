@@ -1,6 +1,7 @@
 WebdriverIO Re-run Service
 ==========================
 [![wdio-rerun-service CI](https://github.com/jwplayer/wdio-rerun-service/actions/workflows/node.js.yml/badge.svg)](https://github.com/jwplayer/wdio-rerun-service/actions/workflows/node.js.yml)
+[![Coverage Status](https://coveralls.io/repos/github/jwplayer/wdio-rerun-service/badge.svg?branch=main)](https://coveralls.io/github/jwplayer/wdio-rerun-service?branch=main)
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
