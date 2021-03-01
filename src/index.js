@@ -1,5 +1,3 @@
-import { CUCUMBER_STATUS_MAP } from './constants'
-
 const fs = require('fs');
 const path = require('path');
 const { v5: uuidv5 } = require('uuid');
@@ -42,6 +40,7 @@ class RerunService {
 
     // Executed after a Cucumber scenario ends.
     afterScenario(world) {
+        const CUCUMBER_STATUS_MAP = ['unknown', 'passed', 'skipped', 'pending', 'undefined', 'ambiguous', 'failed']
         const status = CUCUMBER_STATUS_MAP[world.result.status || 0]
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
             return world.pickle.astNodeIds.includes(child.scenario.id);
@@ -49,11 +48,11 @@ class RerunService {
 
         if (browser.config.framework === 'cucumber' && (status !== 'passed' && status !== 'skipped')) {
             // console.log(`Re-run service is inspecting non-passing scenario.`);
-            let scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
+            const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
             // console.log(`Scenario location: ${scenarioLocation}`);
-            let tagsList = world.pickle.tags.map(tag => tag.name);
+            const tagsList = world.pickle.tags.map(tag => tag.name);
             // console.log(`Scenario tags: ${tagsList}`);
-            let service = this;
+            const service = this;
             if (this.ignoredTags && tagsList.some(ignoredTag => service.ignoredTags.includes(ignoredTag))) {
                 // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
