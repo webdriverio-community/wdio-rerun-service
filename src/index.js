@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 const { v5: uuidv5 } = require('uuid');
+
 const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
 
-    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix }) {
+    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix } = {}) {
         this.nonPassingItems = [];
         this.serviceWorkerId;
         this.ignoredTags = ignoredTags ? ignoredTags : [];
@@ -15,21 +16,18 @@ class RerunService {
         this.specFile = "";
     }
 
-    before(capabilities, specs, browser) {
+    before(capabilities, specs) {
         this.specFile = specs[0];
         // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
-        fs.mkdir(this.rerunDataDir, { recursive: true }, err => {
-            if (err) throw err;
-        });
+        fs.mkdirSync(this.rerunDataDir, { recursive: true });
         // INFO: `namespace` below copied from: https://github.com/kelektiv/node-uuid/blob/master//lib/v35.js#L54:16
         this.serviceWorkerId = uuidv5(`${Date.now()}`, '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
     }
 
-    // Executed after a test (in Mocha/Jasmine) ends.
     afterTest(test, context, { error, result, duration, passed, retries }) {
         if (browser.config.framework !== 'cucumber' && !passed) {
-            console.log(`Re-run service is inspecting non-passing test.`);
-            console.log(`Test location: ${this.specFile}`);
+            // console.log(`Re-run service is inspecting non-passing test.`);
+            // console.log(`Test location: ${this.specFile}`);
             if (error && error.message) {
                 this.nonPassingItems.push({ location: this.specFile, failure: error.message });
             } else {
@@ -43,7 +41,7 @@ class RerunService {
         const CUCUMBER_STATUS_MAP = ['unknown', 'passed', 'skipped', 'pending', 'undefined', 'ambiguous', 'failed']
         const status = CUCUMBER_STATUS_MAP[world.result.status || 0]
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
-            return world.pickle.astNodeIds.includes(child.scenario.id);
+            return world.pickle.astNodeIds.includes(child.scenario.id.toString());
         })[0].scenario.location.line;
 
         if (browser.config.framework === 'cucumber' && (status !== 'passed' && status !== 'skipped')) {
@@ -90,12 +88,10 @@ class RerunService {
                     rerunCommand += ` --spec=${failureLocation}`;
                 });
                 fs.writeFileSync(this.rerunScriptPath, rerunCommand);
-                console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
+                // console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
             }
-        } else {
-            console.log('Re-run service did not detect any failing tests during the entire test execution.');
         }
     }
-}
+};
 
 module.exports = RerunService;
