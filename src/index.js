@@ -49,7 +49,7 @@ class RerunService {
             if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
                 // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
-                this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception.message });
+                this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception ? result.exception.message : ''});
             }
         }
     }
