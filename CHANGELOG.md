@@ -13,6 +13,15 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v1.6.1 (2021-03-12)
+
+#### :rocket: New Feature
+#### :bug: Bug Fix
+* Small bug fix
+#### :memo: Documentation
+* Improved README.md
+#### :house: Internal
+
 ## v1.6.0 (2021-02-26)
 
 #### :rocket: New Feature

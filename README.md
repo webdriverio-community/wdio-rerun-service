@@ -27,7 +27,7 @@ The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `pac
 ```json
 {
     "devDependencies": {
-        "wdio-rerun-service": "^1.6.0"
+        "wdio-rerun-service": "^1.6.1"
     }
 }
 ```
