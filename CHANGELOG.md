@@ -13,6 +13,16 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v1.7.1 (2021-06-24)
+
+#### :nail_care: Polish
+* [[#20]](https://github.com/jwplayer/wdio-rerun-service/pull/20) Use lockfileVersion:2 ([@esaari](https://github.com/esaari))
+* [[#20]](https://github.com/jwplayer/wdio-rerun-service/pull/20) Update `package.json` URLs to reflect webdriverio-community location ([@esaari](https://github.com/esaari))
+* [[#20]](https://github.com/jwplayer/wdio-rerun-service/pull/20) Dependency bumps ([@esaari](https://github.com/esaari))
+
+#### Committers: 1
+- [@esaari](https://github.com/esaari)
+
 ## v1.7.0 (2021-03-01)
 
 #### :bug: Bug Fix
