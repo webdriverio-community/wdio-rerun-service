@@ -3,7 +3,7 @@
   "version": "1.7.0",
   "description": "A WebdriverIO service to track and prepare for re-running failing or flaky Jasmine/Mocha tests or Cucumber Scenarios.",
   "author": "Mike Salvia <msalvia@jwplayer.com>",
-  "homepage": "https://github.com/jwplayer/wdio-rerun-service",
+  "homepage": "https://github.com/webdriverio-community/wdio-rerun-service",
   "license": "Apache-2.0",
   "main": "./build/index",
   "engines": {
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/jwplayer/wdio-rerun-service.git"
+    "url": "git://github.com/webdriverio-community/wdio-rerun-service.git"
   },
   "keywords": [
     "webdriver",
@@ -33,16 +33,20 @@
     "wdio-service",
     "rerun",
     "retry",
+    "test",
     "tests",
     "scenario",
     "cucumber",
     "mocha",
     "jasmine",
     "flaky",
-    "selenium"
+    "selenium",
+    "node",
+    "automation",
+    "javascript"
   ],
   "bugs": {
-    "url": "https://github.com/jwplayer/wdio-rerun-service/issues"
+    "url": "https://github.com/webdriverio-community/wdio-rerun-service/issues"
   },
   "dependencies": {
     "@wdio/logger": "7.0.0",
