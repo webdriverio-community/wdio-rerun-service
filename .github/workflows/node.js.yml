@@ -26,8 +26,8 @@ jobs:
     - run: npm install -g eslint
     - run: npm run build --if-present
     - run: npm run test
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
+    - name: Jest Coverage Report
+      uses: artiomtr/jest-coverage-report-action@v2.0-rc.2
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
     
