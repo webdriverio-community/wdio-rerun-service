@@ -6,7 +6,7 @@ const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
 
-    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix }) {
+    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix } = {}) {
         this.nonPassingItems = [];
         this.serviceWorkerId;
         this.ignoredTags = ignoredTags ? ignoredTags : [];
@@ -46,7 +46,7 @@ class RerunService {
             let tagsList = scenario.tags.map(tag => tag.name);
             // console.log(`Scenario tags: ${tagsList}`);
             let service = this;
-            if (this.ignoredTags && tagsList.some(it => service.ignoredTags.includes(it))) {
+            if (this.ignoredTags && tagsList.some(ignoredTag => service.ignoredTags.includes(ignoredTag))) {
                 // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
             } else {
                 this.nonPassingItems.push({ location: scenarioLocation, failure: result.exception ? result.exception.message : ''});
