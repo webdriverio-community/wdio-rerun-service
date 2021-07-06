@@ -6,7 +6,7 @@ describe('wdio-rerurn-service', () => {
     
     const nonPassingItems = [ { name: "1", location: "feature/sample.feature:1"}, {name: "2", location: "feature/sample.feature:4"} ];
     const capabilities = { browser: "chrome" };
-    const specFile = ["featurs/sample.feature"];
+    const specFile = ["features/sample.feature"];
 
     const world =
     { 
@@ -31,6 +31,26 @@ describe('wdio-rerurn-service', () => {
             tags: ["@sample"]
         }
     }
+
+    const v6ScenarioObject = {
+        tags: [],
+        name: 'Attaching a document to the message to the customer',
+        language: 'en',
+        locations: [ { line: 13, column: 5 } ],
+        steps: [
+            {
+                text: "I'm on the login page",
+                arguments: [],
+                locations: [Array]
+            },
+            {
+                text: 'I log in with a user:',
+                arguments: [Array],
+                locations: [Array]
+            }]
+    };
+
+    const v6Result = { duration: 9371000000, status: 'failed' };
 
     const cucumberBrowser = { config: { framework: "cucumber" }};
     const mochaBrowser = { config: { framework: "mocha" }};
@@ -107,10 +127,10 @@ describe('wdio-rerurn-service', () => {
         expect(() => service.afterScenario()).toThrow();
     })
 
-    it('afterScenario should mot throw an exception when parameters are given', () => {
+    it('afterScenario should not throw an exception when parameters are given', () => {
         let service = new RerunService();
         global.browser = cucumberBrowser;
-        expect(() => service.afterScenario(world)).not.toThrow();
+        expect(() => service.afterScenario(specFile, true, v6ScenarioObject, v6Result)).not.toThrow();
     })
 
     it('after should not throw an exception when no parameters are given', () => {

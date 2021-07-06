@@ -19,9 +19,7 @@ class RerunService {
     before(capabilities, specs) {
         this.specFile = specs[0];
         // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
-        fs.mkdir(this.rerunDataDir, { recursive: true }, err => {
-            if (err) throw err;
-        });
+        fs.mkdirSync(this.rerunDataDir, { recursive: true });
         // INFO: `namespace` below copied from: https://github.com/kelektiv/node-uuid/blob/master//lib/v35.js#L54:16
         this.serviceWorkerId = uuidv5(`${Date.now()}`, '6ba7b810-9dad-11d1-80b4-00c04fd430c8');
     }
