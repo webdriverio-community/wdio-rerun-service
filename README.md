@@ -50,9 +50,9 @@ After package installation is complete, add it to `services` array in `wdio.conf
 const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
-    services: [RerunService],
+    services: [RerunService, {
     // ...
-};
+    }];
 ```
 
 Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted.html)
@@ -67,7 +67,7 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [
-        [RerunService], {
+        [RerunService, {
             // Re-run service options here...
         }]
     ],
@@ -88,7 +88,7 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [
-        [RerunService], {
+        [RerunService, {
             rerunDataDir: './custom-rerun-directory'
         }]
     ],
@@ -109,7 +109,7 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [
-        [RerunService], {
+        [RerunService, {
             rerunScriptPath: './custom-path-for-rerun.sh'
         }]
     ],
@@ -130,7 +130,7 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [
-        [RerunService], {
+        [RerunService, {
             ignoredTags: ['@known_bug']
         }]
     ],
@@ -151,7 +151,7 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [
-        [RerunService], {
+        [RerunService, {
             commandPrefix: "VARIABLE=true"
         }]
     ],
