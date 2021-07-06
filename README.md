@@ -1,7 +1,7 @@
 WebdriverIO Re-run Service
 ==========================
 
-[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/node.js.yml/badge.svg)](https://github.com/jwplayer/wdio-rerun-service/actions/workflows/node.js.yml)
+[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/node.js.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/node.js.yml)
 ![npm](https://img.shields.io/npm/dm/wdio-rerun-service)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/wdio-rerun-service)
 ![GitHub issues](https://img.shields.io/github/issues/webdriverio-community/wdio-rerun-service)
