@@ -13,7 +13,7 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
-## v1.7.1 (2021-06-24)
+## v1.6.2 (2021-06-24)
 
 #### :nail_care: Polish
 * [[#20]](https://github.com/jwplayer/wdio-rerun-service/pull/20) Use lockfileVersion:2 ([@esaari](https://github.com/esaari))
@@ -23,24 +23,22 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 #### Committers: 1
 - [@esaari](https://github.com/esaari)
 
-## v1.7.0 (2021-03-01)
 
+## v1.6.1 (2021-03-12)
+
+#### :rocket: New Feature
 #### :bug: Bug Fix
-* [[#9]](https://github.com/jwplayer/wdio-rerun-service/pull/9) Fix Cucumber hooks, so we're now compatible with WDIO v7 ([@esaari](https://github.com/esaari))
+* Small bug fix
 #### :memo: Documentation
-* [[#9]](https://github.com/jwplayer/wdio-rerun-service/pull/9) Readme updates for clarity ([@esaari](https://github.com/esaari))
-#### ::nail_care:: Polish
-* [[#9]](https://github.com/jwplayer/wdio-rerun-service/pull/9) Filter `skipped` Cucumber scenarios from being included in rerun ([@esaari](https://github.com/esaari))
-
-#### Committers: 1
-- [@esaari](https://github.com/esaari)
+* Improved README.md
+#### :house: Internal
 
 ## v1.6.0 (2021-02-26)
 
 #### :rocket: New Feature
-* [[#11]](https://github.com/jwplayer/wdio-rerun-service/pull/11) Fix issue with Windows-style separators, add CHANGELOG.md ([@mikesalvia](https://github.com/mikesalvia))*
+* [#11](https://github.com/jwplayer/wdio-rerun-service/pull/11) Fix issue with Windows-style separators, add CHANGELOG.md ([@mikesalvia](https://github.com/mikesalvia))*
 #### :bug: Bug Fix
-* [[#10]](https://github.com/jwplayer/wdio-rerun-service/pull/10) Ensure failure locations are unique so there are no duplicates created in re-run.sh ([@mikesalvia](https://github.com/mikesalvia))
+* [#10](https://github.com/jwplayer/wdio-rerun-service/pull/10) Ensure failure locations are unique so there are no duplicates created in re-run.sh ([@mikesalvia](https://github.com/mikesalvia))
 #### :memo: Documentation
 #### :house: Internal
 
