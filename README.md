@@ -51,8 +51,9 @@ const RerunService = require('wdio-rerun-service');
 export.config = {
     // ...
     services: [RerunService, {
-    // ...
-    }];
+        // ...
+    }]
+};
 ```
 
 Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted.html)
