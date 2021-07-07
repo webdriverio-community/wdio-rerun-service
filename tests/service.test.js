@@ -124,6 +124,7 @@ describe('wdio-rerurn-service', () => {
 
     it('afterScenario should throw an exception when no parameters are given', () => {
         let service = new RerunService();
+        global.browser = cucumberBrowser;
         expect(() => service.afterScenario()).toThrow();
     })
 
