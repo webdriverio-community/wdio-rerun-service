@@ -50,7 +50,7 @@
     "url": "https://github.com/webdriverio-community/wdio-rerun-service/issues"
   },
   "dependencies": {
-    "@wdio/logger": "7.0.0",
+    "@wdio/logger": "6.10.10",
     "minimist": "^1.2.5",
     "npm-watch": "^0.10.0",
     "uuid": "^8.3.2"
