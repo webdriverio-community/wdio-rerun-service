@@ -13,6 +13,14 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v1.7.2 (2021-06-24)
+
+#### :nail_care: Polish
+* Service release; no new features or fixes 
+
+#### Committers: 1
+- [@esaari](https://github.com/esaari)
+
 ## v1.7.1 (2021-06-24)
 
 #### :nail_care: Polish
