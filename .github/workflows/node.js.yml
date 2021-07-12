@@ -5,16 +5,16 @@ name: wdio-rerun-service CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [12.x, 13.x, 14.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v2
@@ -25,6 +25,11 @@ jobs:
     - run: npm ci
     - run: npm install -g eslint
     - run: npm run build --if-present
+    - run: npm run test
+    - name: Jest Coverage Report
+      uses: artiomtr/jest-coverage-report-action@v2.0-rc.2
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
     
   build-windows:
     runs-on: windows-latest
@@ -41,3 +46,4 @@ jobs:
     - run: npm ci
     - run: npm install -g eslint
     - run: npm run build --if-present
+    - run: npm run test
