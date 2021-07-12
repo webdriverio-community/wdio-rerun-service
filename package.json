@@ -12,7 +12,7 @@
   "scripts": {
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
-    "compile": "babel src/ -d build/ --config-file ../../babel.config.js",
+    "compile": "babel src/ -d build/ --config-file ./babel.config.js",
     "watch": "npm-watch",
     "test": "run-s test:*",
     "test:clean": "rimraf ./results ./coverage rerun.sh",
