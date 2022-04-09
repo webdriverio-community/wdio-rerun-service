@@ -14,6 +14,12 @@ describe('wdio-rerurn-service', () => {
             feature: {
                 children: [
                     {
+                      background: {
+                        id: 0,
+                        location: { line: 1 }
+                      }
+                    },
+                    {
                         scenario: {
                             id: 1,
                             location: { line: 3 }
