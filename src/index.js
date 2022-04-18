@@ -40,7 +40,9 @@ class RerunService {
     afterScenario(world) {
         const status = world.result.status;
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
-            return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
+            if(child.scenario){
+                return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
+            }
         })[0].scenario.location.line;
 
         if (browser.config.framework === 'cucumber' && (status !== 'PASSED' && status !== 'SKIPPED')) {
