@@ -12,6 +12,19 @@
 _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
+## v1.7.3 (2022-04-19)
+#### :bug: Bug Fix
+* [[#31]](https://github.com/jwplayer/wdio-rerun-service/pull/31) Fixing WDIO v7 status code usage ([@ccristobal-skillz](https://github.com/ccristobal-skillz))
+* [[#26]](https://github.com/jwplayer/wdio-rerun-service/pull/26) Ensure element contains scenario inside filter function ([@yopasa94](https://github.com/yopasa94))
+
+#### :nail_care: Polish
+* [[#32]](https://github.com/jwplayer/wdio-rerun-service/pull/32) Update dependencies, move to fixed static versions ([@esaari](https://github.com/esaari))
+
+#### Committers: 3
+- [@ccristobal-skillz](https://github.com/ccristobal-skillz)
+- [@yopasa94](https://github.com/yopasa94)
+- [@esaari](https://github.com/esaari)
+
 
 ## v1.7.2 (2021-06-24)
 
