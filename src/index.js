@@ -38,13 +38,14 @@ class RerunService {
 
     // Executed after a Cucumber scenario ends.
     afterScenario(world) {
-        const CUCUMBER_STATUS_MAP = ['unknown', 'passed', 'skipped', 'pending', 'undefined', 'ambiguous', 'failed']
-        const status = CUCUMBER_STATUS_MAP[world.result.status || 0]
+        const status = world.result.status;
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
-            return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
+            if(child.scenario){
+                return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
+            }
         })[0].scenario.location.line;
 
-        if (browser.config.framework === 'cucumber' && (status !== 'passed' && status !== 'skipped')) {
+        if (browser.config.framework === 'cucumber' && (status !== 'PASSED' && status !== 'SKIPPED')) {
             // console.log(`Re-run service is inspecting non-passing scenario.`);
             const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
             // console.log(`Scenario location: ${scenarioLocation}`);
