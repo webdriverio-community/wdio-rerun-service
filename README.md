@@ -159,4 +159,26 @@ export.config = {
     // ...
 }
 ```
+
+### customParameters
+Parameters which will be added to the re-run command that is generated.
+Can be used with `commandPrefix`.
+
+Type: `String`
+
+Default: `''`
+
+Example:
+```js
+const RerunService = require('wdio-rerun-service');
+export.config = {
+    // ...
+    services: [
+        [RerunService, {
+            customParameters: "--foobar"
+        }]
+    ],
+    // ...
+}
+```
 ----
