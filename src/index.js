@@ -6,13 +6,14 @@ const argv = require('minimist')(process.argv.slice(2));
 
 class RerunService {
 
-    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix } = {}) {
+    constructor({ ignoredTags, rerunDataDir, rerunScriptPath, commandPrefix, customParameters } = {}) {
         this.nonPassingItems = [];
         this.serviceWorkerId;
-        this.ignoredTags = ignoredTags ? ignoredTags : [];
-        this.rerunDataDir = rerunDataDir ? rerunDataDir : "./results/rerun";
-        this.rerunScriptPath = rerunScriptPath ? rerunScriptPath : "./rerun.sh";
-        this.commandPrefix = commandPrefix ? commandPrefix : "";
+        this.ignoredTags = ignoredTags || [];
+        this.rerunDataDir = rerunDataDir || "./results/rerun";
+        this.rerunScriptPath = rerunScriptPath || "./rerun.sh";
+        this.commandPrefix = commandPrefix || "";
+        this.customParameters = customParameters || "";
         this.specFile = "";
     }
 
@@ -73,10 +74,7 @@ class RerunService {
         if (fs.existsSync(directoryPath)) {
             const rerunFiles = fs.readdirSync(directoryPath);
             if (rerunFiles.length > 0) {
-                let rerunCommand = `DISABLE_RERUN=true node_modules/.bin/wdio ${argv._[0]} `;
-                if (this.commandPrefix) {
-                    rerunCommand = `${this.commandPrefix} ${rerunCommand}`;
-                }
+                let rerunCommand = `${this.commandPrefix} DISABLE_RERUN=true node_modules/.bin/wdio ${this.customParameters} ${argv._[0]} `;
                 let failureLocations = [];
                 rerunFiles.forEach(file => {
                     const json = JSON.parse(fs.readFileSync(`${this.rerunDataDir}/${file}`));

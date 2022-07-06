@@ -48,6 +48,7 @@ describe('wdio-rerurn-service', () => {
         expect(service.rerunDataDir).toEqual("./results/rerun");
         expect(service.rerunScriptPath).toEqual("./rerun.sh");
         expect(service.commandPrefix).toEqual("");
+        expect(service.customParameters).toEqual("");
     })
 
     it('should throw error when setup bad rereunDataDir', () => {
@@ -62,6 +63,7 @@ describe('wdio-rerurn-service', () => {
         expect(service.rerunDataDir).toEqual("./results/rerun");
         expect(service.rerunScriptPath).toEqual("./rerun.sh");
         expect(service.commandPrefix).toEqual("");
+        expect(service.customParameters).toEqual("");
     })
 
     it('can configure rerunDataDir', () => {
@@ -71,6 +73,7 @@ describe('wdio-rerurn-service', () => {
         expect(service.rerunDataDir).toEqual("./results/custom_rerun_directory");
         expect(service.rerunScriptPath).toEqual("./rerun.sh");
         expect(service.commandPrefix).toEqual("");
+        expect(service.customParameters).toEqual("");
     })
 
     it('can configure rerunScriptPath', () => {
@@ -80,6 +83,7 @@ describe('wdio-rerurn-service', () => {
         expect(service.rerunDataDir).toEqual("./results/rerun");
         expect(service.rerunScriptPath).toEqual("./custom_rerun_script.sh");
         expect(service.commandPrefix).toEqual("");
+        expect(service.customParameters).toEqual("");
     })
 
     it('can configure commandPrefix', () => {
@@ -89,6 +93,17 @@ describe('wdio-rerurn-service', () => {
         expect(service.rerunDataDir).toEqual("./results/rerun");
         expect(service.rerunScriptPath).toEqual("./rerun.sh");
         expect(service.commandPrefix).toEqual("CUSTOM_VAR=true");
+        expect(service.customParameters).toEqual("");
+    })
+
+    it('can configure customParameters', () => {
+        let service = new RerunService({customParameters: "--foobar"});
+        expect(() => service.before({}, ['features/sample.feature'])).not.toThrow();
+        expect(service.ignoredTags).toEqual([]);
+        expect(service.rerunDataDir).toEqual("./results/rerun");
+        expect(service.rerunScriptPath).toEqual("./rerun.sh");
+        expect(service.commandPrefix).toEqual("");
+        expect(service.customParameters).toEqual("--foobar");
     })
 
     it('before should throw an exception when no parameters are given', () => {
@@ -113,7 +128,7 @@ describe('wdio-rerurn-service', () => {
         expect(() => service.afterScenario()).toThrow();
     })
 
-    it('afterScenario should mot throw an exception when parameters are given', () => {
+    it('afterScenario should not throw an exception when parameters are given', () => {
         let service = new RerunService();
         global.browser = cucumberBrowser;
         expect(() => service.afterScenario(world)).not.toThrow();
@@ -127,8 +142,14 @@ describe('wdio-rerurn-service', () => {
         expect(() => service.after()).not.toThrow();
     })
 
-    it('onComplete should throw an exception when no parameters are given', () => {
+    it('onComplete should throw an exception when no parameters are given with prefix', () => {
         let service = new RerunService({commandPrefix: "CUSTOM_VAR=true"});
+        service.nonPassingItems = nonPassingItems;
+        expect(() => service.onComplete()).not.toThrow();
+    })
+
+    it('onComplete should throw an exception when no parameters are given with additional params', () => {
+        let service = new RerunService({customParameters: "--foobar"});
         service.nonPassingItems = nonPassingItems;
         expect(() => service.onComplete()).not.toThrow();
     })
