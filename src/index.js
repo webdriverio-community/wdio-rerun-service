@@ -74,7 +74,7 @@ class RerunService {
         if (fs.existsSync(directoryPath)) {
             const rerunFiles = fs.readdirSync(directoryPath);
             if (rerunFiles.length > 0) {
-                let rerunCommand = `${this.commandPrefix} DISABLE_RERUN=true node_modules/.bin/wdio ${this.customParameters} ${argv._[0]} `;
+                let rerunCommand = `${this.commandPrefix} DISABLE_RERUN=true node_modules/.bin/wdio ${argv._[0]} ${this.customParameters} `;
                 let failureLocations = [];
                 rerunFiles.forEach(file => {
                     const json = JSON.parse(fs.readFileSync(`${this.rerunDataDir}/${file}`));
