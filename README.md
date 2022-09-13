@@ -32,7 +32,7 @@ The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `pac
 ```json
 {
     "devDependencies": {
-        "wdio-rerun-service": "^1.7.3"
+        "wdio-rerun-service": "^1.7.4"
     }
 }
 ```

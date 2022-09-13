@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { v5: uuidv5 } = require('uuid');
+const { TestStepResultStatus } = require("@cucumber/messages");
 
 const argv = require('minimist')(process.argv.slice(2));
 
