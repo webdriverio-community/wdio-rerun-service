@@ -38,25 +38,22 @@ class RerunService {
     }
 
     // Executed after a Cucumber scenario ends.
-    afterScenario(world) {
+    afterScenario(world, result, context) {
         const status = world.result.status;
-        const scenarioLineNumber = world.gherkinDocument.feature.children.filter((child) => {
-            if(child.scenario){
+        const scenarioLineNumber = world.gherkinDocument.feature.children.filter(child => {
+            if (child.scenario) {
                 return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
             }
         })[0].scenario.location.line;
-
-        if (browser.config.framework === 'cucumber' && (status !== 'PASSED' && status !== 'SKIPPED')) {
-            // console.log(`Re-run service is inspecting non-passing scenario.`);
+        if (browser.config.framework === 'cucumber' && status !== 'PASSED' && status !== 'SKIPPED' && status !== TestStepResultStatus.PASSED && status !== TestStepResultStatus.SKIPPED) {
             const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
-            // console.log(`Scenario location: ${scenarioLocation}`);
             const tagsList = world.pickle.tags.map(tag => tag.name);
-            // console.log(`Scenario tags: ${tagsList}`);
             const service = this;
-            if (this.ignoredTags && tagsList.some(ignoredTag => service.ignoredTags.includes(ignoredTag))) {
-                // console.log(`Re-run service will ignore the current scenario since it includes one of the ignored tags: ${this.ignoredTags}`);
-            } else {
-                this.nonPassingItems.push({ location: scenarioLocation, failure: world.result.message });
+            if (this.ignoredTags && !tagsList.some(ignoredTag => service.ignoredTags.includes(ignoredTag))) {
+                this.nonPassingItems.push({
+                    location: scenarioLocation,
+                    failure: world.result.message
+                });
             }
         }
     }
