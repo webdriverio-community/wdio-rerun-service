@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const { v5: uuidv5 } = require('uuid');
-const { TestStepResultStatus } = require("@cucumber/messages");
 
 const argv = require('minimist')(process.argv.slice(2));
 
@@ -40,13 +39,14 @@ class RerunService {
 
     // Executed after a Cucumber scenario ends.
     afterScenario(world, result, context) {
-        const status = world.result.status;
+        const CUCUMBER_STATUS_MAP = ['UNKNOWN', 'PASSED', 'SKIPPED', 'PENDING', 'UNDEFINED', 'AMBIGUOUS', 'FAILED']
+        const status = typeof world.result.status === 'number' ? CUCUMBER_STATUS_MAP[world.result.status || 0] : world.result.status;
         const scenarioLineNumber = world.gherkinDocument.feature.children.filter(child => {
             if (child.scenario) {
                 return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
             }
         })[0].scenario.location.line;
-        if (browser.config.framework === 'cucumber' && status !== 'PASSED' && status !== 'SKIPPED' && status !== TestStepResultStatus.PASSED && status !== TestStepResultStatus.SKIPPED) {
+        if (browser.config.framework === 'cucumber' && (status !== 'PASSED' && status !== 'SKIPPED')) {
             const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
             const tagsList = world.pickle.tags.map(tag => tag.name);
             const service = this;

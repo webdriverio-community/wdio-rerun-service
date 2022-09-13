@@ -12,7 +12,7 @@
 _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
-## v1.7.5 (2022-09-13)
+## v1.7.6 (2022-09-13)
 #### :bug: Bug Fix
 * [[#41]](https://github.com/webdriverio-community/wdio-rerun-service/pull/41) Update to work with newer versions of @wdio/cucumber-framework ([@mikesavia](https://github.com/mikesavia))
 
