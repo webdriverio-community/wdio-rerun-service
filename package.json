@@ -36,7 +36,7 @@
     "prepare": "npm run build",
     "rename:cjs": "shx mv ./build/cjs/index.js ./build/index.cjs && rimraf ./build/cjs",
     "test": "run-s test:*",
-    "test:clean": "rimraf ./results ./coverage rerun.sh",
+    "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat",
     "test:eslint": "eslint src tests",
     "test:tsc": "tsc -p tsconfig.json --noEmit",
     "test:unit": "jest --collectCoverageFrom='[\"src/**/*.{js,jsx,ts,tsx}\"]' --coverage --collectCoverage=true --forceExit --detectOpenHandles tests/.*test.*",

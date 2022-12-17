@@ -3,7 +3,7 @@ import type { Testrunner } from '@wdio/types/build/Options'
 import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { argv } from 'node:process'
+import { argv, platform } from 'node:process'
 import { v5 as uuidv5 } from 'uuid'
 
 type AfterScenario = NonNullable<
@@ -47,7 +47,8 @@ export default class RerunService implements Services.ServiceInstance {
         this.serviceWorkerId = ''
         this.ignoredTags = ignoredTags ?? []
         this.rerunDataDir = rerunDataDir ?? './results/rerun'
-        this.rerunScriptPath = rerunScriptPath ?? './rerun.sh'
+        this.rerunScriptPath =
+            rerunScriptPath ?? (platform === 'win32' ? 'rerun.bat' : 'rerun.sh')
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
@@ -152,7 +153,11 @@ export default class RerunService implements Services.ServiceInstance {
             const parsedArgs = minimist(argv.slice(2))
             const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
-            let rerunCommand = `${prefix}DISABLE_RERUN=true node_modules/.bin/wdio ${args}${this.customParameters}`
+            const disableRerun =
+                platform === 'win32'
+                    ? 'set DISABLE_RERUN=true &&'
+                    : 'DISABLE_RERUN=true'
+            let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`
             const failureLocations = new Set<string>()
             for (const file of rerunFiles) {
                 const json = JSON.parse(
@@ -165,7 +170,7 @@ export default class RerunService implements Services.ServiceInstance {
             failureLocations.forEach((failureLocation) => {
                 rerunCommand += ` --spec=${failureLocation}`
             })
-            await writeFile(this.rerunScriptPath, rerunCommand)
+            await writeFile(this.rerunScriptPath, rerunCommand, { mode: 0o755 })
             // console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
         } catch (err) {
             // console.log(`Re-run service failed to generate re-run script: ${err}`);
