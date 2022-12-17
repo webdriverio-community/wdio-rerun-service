@@ -1,0 +1,9 @@
+{
+    "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
+    "compilerOptions": {
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"],
+    },
+    "exclude": ["node_modules", "build"]
+}

@@ -8,7 +8,7 @@ WebdriverIO Re-run Service
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
-_NOTE_: Cucumber Framework users running WebdriverIO versions `5.x` and `6.x` should use version `1.6.x`. If you are on the latest major version of `7.x`, use the latest `1.7.x` version of this service.
+_NOTE_: Cucumber Framework users running WebdriverIO versions `5.x.x` and `6.x.x` should use version `1.6.x`. If you are on `7.x.x`, use version `1.7.x` version of this service. If you are on the latest major version of `8.x.x`, use the latest `2.x.x` version of this service.
 
 ## Re-run vs. Retry
 
@@ -32,7 +32,7 @@ The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `pac
 ```json
 {
     "devDependencies": {
-        "wdio-rerun-service": "^1.7.6"
+        "wdio-rerun-service": "^2.0.0"
     }
 }
 ```
@@ -47,8 +47,8 @@ After package installation is complete, add it to `services` array in `wdio.conf
 
 ```js
 // wdio.conf.js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [RerunService, {
         // ...
@@ -64,8 +64,8 @@ The following options may be added to the wdio.conf.js file. To define options f
 
 ```js
 // wdio.conf.js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {
@@ -85,8 +85,8 @@ Default: `./results/rerun`
 
 Example:
 ```js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {
@@ -106,8 +106,8 @@ Default: `./rerun.sh`
 
 Example:
 ```js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {
@@ -127,8 +127,8 @@ Default: `[]`
 
 Example:
 ```js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {
@@ -148,8 +148,8 @@ Default: `''`
 
 Example:
 ```js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {
@@ -170,8 +170,8 @@ Default: `''`
 
 Example:
 ```js
-const RerunService = require('wdio-rerun-service');
-export.config = {
+import RerunService from 'wdio-rerun-service';
+export const config = {
     // ...
     services: [
         [RerunService, {

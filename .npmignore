@@ -3,3 +3,7 @@ tests/
 coverage/
 .idea/
 results/
+tsconfig.json
+tsconfig.eslint.json
+.eslintrc.json
+.prettierrc.json
