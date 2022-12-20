@@ -1,6 +1,6 @@
 {
   "name": "wdio-rerun-service",
-  "version": "2.0.0",
+  "version": "1.7.6",
   "description": "A WebdriverIO service to track and prepare for re-running failing or flaky Jasmine/Mocha tests or Cucumber Scenarios.",
   "author": "Mike Salvia <msalvia@jwplayer.com>",
   "homepage": "https://github.com/webdriverio-community/wdio-rerun-service",
@@ -96,6 +96,7 @@
     "npm-watch": "0.11.0",
     "prettier": "^2.8.1",
     "prettier-plugin-organize-imports": "^3.2.1",
+    "release-it": "^15.5.1",
     "rimraf": "^3.0.2",
     "shx": "^0.3.4",
     "ts-jest": "^29.0.3",
