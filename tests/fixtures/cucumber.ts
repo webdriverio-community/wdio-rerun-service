@@ -11,6 +11,7 @@ import type {
     TestStepFinished,
     TestStepStarted,
 } from '@cucumber/messages'
+import { TestStepResultStatus } from '@cucumber/messages'
 
 /*
  * Copied from @wdio/cucumber-framework (8.0.13)
@@ -391,7 +392,7 @@ export const testStepStarted: TestStepStarted = {
 
 export const testStepFinished: TestStepFinished = {
     testStepResult: {
-        status: 'PASSED' as any,
+        status: TestStepResultStatus.PASSED,
         duration: {
             seconds: 0,
             nanos: 1000000,
