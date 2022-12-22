@@ -1,9 +1,11 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "outDir": "build",
+        "outDir": "build/esm",
         "noEmit": false,
-        "declaration": true
+        "declaration": true,
+        "sourceMap": true
     },
+    "include": [],
     "files": ["src/index.ts"]
 }
