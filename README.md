@@ -27,20 +27,16 @@ It is recommended to take some time to evaluate the options available. A hybrid 
 
 ## Installation
 
-The easiest way is to add `wdio-rerun-service` to `devDependencies` in your `package.json`.
-
-```json
-{
-    "devDependencies": {
-        "wdio-rerun-service": "^2.0.0"
-    }
-}
-```
-
-It can be installed by using `npm`:
+Using `npm`:
 
 ```bash
 npm install wdio-rerun-service
+```
+
+or using `yarn`:
+
+```bash
+yarn add wdio-rerun-service
 ```
 
 After package installation is complete, add it to `services` array in `wdio.conf.js`:
