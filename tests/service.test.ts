@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { describe, expect, it } from '@jest/globals'
 import RerunService from '../src'
 

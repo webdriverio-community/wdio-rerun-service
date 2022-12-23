@@ -154,9 +154,9 @@ export default class RerunService implements Services.ServiceInstance {
                 let rerunCommand = `${this.commandPrefix} DISABLE_RERUN=true node_modules/.bin/wdio ${args} ${this.customParameters} `
                 const failureLocations: string[] = []
                 for (const file of rerunFiles) {
-                    const json: NonPassingItem[] = JSON.parse(
+                    const json = JSON.parse(
                         await readFile(`${this.rerunDataDir}/${file}`, 'utf8'),
-                    )
+                    ) as NonPassingItem[]
                     json.forEach((failure) => {
                         failureLocations.push(
                             failure.location.replace(/\\/g, '/'),
