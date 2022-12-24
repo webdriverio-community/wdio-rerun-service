@@ -1,0 +1,8 @@
+{
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "build/cjs",
+        "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"]
+    },
+    "files": ["src/index.ts"]
+}

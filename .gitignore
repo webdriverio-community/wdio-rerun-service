@@ -3,4 +3,5 @@ build/
 coverage/
 results/
 .idea/
+.vscode/
 rerun.sh
