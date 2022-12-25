@@ -9,18 +9,18 @@
     "access": "public"
   },
   "type": "module",
-  "main": "./build/index.cjs",
-  "types": "./build/index.d.ts",
-  "module": "./build/index.js",
+  "main": "./build/cjs/index.js",
+  "types": "./build/cjs/index.d.ts",
+  "module": "./build/esm/index.js",
   "exports": {
     ".": {
       "import": {
-        "types": "./build/index.d.ts",
-        "default": "./build/index.js"
+        "types": "./build/esm/index.d.ts",
+        "default": "./build/esm/index.js"
       },
       "require": {
-        "types": "./build/index.d.ts",
-        "default": "./build/index.cjs"
+        "types": "./build/cjs/index.d.ts",
+        "default": "./build/cjs/index.js"
       }
     }
   },
@@ -30,16 +30,16 @@
   "scripts": {
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
-    "compile": "run-s compile:esm compile:cjs rename:cjs",
+    "compile": "run-s compile:esm compile:cjs generate:cjs:package",
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
+    "generate:cjs:package": "shx echo \"{\\\"type\\\":\\\"commonjs\\\"}\" > ./build/cjs/package.json",
     "prepare": "npm run build",
-    "rename:cjs": "shx mv ./build/cjs/index.js ./build/index.cjs && rimraf ./build/cjs",
     "test": "run-s test:*",
     "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat",
     "test:eslint": "eslint src tests",
     "test:tsc": "tsc -p tsconfig.json --noEmit",
-    "test:unit": "jest --collectCoverageFrom='[\"src/**/*.{js,jsx,ts,tsx}\"]' --coverage --collectCoverage=true --forceExit --detectOpenHandles tests/.*test.*",
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "watch": "npm-watch"
   },
   "watch": {
@@ -88,6 +88,7 @@
     "@typescript-eslint/parser": "^5.46.1",
     "@wdio/cucumber-framework": "^8.0.13",
     "@wdio/globals": "^8.0.13",
+    "cross-env": "^7.0.3",
     "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -104,16 +105,13 @@
     "typescript": "^4.9.4"
   },
   "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "testMatch": [
-      "**/tests/**/*.[jt]s?(x)"
-    ],
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
+    "preset": "ts-jest/presets/default-esm",
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
     },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!@wdio|@cucumber)"
+    "collectCoverageFrom": [
+      "src/index.ts"
     ]
   }
 }

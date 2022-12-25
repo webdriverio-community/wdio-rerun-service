@@ -1,11 +1,13 @@
+import type { ITestCaseHookParameter } from '@cucumber/cucumber'
+import { TestStepResultStatus } from '@cucumber/messages'
 import { describe, expect, it } from '@jest/globals'
 import minimist from 'minimist'
 import { readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { argv, platform } from 'node:process'
-import { join } from 'path'
-import RerunService from '../src'
-import { gherkinDocument, pickle } from './fixtures/cucumber'
+import RerunService from '../src/index.js'
+import { gherkinDocument, pickle } from './fixtures/cucumber.js'
 
 describe('wdio-rerun-service', () => {
     const nonPassingItemsCucumber = [
@@ -22,17 +24,23 @@ describe('wdio-rerun-service', () => {
     const world = {
         gherkinDocument: gherkinDocument,
         result: {
-            status: 'PASSED' as any,
+            status: TestStepResultStatus.PASSED,
             duration: {
-                seconds: 0,
+                seconds: 4,
                 nanos: 1000000,
             },
+            message: 'some message',
         },
         pickle: pickle,
-    }
+        testCaseStartedId: 'some-id',
+    } satisfies ITestCaseHookParameter
 
-    const cucumberBrowser = { config: { framework: 'cucumber' } }
-    const mochaBrowser = { config: { framework: 'mocha' } }
+    const cucumberBrowser: WebdriverIO.Browser = {
+        config: { framework: 'cucumber' },
+    } as WebdriverIO.Browser
+    const mochaBrowser = {
+        config: { framework: 'mocha' },
+    } as WebdriverIO.Browser
 
     const rerunScriptFile = platform === 'win32' ? 'rerun.bat' : 'rerun.sh'
 
@@ -147,31 +155,48 @@ describe('wdio-rerun-service', () => {
 
         it('should not throw an exception when parameters are given', () => {
             const service = new RerunService()
-            // @ts-expect-error - mock browser object
             global.browser = cucumberBrowser
-            expect(() => service.afterScenario(world as any)).not.toThrow()
+            expect(() => service.afterScenario(world)).not.toThrow()
         })
 
-        for (const status of ['PENDING', 'UNDEFINED', 'AMBIGUOUS', 'FAILED']) {
+        for (const status of [
+            TestStepResultStatus.PENDING,
+            TestStepResultStatus.UNDEFINED,
+            TestStepResultStatus.AMBIGUOUS,
+            TestStepResultStatus.FAILED,
+        ]) {
             it('should add to nonPassingItems if status is ' + status, () => {
                 const service = new RerunService()
-                // @ts-expect-error - mock browser object
                 global.browser = cucumberBrowser
-                const testWorld = { ...world, result: { status } }
-                service.afterScenario(testWorld as any)
+                const testWorld = {
+                    ...world,
+                    result: {
+                        ...world.result,
+                        status,
+                    },
+                }
+                service.afterScenario(testWorld)
                 expect(service.nonPassingItems.length).toBeGreaterThan(0)
             })
         }
 
-        for (const status of ['PASSED', 'SKIPPED']) {
+        for (const status of [
+            TestStepResultStatus.PASSED,
+            TestStepResultStatus.SKIPPED,
+        ]) {
             it(
                 'should not add to nonPassingItems if status is ' + status,
                 () => {
                     const service = new RerunService()
-                    // @ts-expect-error - mock browser object
                     global.browser = cucumberBrowser
-                    const testWorld = { ...world, result: { status } }
-                    service.afterScenario(testWorld as any)
+                    const testWorld = {
+                        ...world,
+                        result: {
+                            ...world.result,
+                            status,
+                        },
+                    }
+                    service.afterScenario(testWorld)
                     expect(service.nonPassingItems).toEqual([])
                 },
             )
@@ -181,10 +206,15 @@ describe('wdio-rerun-service', () => {
             const service = new RerunService({
                 ignoredTags: ['@scenario-tag6'],
             })
-            // @ts-expect-error - mock browser object
             global.browser = cucumberBrowser
-            const testWorld = { ...world, result: { status: 'FAILED' } }
-            service.afterScenario(testWorld as any)
+            const testWorld = {
+                ...world,
+                result: {
+                    ...world.result,
+                    status: TestStepResultStatus.FAILED,
+                },
+            }
+            service.afterScenario(testWorld)
             expect(service.nonPassingItems.length).toBeGreaterThan(0)
         })
 
@@ -192,10 +222,15 @@ describe('wdio-rerun-service', () => {
             const service = new RerunService({
                 ignoredTags: ['@scenario-tag1'],
             })
-            // @ts-expect-error - mock browser object
             global.browser = cucumberBrowser
-            const testWorld = { ...world, result: { status: 'FAILED' } }
-            service.afterScenario(testWorld as any)
+            const testWorld = {
+                ...world,
+                result: {
+                    ...world.result,
+                    status: TestStepResultStatus.FAILED,
+                },
+            }
+            service.afterScenario(testWorld)
             expect(service.nonPassingItems).toEqual([])
         })
     })
@@ -203,7 +238,6 @@ describe('wdio-rerun-service', () => {
     describe('afterTest', () => {
         it('should not throw an exception when parameters are given', () => {
             const service = new RerunService()
-            // @ts-expect-error - mock browser object
             global.browser = mochaBrowser
             expect(() =>
                 service.afterTest({} as any, 'context', {
@@ -223,7 +257,6 @@ describe('wdio-rerun-service', () => {
 
         it('should not throw an exception when parameters are given but no error.message', () => {
             const service = new RerunService()
-            // @ts-expect-error - mock browser object
             global.browser = mochaBrowser
             expect(() =>
                 service.afterTest({} as any, 'context', {
@@ -243,7 +276,6 @@ describe('wdio-rerun-service', () => {
 
         it('should add to nonPassingItems if results.passed is false', () => {
             const service = new RerunService()
-            // @ts-expect-error - mock browser object
             global.browser = mochaBrowser
             service.afterTest({} as any, 'context', {
                 error: { message: 'This test has failed.' },
@@ -262,7 +294,6 @@ describe('wdio-rerun-service', () => {
 
         it('should not add to nonPassingItems if results.passed is true', () => {
             const service = new RerunService()
-            // @ts-expect-error - mock browser object
             global.browser = mochaBrowser
             service.afterTest({} as any, 'context', {
                 error: { message: 'This test has failed.' },
@@ -312,7 +343,9 @@ describe('wdio-rerun-service', () => {
             service.serviceWorkerId = '123'
             await expect(service.onComplete()).resolves.toBeUndefined()
         })
+    })
 
+    describe('integration tests', () => {
         it('should add failed specs to rerun script', async () => {
             const rerunDataDir = join(tmpdir(), 'rerun-data')
             const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
@@ -332,6 +365,28 @@ describe('wdio-rerun-service', () => {
                 `${disableRerun} npx wdio ${args} --spec=tests/sample1.test.ts --spec=tests/sample2.test.ts`,
             )
             await rm(rerunDataDir, { recursive: true, force: true })
+        })
+
+        it('should not add failed specs to rerun script if DISABLE_RERUN is set', async () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const rerunDataDir = join(tmpdir(), 'rerun-data')
+            const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
+            const service = new RerunService({ rerunDataDir, rerunScriptPath })
+            await service.before({}, [])
+            service.nonPassingItems = nonPassingItemsMocha
+            await service.after()
+            await service.onComplete()
+            let rerunScript: string | undefined = undefined
+            let err: NodeJS.ErrnoException | undefined = undefined
+            try {
+                rerunScript = await readFile(rerunScriptPath, 'utf8')
+                await rm(rerunDataDir, { recursive: true, force: true })
+            } catch (e) {
+                err = e as NodeJS.ErrnoException
+            }
+            expect(err).toBeDefined()
+            expect(err?.code).toBe('ENOENT')
+            expect(rerunScript).toBeUndefined()
         })
     })
 })

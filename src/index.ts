@@ -1,9 +1,8 @@
-import type { Capabilities, Frameworks, Services } from '@wdio/types'
-import type { Testrunner } from '@wdio/types/build/Options'
+import type { Capabilities, Frameworks, Options, Services } from '@wdio/types'
 import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { argv, platform } from 'node:process'
+import { argv, env, platform } from 'node:process'
 import { v5 as uuidv5 } from 'uuid'
 
 type AfterScenario = NonNullable<
@@ -34,6 +33,7 @@ export default class RerunService implements Services.ServiceInstance {
     commandPrefix: string
     customParameters: string
     specFile: string
+    disabled: boolean
 
     constructor(options: RerunServiceOptions = {}) {
         const {
@@ -52,12 +52,16 @@ export default class RerunService implements Services.ServiceInstance {
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
+        this.disabled = env['DISABLE_RERUN'] === 'true'
     }
 
     async before(
         _capabilities: Capabilities.RemoteCapability,
         specs: string[],
     ) {
+        if (this.disabled) {
+            return
+        }
         this.specFile = specs[0] ?? ''
         // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
         await mkdir(this.rerunDataDir, { recursive: true })
@@ -69,8 +73,11 @@ export default class RerunService implements Services.ServiceInstance {
         _context: any,
         results: Frameworks.TestResult,
     ) {
+        if (this.disabled) {
+            return
+        }
         const { passed } = results
-        const config = browser.config as Testrunner
+        const config = browser.config as Options.Testrunner
         if (passed || config.framework === 'cucumber') {
             return
         }
@@ -89,20 +96,11 @@ export default class RerunService implements Services.ServiceInstance {
 
     // Executed after a Cucumber scenario ends.
     afterScenario(world: World) {
-        const CUCUMBER_STATUS_MAP = [
-            'UNKNOWN',
-            'PASSED',
-            'SKIPPED',
-            'PENDING',
-            'UNDEFINED',
-            'AMBIGUOUS',
-            'FAILED',
-        ]
-        const config = browser.config as Testrunner
-        const status =
-            typeof world.result?.status === 'number'
-                ? CUCUMBER_STATUS_MAP[world.result.status]
-                : world.result?.status
+        if (this.disabled) {
+            return
+        }
+        const config = browser.config as Options.Testrunner
+        const status = world.result?.status
         if (
             config.framework !== 'cucumber' ||
             status === 'PASSED' ||
@@ -134,6 +132,9 @@ export default class RerunService implements Services.ServiceInstance {
     }
 
     async after() {
+        if (this.disabled) {
+            return
+        }
         if (this.nonPassingItems.length === 0) {
             return // console.log('Re-run service did not detect any non-passing scenarios or tests.');
         }
@@ -144,6 +145,9 @@ export default class RerunService implements Services.ServiceInstance {
     }
 
     async onComplete() {
+        if (this.disabled) {
+            return
+        }
         try {
             const files = await readdir(this.rerunDataDir)
             const rerunFiles = files.filter((file) => file.endsWith('.json'))
