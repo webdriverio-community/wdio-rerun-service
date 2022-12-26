@@ -1,14 +1,14 @@
 WebdriverIO Re-run Service
 ==========================
 
-[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/node.js.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/node.js.yml)
+[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
 ![npm](https://img.shields.io/npm/dm/wdio-rerun-service)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/wdio-rerun-service)
 ![GitHub issues](https://img.shields.io/github/issues/webdriverio-community/wdio-rerun-service)
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
-_NOTE_: Cucumber Framework users running WebdriverIO versions `5.x.x` and `6.x.x` should use version `1.6.x`. If you are on `7.x.x`, use version `1.7.x` version of this service. If you are on the latest major version of `8.x.x`, use the latest `2.x.x` version of this service.
+_NOTE_: Users running WebdriverIO versions `5.x.x` and `6.x.x` should use version `1.6.x`. If you are on `7.x.x`, use version `1.7.x` version of this service. If you are on the latest major version of `8.x.x`, use the latest `2.x.x` version of this service.
 
 ## Re-run vs. Retry
 
