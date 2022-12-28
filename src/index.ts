@@ -3,7 +3,7 @@ import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { argv, env, platform } from 'node:process'
-import { v5 as uuidv5 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 type AfterScenario = NonNullable<
     WebdriverIO.HookFunctionExtension['afterScenario']
@@ -65,7 +65,7 @@ export default class RerunService implements Services.ServiceInstance {
         this.specFile = specs[0] ?? ''
         // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
         await mkdir(this.rerunDataDir, { recursive: true })
-        this.serviceWorkerId = uuidv5(String(Date.now()), uuidv5.DNS)
+        this.serviceWorkerId = uuidv4()
     }
 
     afterTest(
