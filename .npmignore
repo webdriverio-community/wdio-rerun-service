@@ -1,11 +1,7 @@
+.*
 src/
 tests/
-coverage/
-.idea/
 results/
-rerun.sh
-rerun.bat
-tsconfig.json
-tsconfig.eslint.json
-.eslintrc.json
-.prettierrc.json
+coverage/
+tsconfig.*
+rerun*
