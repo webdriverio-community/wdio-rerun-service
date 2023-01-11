@@ -5,10 +5,17 @@ name: wdio-rerun-service CI
 
 on:
   push:
-    branches: [ master, main ]
+    branches:
+      - master
+      - main
+      - v7
+      - lts
   pull_request:
-    branches: [ master, main ]
-
+    branches:
+      - master
+      - main
+      - v7
+      - lts
 jobs:
   build:
     runs-on: ubuntu-latest
