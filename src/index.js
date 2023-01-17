@@ -41,11 +41,30 @@ class RerunService {
     afterScenario(world, result, context) {
         const CUCUMBER_STATUS_MAP = ['UNKNOWN', 'PASSED', 'SKIPPED', 'PENDING', 'UNDEFINED', 'AMBIGUOUS', 'FAILED']
         const status = typeof world.result.status === 'number' ? CUCUMBER_STATUS_MAP[world.result.status || 0] : world.result.status;
-        const scenarioLineNumber = world.gherkinDocument.feature.children.filter(child => {
-            if (child.scenario) {
-                return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
-            }
-        })[0].scenario.location.line;
+        const scenario = world.gherkinDocument.feature.children.filter(child => {
+          if (child.scenario) {
+            return child.scenario && world.pickle.astNodeIds.includes(child.scenario.id.toString());
+          }
+        })[0].scenario;
+    
+        let scenarioLineNumber = scenario.location.line;
+    
+        if (scenario.examples && scenario.examples.length > 0) {
+          let exampleLineNumber = 0;
+          scenario.examples.find(example =>
+            example.tableBody.find(row => {
+              if (row.id === world.pickle.astNodeIds[1]) {
+                exampleLineNumber = row.location.line;
+                return true;
+              } else {
+                return false;
+              }
+            })
+          )
+    
+          scenarioLineNumber = exampleLineNumber;
+        }
+        
         if (browser.config.framework === 'cucumber' && (status !== 'PASSED' && status !== 'SKIPPED')) {
             const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`;
             const tagsList = world.pickle.tags.map(tag => tag.name);
