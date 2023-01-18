@@ -108,27 +108,27 @@ export default class RerunService implements Services.ServiceInstance {
         ) {
             return
         }
-        const scenario =
-            world.gherkinDocument.feature?.children.filter((child) =>
+        const scenario = world.gherkinDocument.feature?.children.filter(
+            (child) =>
                 child.scenario
                     ? world.pickle.astNodeIds.includes(
                           child.scenario.id.toString(),
                       )
                     : false,
-            )?.[0]?.scenario ?? 0
+        )?.[0]?.scenario
 
-        let scenarioLineNumber = scenario.location.line
+        let scenarioLineNumber = scenario?.location.line ?? 0
 
-        if (scenario.examples?.length > 0) {
+        if (scenario && scenario.examples.length > 0) {
             let exampleLineNumber = 0
-            scenario.examples.find(example =>
-                example.tableBody.find(row => {
+            scenario.examples.find((example) =>
+                example.tableBody.find((row) => {
                     if (row.id === world.pickle.astNodeIds[1]) {
                         exampleLineNumber = row.location.line
                         return true
                     }
                     return false
-                })
+                }),
             )
 
             scenarioLineNumber = exampleLineNumber
