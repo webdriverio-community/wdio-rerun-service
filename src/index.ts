@@ -77,7 +77,7 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         const { passed } = results
-        const config = browser.config as Options.Testrunner
+        const config = browser.options as Options.Testrunner
         if (passed || config.framework === 'cucumber') {
             return
         }
@@ -99,7 +99,7 @@ export default class RerunService implements Services.ServiceInstance {
         if (this.disabled) {
             return
         }
-        const config = browser.config as Options.Testrunner
+        const config = browser.options as Options.Testrunner
         const status = world.result?.status
         if (
             config.framework !== 'cucumber' ||
