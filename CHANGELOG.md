@@ -11,6 +11,10 @@
 
 _Note: Gaps between patch versions are faulty, broken or test releases._
 
+## v1.7.8 (2023-01-18)
+#### :bug: Bug Fix
+* Service release; no new features/fixes
+
 ## v1.7.7 (2023-01-18)
 #### :bug: Bug Fix
 * [[#53]](https://github.com/webdriverio-community/wdio-rerun-service/pull/53) Generate failure line number at Example data line rather than the Scenario Outline line ([@wenzhhu](https://github.com/wenzhhu))
