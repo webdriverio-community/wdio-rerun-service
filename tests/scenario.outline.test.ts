@@ -11,7 +11,7 @@ describe('wdio-rerurn-service', () => {
     const specFile = ['tests/scenario.outline.feature']
 
     const cucumberBrowser: WebdriverIO.Browser = {
-        config: { framework: 'cucumber' },
+        options: { framework: 'cucumber' },
     } as WebdriverIO.Browser
 
     it('should generate line number at the row of example data', async () => {
