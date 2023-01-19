@@ -13,7 +13,7 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
-## v2.0.5 (2023-1-19)
+## v2.0.6 (2023-1-19)
 #### :bug: Bug Fix
 * [[#56]](https://github.com/webdriverio-community/wdio-rerun-service/pull/56) [v8] Generate failure line number at Example data line ([@cesar-rivera](https://github.com/cesar-rivera), [@wenzhhu](https://github.com/wenzhhu))
 * [[#58]](https://github.com/webdriverio-community/wdio-rerun-service/pull/58) Use correct property when determining framework ([@esaari](https://github.com/esaari))
