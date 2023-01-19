@@ -36,10 +36,10 @@ describe('wdio-rerun-service', () => {
     } satisfies ITestCaseHookParameter
 
     const cucumberBrowser: WebdriverIO.Browser = {
-        config: { framework: 'cucumber' },
+        options: { framework: 'cucumber' },
     } as WebdriverIO.Browser
     const mochaBrowser = {
-        config: { framework: 'mocha' },
+        options: { framework: 'mocha' },
     } as WebdriverIO.Browser
 
     const rerunScriptFile = platform === 'win32' ? 'rerun.bat' : 'rerun.sh'
