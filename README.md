@@ -64,7 +64,7 @@ Every teams re-run needs will differ execution could be based on any number of f
 
 ##### attemptRerun.sh
 Executes `./rerun.sh` if less than 25 failures have been found in last execution of WebDriver.IO.
-```
+```sh
 #!/usr/bin/env bash
 MAX_TO_RERUN=${MAX_TO_RERUN:=25}
 if [ -f "rerun.sh" ]; then
@@ -82,17 +82,17 @@ fi
 ```
 ##### Bash Re-run Command
 Execute in shell
-```
+```sh
 . ./attemptRerun.sh
 ```
 ##### Integrate with NPM
 Add task in `package.json`
-```
+```sh
 "attempt-rerun": ". ./attemptRerun.sh"
 ````
 ##### NPM Re-run Command
 Execute in shell
-```
+```sh
 npm run attempt-rerun
 ```
 
