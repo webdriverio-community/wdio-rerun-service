@@ -54,6 +54,48 @@ export const config = {
 
 Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted.html)
 
+## Usage
+By design, this service does not automatically re-run failed tests.
+
+After WebDriver.IO has completed execution, if failures or unstable tests/scenarios are found a file will be at **rerunScriptPath** or by default `./rerun.sh` (see Configuration).
+
+### Conditional Re-run
+Every teams re-run needs will differ execution could be based on any number of factors, this is an example of how to accomplish a conditional re-run based on # of failures.
+
+##### attemptRerun.sh
+Executes `./rerun.sh` if less than 25 failures have been found in last execution of WebDriver.IO.
+```sh
+#!/usr/bin/env bash
+MAX_TO_RERUN=${MAX_TO_RERUN:=25}
+if [ -f "rerun.sh" ]; then
+  echo "[rerun.sh] file exits, checking total failures."
+  NUMBER_OF_FAILURES=$(grep "\-\-spec" -o rerun.sh | wc -l | xargs)
+	if [ "$MAX_TO_RERUN" -gt "$NUMBER_OF_FAILURES" ]; then
+    echo "Re-running $NUMBER_OF_FAILURES failed scenarios!"
+    . ./rerun.sh
+	else
+    echo "Skipping re-run, expected < $MAX_TO_RERUN failures to qualify execution for re-run, got $NUMBER_OF_FAILURES failures."
+	fi
+else
+  echo "No [rerun.sh] file exits, skipping re-run!"
+fi
+```
+##### Bash Re-run Command
+Execute in shell
+```sh
+. ./attemptRerun.sh
+```
+##### Integrate with NPM
+Add task in `package.json`
+```sh
+"attempt-rerun": ". ./attemptRerun.sh"
+````
+##### NPM Re-run Command
+Execute in shell
+```sh
+npm run attempt-rerun
+```
+
 ## Configuration
 
 The following options may be added to the wdio.conf.js file. To define options for the service you need to add the service to the `services` list in the following way:
@@ -178,3 +220,4 @@ export const config = {
 }
 ```
 ----
+
