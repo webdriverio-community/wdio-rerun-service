@@ -13,6 +13,17 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v2.0.7 (2023-7-24)
+#### :bug: Bug Fix
+* [[#67]](https://github.com/webdriverio-community/wdio-rerun-service/pull/67) Update some dependencies ([@esaari](https://github.com/esaari))
+
+#### :memo: Documentation
+* [[#63]](https://github.com/webdriverio-community/wdio-rerun-service/pull/63) Update Readme ([@mikesalvia](https://github.com/mikesalvia))
+
+#### Committers: 3
+- [@esaari](https://github.com/esaari)
+- [@mikesalvia](https://github.com/mikesalvia)
+
 ## v2.0.6 (2023-1-19)
 #### :bug: Bug Fix
 * [[#56]](https://github.com/webdriverio-community/wdio-rerun-service/pull/56) [v8] Generate failure line number at Example data line ([@cesar-rivera](https://github.com/cesar-rivera), [@wenzhhu](https://github.com/wenzhhu))
