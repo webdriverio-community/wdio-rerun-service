@@ -219,5 +219,28 @@ export const config = {
     // ...
 }
 ```
+
+### allowMultipleReruns
+Allows multiple retries when set to true. 
+This will clear the configured `rerunDataDir` before a test run and set the environment variable `DISABLE_RERUN = false` in the created rerun script.
+
+Type: `boolean`
+
+Default: `false`
+
+Example:
+```js
+import RerunService from 'wdio-rerun-service';
+export const config = {
+    // ...
+    services: [
+        [RerunService, {
+            allowMultipleReruns: true
+        }]
+    ],
+    // ...
+}
+```
+
 ----
 

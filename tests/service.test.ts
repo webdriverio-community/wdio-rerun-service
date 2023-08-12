@@ -2,7 +2,7 @@ import type { ITestCaseHookParameter } from '@cucumber/cucumber'
 import { TestStepResultStatus } from '@cucumber/messages'
 import { describe, expect, it } from '@jest/globals'
 import minimist from 'minimist'
-import { readFile, rm } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { argv, platform } from 'node:process'
@@ -131,6 +131,22 @@ describe('wdio-rerun-service', () => {
             expect(service.commandPrefix).toEqual('')
             expect(service.customParameters).toEqual('--foobar')
         })
+
+        it('can configure allowMultipleReruns', async () => {
+            const service = new RerunService({
+                allowMultipleReruns: true,
+            })
+            await expect(
+                service.before({}, ['features/sample.feature']),
+            ).resolves.toBeUndefined()
+            expect(service.ignoredTags).toEqual([])
+            expect(service.rerunDataDir).toEqual('./results/rerun')
+            expect(service.rerunScriptPath).toEqual(rerunScriptFile)
+            expect(service.commandPrefix).toEqual('')
+            expect(service.customParameters).toEqual('')
+            expect(service.disabled).toEqual(false)
+            expect(service.allowMultipleReruns).toEqual(true)
+        })
     })
 
     describe('before', () => {
@@ -143,6 +159,33 @@ describe('wdio-rerun-service', () => {
         it('should not throw an exception when empty specFile parameter', async () => {
             const service = new RerunService()
             await expect(service.before({}, [])).resolves.toBeUndefined()
+        })
+
+        it('should clear the rerun directory when multiple reruns are allowed', async () => {
+            await mkdir('./results/rerun', { recursive: true })
+            await writeFile('./results/rerun/1.txt', 'test')
+            const service = new RerunService({ allowMultipleReruns: true })
+            await service.before({}, specFile)
+            const filesInDir = await readdir('./results/rerun')
+            expect(filesInDir).toHaveLength(0)
+        })
+
+        it('should not clear the rerun directory when multiple reruns are not allowed', async () => {
+            await mkdir('./results/rerun', { recursive: true })
+            await writeFile('./results/rerun/1.txt', 'test')
+            const service = new RerunService({ allowMultipleReruns: false })
+            await service.before({}, specFile)
+            const filesInDir = await readdir('./results/rerun')
+            expect(filesInDir).toHaveLength(1)
+        })
+
+        it('should not clear the rerun directory when rerun is disabled', async () => {
+            await mkdir('./results/rerun', { recursive: true })
+            await writeFile('./results/rerun/1.txt', 'test')
+            const service = new RerunService()
+            await service.before({}, specFile)
+            const filesInDir = await readdir('./results/rerun')
+            expect(filesInDir).toHaveLength(1)
         })
     })
 
@@ -387,6 +430,32 @@ describe('wdio-rerun-service', () => {
             expect(err).toBeDefined()
             expect(err?.code).toBe('ENOENT')
             expect(rerunScript).toBeUndefined()
+        })
+
+        it('should add failed specs to rerun script if DISABLE_RERUN is set to false', async () => {
+            process.env['DISABLE_RERUN'] = 'false'
+            const rerunDataDir = join(tmpdir(), 'rerun-data')
+            const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+                allowMultipleReruns: true,
+            })
+            await service.before({}, [])
+            service.nonPassingItems = nonPassingItemsMocha
+            await service.after()
+            await service.onComplete()
+            const disableRerun =
+                platform === 'win32'
+                    ? 'set DISABLE_RERUN=false &&'
+                    : 'DISABLE_RERUN=false'
+            const rerunScript = await readFile(rerunScriptPath, 'utf8')
+            const parsedArgs = minimist(argv.slice(2))
+            const args = parsedArgs._[0] ?? ''
+            expect(rerunScript).toBe(
+                `${disableRerun} npx wdio ${args} --spec=tests/sample1.test.ts --spec=tests/sample2.test.ts`,
+            )
+            await rm(rerunDataDir, { recursive: true, force: true })
         })
     })
 })
