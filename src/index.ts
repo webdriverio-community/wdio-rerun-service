@@ -1,6 +1,6 @@
 import type { Capabilities, Frameworks, Options, Services } from '@wdio/types'
 import minimist from 'minimist'
-import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { argv, env, platform } from 'node:process'
 import { v4 as uuidv4 } from 'uuid'
@@ -22,6 +22,7 @@ interface RerunServiceOptions {
     rerunScriptPath?: string
     commandPrefix?: string
     customParameters?: string
+    allowMultipleReruns?: boolean
 }
 
 export default class RerunService implements Services.ServiceInstance {
@@ -34,6 +35,7 @@ export default class RerunService implements Services.ServiceInstance {
     customParameters: string
     specFile: string
     disabled: boolean
+    allowMultipleReruns: boolean
 
     constructor(options: RerunServiceOptions = {}) {
         const {
@@ -42,6 +44,7 @@ export default class RerunService implements Services.ServiceInstance {
             rerunScriptPath,
             commandPrefix,
             customParameters,
+            allowMultipleReruns,
         } = options
         this.nonPassingItems = []
         this.serviceWorkerId = ''
@@ -52,7 +55,11 @@ export default class RerunService implements Services.ServiceInstance {
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
-        this.disabled = env['DISABLE_RERUN'] === 'true'
+        this.disabled =
+            allowMultipleReruns === true
+                ? !allowMultipleReruns
+                : env['DISABLE_RERUN'] === 'true'
+        this.allowMultipleReruns = allowMultipleReruns ?? false
     }
 
     async before(
@@ -63,7 +70,12 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         this.specFile = specs[0] ?? ''
-        // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
+        // console.log(
+        //     `Re-run service is activated. Data directory: ${this.rerunDataDir}`,
+        // )
+        if (this.allowMultipleReruns) {
+            await rm(this.rerunDataDir, { recursive: true, force: true });
+        }
         await mkdir(this.rerunDataDir, { recursive: true })
         this.serviceWorkerId = uuidv4()
     }
@@ -175,10 +187,12 @@ export default class RerunService implements Services.ServiceInstance {
             const parsedArgs = minimist(argv.slice(2))
             const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
+            const disableRerunValue = String(!this.allowMultipleReruns)
             const disableRerun =
                 platform === 'win32'
-                    ? 'set DISABLE_RERUN=true &&'
-                    : 'DISABLE_RERUN=true'
+                    ? `set DISABLE_RERUN=${disableRerunValue} &&`
+                    : `DISABLE_RERUN=${disableRerunValue}`
+
             let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`
             const failureLocations = new Set<string>()
             for (const file of rerunFiles) {
