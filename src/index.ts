@@ -1,3 +1,5 @@
+import type { Logger } from '@wdio/logger'
+import logger from '@wdio/logger'
 import type { Capabilities, Frameworks, Options, Services } from '@wdio/types'
 import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
@@ -34,6 +36,7 @@ export default class RerunService implements Services.ServiceInstance {
     customParameters: string
     specFile: string
     disabled: boolean
+    log: Logger
 
     constructor(options: RerunServiceOptions = {}) {
         const {
@@ -53,6 +56,7 @@ export default class RerunService implements Services.ServiceInstance {
         this.customParameters = customParameters ?? ''
         this.specFile = ''
         this.disabled = env['DISABLE_RERUN'] === 'true'
+        this.log = logger('@wdio/wdio-rerun-service')
     }
 
     async before(
@@ -63,7 +67,9 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         this.specFile = specs[0] ?? ''
-        // console.log(`Re-run service is activated. Data directory: ${this.rerunDataDir}`);
+        this.log.debug(
+            `Re-run service is activated. Data directory: ${this.rerunDataDir}`,
+        )
         await mkdir(this.rerunDataDir, { recursive: true })
         this.serviceWorkerId = uuidv4()
     }
@@ -81,8 +87,8 @@ export default class RerunService implements Services.ServiceInstance {
         if (passed || config.framework === 'cucumber') {
             return
         }
-        // console.log(`Re-run service is inspecting non-passing test.`);
-        // console.log(`Test location: ${this.specFile}`);
+        this.log.debug(`Re-run service is inspecting non-passing test.`)
+        this.log.debug(`Test location: ${this.specFile}`)
         const error = results.error as Error | undefined
         if (error?.message) {
             this.nonPassingItems.push({
@@ -90,7 +96,9 @@ export default class RerunService implements Services.ServiceInstance {
                 failure: error.message,
             })
         } else {
-            // console.log("The non-passing test did not contain any error message, it could not be added for re-run.")
+            this.log.debug(
+                'The non-passing test did not contain any error message, it could not be added for re-run.',
+            )
         }
     }
 
@@ -154,7 +162,10 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         if (this.nonPassingItems.length === 0) {
-            return // console.log('Re-run service did not detect any non-passing scenarios or tests.');
+            this.log.debug(
+                'Re-run service did not detect any non-passing scenarios or tests.',
+            )
+            return
         }
         await writeFile(
             join(this.rerunDataDir, `rerun-${this.serviceWorkerId}.json`),
@@ -193,9 +204,15 @@ export default class RerunService implements Services.ServiceInstance {
                 rerunCommand += ` --spec=${failureLocation}`
             })
             await writeFile(this.rerunScriptPath, rerunCommand, { mode: 0o755 })
-            // console.log(`Re-run script has been generated @ ${this.rerunScriptPath}`);
+            this.log.debug(
+                `Re-run script has been generated @ ${this.rerunScriptPath}`,
+            )
         } catch (err) {
-            // console.log(`Re-run service failed to generate re-run script: ${err}`);
+            this.log.debug(
+                `Re-run service failed to generate re-run script: ${JSON.stringify(
+                    err,
+                )}`,
+            )
         }
     }
 }
