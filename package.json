@@ -84,7 +84,7 @@
     "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@types/minimist": "^1.2.2",
     "@types/node": "^18.11.16",
-    "@types/uuid": "^9.0.0",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^5.46.1",
     "@typescript-eslint/parser": "^5.46.1",
     "@wdio/cucumber-framework": "^8.13.9",
