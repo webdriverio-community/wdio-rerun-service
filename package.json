@@ -76,7 +76,7 @@
     "@wdio/logger": "^8.11.0",
     "@wdio/types": "^8.0.11",
     "minimist": "^1.2.7",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",
