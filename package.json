@@ -1,8 +1,11 @@
 {
   "name": "wdio-rerun-service",
-  "version": "2.0.7",
-  "description": "A WebdriverIO service to track and prepare for re-running failing or flaky Jasmine/Mocha tests or Cucumber Scenarios.",
-  "author": "Mike Salvia <mike.salvia@icloud.com>",
+  "version": "2.1.0",
+  "description": "A WebdriverIO service to track and stage for re-running failed or flaky Jasmine/Mocha tests or Cucumber Scenarios.",
+  "authors": [
+    "Mike Salvia <mike.salvia@icloud.com>",
+    "Eric Saari <esaari@gmail.com>"
+  ],
   "homepage": "https://github.com/webdriverio-community/wdio-rerun-service",
   "license": "MIT",
   "publishConfig": {
@@ -25,7 +28,7 @@
     }
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=22.19.0"
   },
   "scripts": {
     "build": "run-s clean compile",
@@ -50,24 +53,43 @@
     "url": "git://github.com/webdriverio-community/wdio-rerun-service.git"
   },
   "keywords": [
-    "webdriver",
-    "webdriverio",
+    "automation",
+    "auto-rerun",
+    "bdd",
+    "ci",
+    "continuous-integration",
+    "cucumber",
+    "cucumberjs",
+    "flaky",
+    "flaky-tests",
+    "gherkin",
+    "jasmine",
+    "jasmine-tests",
+    "javascript",
+    "javascript-testing",
+    "mocha",
+    "mocha-tests",
+    "nodejs",
+    "parallel-testing",
+    "re-run",
+    "rerun",
+    "rerun-failures",
+    "retry",
+    "retry-failures",
+    "retry-runner",
+    "scenario",
+    "selenium",
+    "test",
+    "test-retry",
+    "tests",
+    "typescript",
     "wdio",
     "wdio-service",
-    "rerun",
-    "re-run",
-    "retry",
-    "test",
-    "tests",
-    "scenario",
-    "cucumber",
-    "mocha",
-    "jasmine",
-    "flaky",
-    "selenium",
-    "node",
-    "automation",
-    "javascript"
+    "wdio-service-plugin",
+    "webdriver",
+    "webdriver.io",
+    "webdriverio",
+    "webdriverio-plugin"
   ],
   "bugs": {
     "url": "https://github.com/webdriverio-community/wdio-rerun-service/issues"
