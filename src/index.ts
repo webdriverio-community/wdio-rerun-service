@@ -103,7 +103,7 @@ export default class RerunService implements Services.ServiceInstance {
     }
 
     // Executed after a Cucumber scenario ends.
-    afterScenario(world: World) {
+    async afterScenario(world: World) {
         if (this.disabled) {
             return
         }
@@ -116,34 +116,50 @@ export default class RerunService implements Services.ServiceInstance {
         ) {
             return
         }
-        const scenario = world.gherkinDocument.feature?.children.filter(
-            (child) =>
-                child.scenario
-                    ? world.pickle.astNodeIds.includes(
-                          child.scenario.id.toString(),
-                      )
-                    : false,
-        )?.[0]?.scenario
 
-        let scenarioLineNumber = scenario?.location.line ?? 0
+        const { gherkinDocument, pickle } = world;
+        const featureChildren = gherkinDocument.feature?.children ?? [];
+        
+        // Locate the matching scenario by searching feature children
+        // Scenarios can be at top-level OR nested within Rule blocks
+        const findMatchingScenario = () => {
+            for (const featureChild of featureChildren) {
+                // Direct scenario under feature
+                if (featureChild.scenario) {
+                    if (pickle.astNodeIds.includes(featureChild.scenario.id)) {
+                        return featureChild.scenario;
+                    }
+                }
+                // Scenario nested inside a Rule block
+                if (featureChild.rule?.children) {
+                    const ruleScenario = featureChild.rule.children.find(
+                        (rc) => rc.scenario && pickle.astNodeIds.includes(rc.scenario.id)
+                    )?.scenario;
+                    if (ruleScenario) return ruleScenario;
+                }
+            }
+            return undefined;
+        };
+        
+        const scenario = findMatchingScenario();
+        let scenarioLineNumber = scenario?.location?.line ?? 0
 
         if (scenario && scenario.examples.length > 0) {
             let exampleLineNumber = 0
             scenario.examples.find((example) =>
                 example.tableBody.find((row) => {
-                    if (row.id === world.pickle.astNodeIds[1]) {
+                    if (row.id === pickle.astNodeIds[1]) {
                         exampleLineNumber = row.location.line
                         return true
                     }
                     return false
                 }),
             )
-
             scenarioLineNumber = exampleLineNumber
         }
 
-        const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`
-        const tagsList = world.pickle.tags.map((tag) => tag.name)
+        const scenarioLocation = `${pickle.uri}:${scenarioLineNumber}`
+        const tagsList = pickle.tags.map((tag) => tag.name)
         if (
             !Array.isArray(this.ignoredTags) ||
             !tagsList.some((ignoredTag) =>
