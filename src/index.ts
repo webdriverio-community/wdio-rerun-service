@@ -1,6 +1,6 @@
 import type { Logger } from '@wdio/logger'
 import logger from '@wdio/logger'
-import type { Capabilities, Frameworks, Options, Services } from '@wdio/types'
+import type { Frameworks, Options, Services } from '@wdio/types'
 import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -60,7 +60,7 @@ export default class RerunService implements Services.ServiceInstance {
     }
 
     async before(
-        _capabilities: Capabilities.RemoteCapability,
+        _capabilities: WebdriverIO.Capabilities,
         specs: string[],
     ) {
         if (this.disabled) {
