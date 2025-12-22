@@ -1,0 +1,68 @@
+{
+    "gherkinDocument": {
+        "feature": {
+            "tags": [],
+            "location": {
+                "line": 1,
+                "column": 1
+            },
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Malformed scenario test",
+            "description": "  This feature is used to test edge cases where scenario matching fails",
+            "children": [
+                {
+                    "scenario": {
+                        "id": "valid-scenario-id",
+                        "tags": [],
+                        "location": {
+                            "line": 4,
+                            "column": 3
+                        },
+                        "keyword": "Scenario",
+                        "name": "This scenario will not be found",
+                        "description": "",
+                        "steps": [
+                            {
+                                "id": "step-1",
+                                "location": {
+                                    "line": 5,
+                                    "column": 5
+                                },
+                                "keyword": "Given ",
+                                "text": "I have a step"
+                            }
+                        ],
+                        "examples": []
+                    }
+                }
+            ]
+        },
+        "comments": [],
+        "uri": "/path/to/features/malformed-scenario.feature"
+    },
+    "pickle": {
+        "id": "pickle-id",
+        "uri": "/path/to/features/malformed-scenario.feature",
+        "name": "This scenario will not be found",
+        "language": "en",
+        "steps": [
+            {
+                "text": "I have a step",
+                "id": "pickle-step-1",
+                "astNodeIds": ["step-1"]
+            }
+        ],
+        "tags": [],
+        "astNodeIds": ["non-existent-scenario-id"]
+    },
+    "result": {
+        "status": 5,
+        "duration": {
+            "seconds": 0,
+            "nanos": 1000000
+        },
+        "message": "Scenario not found in gherkin document"
+    },
+    "testCaseStartedId": "test-case-id"
+}

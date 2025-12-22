@@ -1,0 +1,143 @@
+{
+    "gherkinDocument": {
+        "feature": {
+            "tags": [
+                {
+                    "location": {
+                        "line": 1,
+                        "column": 1
+                    },
+                    "name": "@tag10",
+                    "id": "5"
+                }
+            ],
+            "location": {
+                "line": 2,
+                "column": 1
+            },
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Generate line number at Example data line of the failing case rather than the Scenario Outline line",
+            "description": "  As a rerun service user\n  I want to gnerate line number at Example data line of the failing case rather than the Scenario Outline line\n  So that I can rerun the failing scenario only ",
+            "children": [
+                {
+                    "scenario": {
+                        "id": "4",
+                        "tags": [],
+                        "location": {
+                            "line": 7,
+                            "column": 3
+                        },
+                        "keyword": "Scenario Outline",
+                        "name": "This is a scenario outline",
+                        "description": "",
+                        "steps": [
+                            {
+                                "id": "0",
+                                "location": {
+                                    "line": 8,
+                                    "column": 5
+                                },
+                                "keyword": "And ",
+                                "text": "I use the \"<testData>\" for \"<testCase>\""
+                            }
+                        ],
+                        "examples": [
+                            {
+                                "id": "3",
+                                "tags": [],
+                                "location": {
+                                    "line": 10,
+                                    "column": 5
+                                },
+                                "keyword": "Examples",
+                                "name": "",
+                                "description": "",
+                                "tableHeader": {
+                                    "id": "1",
+                                    "location": {
+                                        "line": 11,
+                                        "column": 7
+                                    },
+                                    "cells": [
+                                        {
+                                            "location": {
+                                                "line": 11,
+                                                "column": 9
+                                            },
+                                            "value": "testCase"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 11,
+                                                "column": 20
+                                            },
+                                            "value": "testData"
+                                        }
+                                    ]
+                                },
+                                "tableBody": [
+                                    {
+                                        "id": "2",
+                                        "location": {
+                                            "line": 12,
+                                            "column": 7
+                                        },
+                                        "cells": [
+                                            {
+                                                "location": {
+                                                    "line": 12,
+                                                    "column": 9
+                                                },
+                                                "value": "case1"
+                                            },
+                                            {
+                                                "location": {
+                                                    "line": 12,
+                                                    "column": 20
+                                                },
+                                                "value": "value1"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "comments": [],
+        "uri": "tests/scenario.outline.feature"
+    },
+    "pickle": {
+        "id": "7",
+        "uri": "tests/scenario.outline.feature",
+        "astNodeIds": ["4", "2"],
+        "name": "This is a scenario outline",
+        "language": "en",
+        "steps": [
+            {
+                "id": "6",
+                "text": "I use the \"value1\" for \"case1\"",
+                "astNodeIds": ["0", "2"],
+                "keyword": "And "
+            }
+        ],
+        "tags": [
+            {
+                "name": "@tag10",
+                "astNodeId": "5"
+            }
+        ]
+    },
+    "testCaseStartedId": "276",
+    "result": {
+        "duration": {
+            "seconds": 0,
+            "nanos": 1064330
+        },
+        "status": "FAILED",
+        "message": "function has 0 arguments, should have 2 (if synchronous or returning a promise) or 3 (if accepting a callback)"
+    }
+}

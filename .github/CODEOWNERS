@@ -1,0 +1,4 @@
+# Default code owners for wdio-rerun-service
+# These users will be automatically requested for review on PRs
+
+* @esaari

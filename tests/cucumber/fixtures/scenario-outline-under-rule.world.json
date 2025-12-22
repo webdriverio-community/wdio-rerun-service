@@ -1,0 +1,253 @@
+{
+    "gherkinDocument": {
+        "comments": [],
+        "feature": {
+            "location": {
+                "line": 2,
+                "column": 1
+            },
+            "tags": [
+                {
+                    "location": {
+                        "line": 1,
+                        "column": 1
+                    },
+                    "name": "@feature-tag",
+                    "id": "1"
+                }
+            ],
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Generate line number for Scenario Outlines nested under Rules",
+            "description": "  As a rerun service user\n  I want to generate line numbers for scenario outlines inside Rule blocks\n  So that I can rerun failing cases with specific example data",
+            "children": [
+                {
+                    "rule": {
+                        "location": {
+                            "line": 7,
+                            "column": 3
+                        },
+                        "keyword": "Rule",
+                        "name": "Example data validation",
+                        "description": "",
+                        "tags": [],
+                        "id": "2",
+                        "children": [
+                            {
+                                "scenario": {
+                                    "location": {
+                                        "line": 8,
+                                        "column": 5
+                                    },
+                                    "tags": [],
+                                    "keyword": "Scenario Outline",
+                                    "name": "Testing with different data sets",
+                                    "description": "",
+                                    "steps": [
+                                        {
+                                            "location": {
+                                                "line": 9,
+                                                "column": 7
+                                            },
+                                            "keyword": "Given ",
+                                            "text": "I use the \"<testData>\" for \"<testCase>\"",
+                                            "id": "3"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 10,
+                                                "column": 7
+                                            },
+                                            "keyword": "Then ",
+                                            "text": "I validate the result",
+                                            "id": "4"
+                                        }
+                                    ],
+                                    "examples": [
+                                        {
+                                            "location": {
+                                                "line": 12,
+                                                "column": 7
+                                            },
+                                            "keyword": "Examples",
+                                            "name": "Primary data",
+                                            "description": "",
+                                            "tags": [],
+                                            "tableHeader": {
+                                                "location": {
+                                                    "line": 13,
+                                                    "column": 9
+                                                },
+                                                "cells": [
+                                                    {
+                                                        "location": {
+                                                            "line": 13,
+                                                            "column": 11
+                                                        },
+                                                        "value": "testCase"
+                                                    },
+                                                    {
+                                                        "location": {
+                                                            "line": 13,
+                                                            "column": 22
+                                                        },
+                                                        "value": "testData"
+                                                    }
+                                                ],
+                                                "id": "5"
+                                            },
+                                            "tableBody": [
+                                                {
+                                                    "location": {
+                                                        "line": 14,
+                                                        "column": 9
+                                                    },
+                                                    "cells": [
+                                                        {
+                                                            "location": {
+                                                                "line": 14,
+                                                                "column": 11
+                                                            },
+                                                            "value": "case1"
+                                                        },
+                                                        {
+                                                            "location": {
+                                                                "line": 14,
+                                                                "column": 22
+                                                            },
+                                                            "value": "value1"
+                                                        }
+                                                    ],
+                                                    "id": "6"
+                                                },
+                                                {
+                                                    "location": {
+                                                        "line": 15,
+                                                        "column": 9
+                                                    },
+                                                    "cells": [
+                                                        {
+                                                            "location": {
+                                                                "line": 15,
+                                                                "column": 11
+                                                            },
+                                                            "value": "case2"
+                                                        },
+                                                        {
+                                                            "location": {
+                                                                "line": 15,
+                                                                "column": 22
+                                                            },
+                                                            "value": "value2"
+                                                        }
+                                                    ],
+                                                    "id": "7"
+                                                }
+                                            ],
+                                            "id": "8"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 17,
+                                                "column": 7
+                                            },
+                                            "keyword": "Examples",
+                                            "name": "Secondary data",
+                                            "description": "",
+                                            "tags": [],
+                                            "tableHeader": {
+                                                "location": {
+                                                    "line": 18,
+                                                    "column": 9
+                                                },
+                                                "cells": [
+                                                    {
+                                                        "location": {
+                                                            "line": 18,
+                                                            "column": 11
+                                                        },
+                                                        "value": "testCase"
+                                                    },
+                                                    {
+                                                        "location": {
+                                                            "line": 18,
+                                                            "column": 22
+                                                        },
+                                                        "value": "testData"
+                                                    }
+                                                ],
+                                                "id": "9"
+                                            },
+                                            "tableBody": [
+                                                {
+                                                    "location": {
+                                                        "line": 19,
+                                                        "column": 9
+                                                    },
+                                                    "cells": [
+                                                        {
+                                                            "location": {
+                                                                "line": 19,
+                                                                "column": 11
+                                                            },
+                                                            "value": "case3"
+                                                        },
+                                                        {
+                                                            "location": {
+                                                                "line": 19,
+                                                                "column": 22
+                                                            },
+                                                            "value": "value3"
+                                                        }
+                                                    ],
+                                                    "id": "10"
+                                                }
+                                            ],
+                                            "id": "11"
+                                        }
+                                    ],
+                                    "id": "12"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "uri": "tests/scenario.outline.rule.feature"
+    },
+    "pickle": {
+        "id": "13",
+        "uri": "tests/scenario.outline.rule.feature",
+        "name": "Testing with different data sets",
+        "language": "en",
+        "steps": [
+            {
+                "text": "I use the \"value3\" for \"case3\"",
+                "id": "14",
+                "astNodeIds": ["3", "10"]
+            },
+            {
+                "text": "I validate the result",
+                "id": "15",
+                "astNodeIds": ["4", "10"]
+            }
+        ],
+        "tags": [
+            {
+                "name": "@feature-tag",
+                "astNodeId": "1"
+            }
+        ],
+        "astNodeIds": ["12", "10"]
+    },
+    "result": {
+        "status": 2,
+        "duration": {
+            "seconds": 1,
+            "nanos": 750000000
+        },
+        "message": "Validation failed"
+    },
+    "testCaseStartedId": "outline-rule-test-id"
+}

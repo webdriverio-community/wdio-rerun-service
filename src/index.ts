@@ -1,6 +1,6 @@
 import type { Logger } from '@wdio/logger'
 import logger from '@wdio/logger'
-import type { Capabilities, Frameworks, Options, Services } from '@wdio/types'
+import type { Frameworks, Options, Services } from '@wdio/types'
 import minimist from 'minimist'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
@@ -24,6 +24,7 @@ interface RerunServiceOptions {
     rerunScriptPath?: string
     commandPrefix?: string
     customParameters?: string
+    platformName?: NodeJS.Platform
 }
 
 export default class RerunService implements Services.ServiceInstance {
@@ -36,6 +37,7 @@ export default class RerunService implements Services.ServiceInstance {
     customParameters: string
     specFile: string
     disabled: boolean
+    platformName: NodeJS.Platform
     log: Logger
 
     constructor(options: RerunServiceOptions = {}) {
@@ -45,13 +47,16 @@ export default class RerunService implements Services.ServiceInstance {
             rerunScriptPath,
             commandPrefix,
             customParameters,
+            platformName,
         } = options
         this.nonPassingItems = []
         this.serviceWorkerId = ''
         this.ignoredTags = ignoredTags ?? []
         this.rerunDataDir = rerunDataDir ?? './results/rerun'
+        this.platformName = platformName ?? platform
         this.rerunScriptPath =
-            rerunScriptPath ?? (platform === 'win32' ? 'rerun.bat' : 'rerun.sh')
+            rerunScriptPath ??
+            (this.platformName === 'win32' ? 'rerun.bat' : 'rerun.sh')
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
@@ -59,10 +64,7 @@ export default class RerunService implements Services.ServiceInstance {
         this.log = logger('@wdio/wdio-rerun-service')
     }
 
-    async before(
-        _capabilities: Capabilities.RemoteCapability,
-        specs: string[],
-    ) {
+    async before(_capabilities: WebdriverIO.Capabilities, specs: string[]) {
         if (this.disabled) {
             return
         }
@@ -108,7 +110,7 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         const config = browser.options as Options.Testrunner
-        const status = world.result?.status
+        const status = world.result?.status as string | undefined
         if (
             config.framework !== 'cucumber' ||
             status === 'PASSED' ||
@@ -116,34 +118,52 @@ export default class RerunService implements Services.ServiceInstance {
         ) {
             return
         }
-        const scenario = world.gherkinDocument.feature?.children.filter(
-            (child) =>
-                child.scenario
-                    ? world.pickle.astNodeIds.includes(
-                          child.scenario.id.toString(),
-                      )
-                    : false,
-        )?.[0]?.scenario
 
+        const { gherkinDocument, pickle } = world
+        const featureChildren = gherkinDocument.feature?.children ?? []
+
+        // Locate the matching scenario by searching feature children
+        // Scenarios can be at top-level OR nested within Rule blocks
+        const findMatchingScenario = () => {
+            for (const featureChild of featureChildren) {
+                // Direct scenario under feature
+                if (featureChild.scenario) {
+                    if (pickle.astNodeIds.includes(featureChild.scenario.id)) {
+                        return featureChild.scenario
+                    }
+                }
+                // Scenario nested inside a Rule block
+                if (featureChild.rule?.children) {
+                    const ruleScenario = featureChild.rule.children.find(
+                        (ruleChild) =>
+                            ruleChild.scenario &&
+                            pickle.astNodeIds.includes(ruleChild.scenario.id),
+                    )?.scenario
+                    if (ruleScenario) return ruleScenario
+                }
+            }
+            return undefined
+        }
+
+        const scenario = findMatchingScenario()
         let scenarioLineNumber = scenario?.location.line ?? 0
 
         if (scenario && scenario.examples.length > 0) {
             let exampleLineNumber = 0
             scenario.examples.find((example) =>
                 example.tableBody.find((row) => {
-                    if (row.id === world.pickle.astNodeIds[1]) {
+                    if (row.id === pickle.astNodeIds[1]) {
                         exampleLineNumber = row.location.line
                         return true
                     }
                     return false
                 }),
             )
-
             scenarioLineNumber = exampleLineNumber
         }
 
-        const scenarioLocation = `${world.pickle.uri}:${scenarioLineNumber}`
-        const tagsList = world.pickle.tags.map((tag) => tag.name)
+        const scenarioLocation = `${pickle.uri}:${scenarioLineNumber}`
+        const tagsList = pickle.tags.map((tag) => tag.name)
         if (
             !Array.isArray(this.ignoredTags) ||
             !tagsList.some((ignoredTag) =>
@@ -187,7 +207,7 @@ export default class RerunService implements Services.ServiceInstance {
             const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
             const disableRerun =
-                platform === 'win32'
+                this.platformName === 'win32'
                     ? 'set DISABLE_RERUN=true &&'
                     : 'DISABLE_RERUN=true'
             let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`

@@ -1,0 +1,275 @@
+{
+    "gherkinDocument": {
+        "comments": [],
+        "feature": {
+            "location": {
+                "line": 2,
+                "column": 1
+            },
+            "tags": [
+                {
+                    "location": {
+                        "line": 1,
+                        "column": 1
+                    },
+                    "name": "@feature-tag",
+                    "id": "1"
+                }
+            ],
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Scenario Outline with Multiple Examples",
+            "description": "  As a rerun service user\n  I want to test scenario outlines with multiple Examples tables\n  So that I can ensure line numbers are captured correctly",
+            "children": [
+                {
+                    "scenario": {
+                        "location": {
+                            "line": 7,
+                            "column": 3
+                        },
+                        "tags": [],
+                        "keyword": "Scenario Outline",
+                        "name": "Check multiple examples",
+                        "description": "",
+                        "steps": [
+                            {
+                                "location": {
+                                    "line": 8,
+                                    "column": 5
+                                },
+                                "keyword": "Given ",
+                                "text": "I have a value \"<value>\"",
+                                "id": "2"
+                            },
+                            {
+                                "location": {
+                                    "line": 9,
+                                    "column": 5
+                                },
+                                "keyword": "When ",
+                                "text": "I process it",
+                                "id": "3"
+                            },
+                            {
+                                "location": {
+                                    "line": 10,
+                                    "column": 5
+                                },
+                                "keyword": "Then ",
+                                "text": "I should get \"<result>\"",
+                                "id": "4"
+                            }
+                        ],
+                        "examples": [
+                            {
+                                "location": {
+                                    "line": 12,
+                                    "column": 5
+                                },
+                                "tags": [],
+                                "keyword": "Examples",
+                                "name": "First set",
+                                "description": "",
+                                "tableHeader": {
+                                    "location": {
+                                        "line": 13,
+                                        "column": 7
+                                    },
+                                    "cells": [
+                                        {
+                                            "location": {
+                                                "line": 13,
+                                                "column": 9
+                                            },
+                                            "value": "value"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 13,
+                                                "column": 17
+                                            },
+                                            "value": "result"
+                                        }
+                                    ],
+                                    "id": "5"
+                                },
+                                "tableBody": [
+                                    {
+                                        "location": {
+                                            "line": 14,
+                                            "column": 7
+                                        },
+                                        "cells": [
+                                            {
+                                                "location": {
+                                                    "line": 14,
+                                                    "column": 9
+                                                },
+                                                "value": "foo"
+                                            },
+                                            {
+                                                "location": {
+                                                    "line": 14,
+                                                    "column": 17
+                                                },
+                                                "value": "FOO"
+                                            }
+                                        ],
+                                        "id": "6"
+                                    },
+                                    {
+                                        "location": {
+                                            "line": 15,
+                                            "column": 7
+                                        },
+                                        "cells": [
+                                            {
+                                                "location": {
+                                                    "line": 15,
+                                                    "column": 9
+                                                },
+                                                "value": "bar"
+                                            },
+                                            {
+                                                "location": {
+                                                    "line": 15,
+                                                    "column": 17
+                                                },
+                                                "value": "BAR"
+                                            }
+                                        ],
+                                        "id": "7"
+                                    }
+                                ],
+                                "id": "8"
+                            },
+                            {
+                                "location": {
+                                    "line": 17,
+                                    "column": 5
+                                },
+                                "tags": [],
+                                "keyword": "Examples",
+                                "name": "Second set",
+                                "description": "",
+                                "tableHeader": {
+                                    "location": {
+                                        "line": 18,
+                                        "column": 7
+                                    },
+                                    "cells": [
+                                        {
+                                            "location": {
+                                                "line": 18,
+                                                "column": 9
+                                            },
+                                            "value": "value"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 18,
+                                                "column": 17
+                                            },
+                                            "value": "result"
+                                        }
+                                    ],
+                                    "id": "9"
+                                },
+                                "tableBody": [
+                                    {
+                                        "location": {
+                                            "line": 19,
+                                            "column": 7
+                                        },
+                                        "cells": [
+                                            {
+                                                "location": {
+                                                    "line": 19,
+                                                    "column": 9
+                                                },
+                                                "value": "baz"
+                                            },
+                                            {
+                                                "location": {
+                                                    "line": 19,
+                                                    "column": 17
+                                                },
+                                                "value": "BAZ"
+                                            }
+                                        ],
+                                        "id": "10"
+                                    },
+                                    {
+                                        "location": {
+                                            "line": 20,
+                                            "column": 7
+                                        },
+                                        "cells": [
+                                            {
+                                                "location": {
+                                                    "line": 20,
+                                                    "column": 9
+                                                },
+                                                "value": "qux"
+                                            },
+                                            {
+                                                "location": {
+                                                    "line": 20,
+                                                    "column": 17
+                                                },
+                                                "value": "QUX"
+                                            }
+                                        ],
+                                        "id": "11"
+                                    }
+                                ],
+                                "id": "12"
+                            }
+                        ],
+                        "id": "13"
+                    }
+                }
+            ]
+        },
+        "uri": "tests/scenario.outline.multiple.feature"
+    },
+    "pickle": {
+        "id": "14",
+        "uri": "tests/scenario.outline.multiple.feature",
+        "name": "Check multiple examples",
+        "language": "en",
+        "steps": [
+            {
+                "text": "I have a value \"baz\"",
+                "id": "15",
+                "astNodeIds": ["2", "10"]
+            },
+            {
+                "text": "I process it",
+                "id": "16",
+                "astNodeIds": ["3", "10"]
+            },
+            {
+                "text": "I should get \"BAZ\"",
+                "id": "17",
+                "astNodeIds": ["4", "10"]
+            }
+        ],
+        "tags": [
+            {
+                "name": "@feature-tag",
+                "astNodeId": "1"
+            }
+        ],
+        "astNodeIds": ["13", "10"]
+    },
+    "result": {
+        "status": 2,
+        "duration": {
+            "seconds": 0,
+            "nanos": 500000000
+        },
+        "message": "Test failed on second Examples table"
+    },
+    "testCaseStartedId": "multiple-examples-test-id"
+}

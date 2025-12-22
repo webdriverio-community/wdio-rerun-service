@@ -1,0 +1,181 @@
+{
+    "gherkinDocument": {
+        "comments": [],
+        "feature": {
+            "location": {
+                "line": 2,
+                "column": 1
+            },
+            "tags": [
+                {
+                    "location": {
+                        "line": 1,
+                        "column": 1
+                    },
+                    "name": "@feature-tag",
+                    "id": "1"
+                }
+            ],
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Background in Rules",
+            "description": "  As a rerun service user\n  I want to test scenarios with Background steps in Rules\n  So that I can ensure line numbers are captured correctly",
+            "children": [
+                {
+                    "background": {
+                        "location": {
+                            "line": 7,
+                            "column": 3
+                        },
+                        "keyword": "Background",
+                        "name": "",
+                        "description": "",
+                        "steps": [
+                            {
+                                "location": {
+                                    "line": 8,
+                                    "column": 5
+                                },
+                                "keyword": "Given ",
+                                "text": "I have a feature background",
+                                "id": "2"
+                            }
+                        ],
+                        "id": "3"
+                    }
+                },
+                {
+                    "rule": {
+                        "location": {
+                            "line": 10,
+                            "column": 3
+                        },
+                        "keyword": "Rule",
+                        "name": "Business rule with background",
+                        "description": "",
+                        "tags": [],
+                        "id": "4",
+                        "children": [
+                            {
+                                "background": {
+                                    "location": {
+                                        "line": 11,
+                                        "column": 5
+                                    },
+                                    "keyword": "Background",
+                                    "name": "",
+                                    "description": "",
+                                    "steps": [
+                                        {
+                                            "location": {
+                                                "line": 12,
+                                                "column": 7
+                                            },
+                                            "keyword": "Given ",
+                                            "text": "I have a rule background",
+                                            "id": "5"
+                                        }
+                                    ],
+                                    "id": "6"
+                                }
+                            },
+                            {
+                                "scenario": {
+                                    "location": {
+                                        "line": 14,
+                                        "column": 5
+                                    },
+                                    "tags": [],
+                                    "keyword": "Scenario",
+                                    "name": "Test scenario with backgrounds",
+                                    "description": "",
+                                    "steps": [
+                                        {
+                                            "location": {
+                                                "line": 15,
+                                                "column": 7
+                                            },
+                                            "keyword": "Given ",
+                                            "text": "I run a test",
+                                            "id": "7"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 16,
+                                                "column": 7
+                                            },
+                                            "keyword": "When ",
+                                            "text": "something happens",
+                                            "id": "8"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 17,
+                                                "column": 7
+                                            },
+                                            "keyword": "Then ",
+                                            "text": "I expect a result",
+                                            "id": "9"
+                                        }
+                                    ],
+                                    "examples": [],
+                                    "id": "10"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "uri": "tests/background.rule.feature"
+    },
+    "pickle": {
+        "id": "11",
+        "uri": "tests/background.rule.feature",
+        "name": "Test scenario with backgrounds",
+        "language": "en",
+        "steps": [
+            {
+                "text": "I have a feature background",
+                "id": "12",
+                "astNodeIds": ["2"]
+            },
+            {
+                "text": "I have a rule background",
+                "id": "13",
+                "astNodeIds": ["5"]
+            },
+            {
+                "text": "I run a test",
+                "id": "14",
+                "astNodeIds": ["7"]
+            },
+            {
+                "text": "something happens",
+                "id": "15",
+                "astNodeIds": ["8"]
+            },
+            {
+                "text": "I expect a result",
+                "id": "16",
+                "astNodeIds": ["9"]
+            }
+        ],
+        "tags": [
+            {
+                "name": "@feature-tag",
+                "astNodeId": "1"
+            }
+        ],
+        "astNodeIds": ["10"]
+    },
+    "result": {
+        "status": 2,
+        "duration": {
+            "seconds": 1,
+            "nanos": 250000000
+        },
+        "message": "Test failed"
+    },
+    "testCaseStartedId": "background-rule-test-id"
+}
