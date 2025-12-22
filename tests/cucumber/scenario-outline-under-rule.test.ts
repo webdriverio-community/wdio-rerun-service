@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import * as fs from 'fs'
+import fs from 'fs'
 import RerunService from '../../src'
 
 const world = JSON.parse(
