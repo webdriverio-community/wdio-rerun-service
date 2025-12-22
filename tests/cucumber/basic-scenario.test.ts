@@ -8,7 +8,7 @@ const world = JSON.parse(
         .toString(),
 )
 
-describe('wdio-rerurn-service', () => {
+describe('wdio-rerun-service', () => {
     const capabilities = { browserName: 'chrome' } as WebdriverIO.Capabilities
     const specFile = ['tests/scenario.feature']
 

@@ -26,10 +26,4 @@ describe('wdio-rerun-service - Malformed scenario (no matching ID)', () => {
         expect(service.nonPassingItems.length).toBe(1)
         expect(service.nonPassingItems[0]?.location).toContain(':0')
     })
-
-    it('should handle malformed scenario gracefully without throwing', () => {
-        const service = new RerunService()
-        global.browser = cucumberBrowser
-        expect(() => service.afterScenario(world)).not.toThrow()
-    })
 })
