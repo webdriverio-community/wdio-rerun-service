@@ -7,13 +7,9 @@ on:
   push:
     branches:
       - main
-      - v7
-      - lts
   pull_request:
     branches:
       - main
-      - v7
-      - lts
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -23,16 +19,19 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x, 20.x, 22.x]
     steps:
     - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci --ignore-scripts
-    - run: npm run build --if-present
-    - run: npm test
+        cache: 'pnpm'
+    - run: pnpm install
+    - run: pnpm run build
+    - run: pnpm test
       env:
         CI: true
 
@@ -40,15 +39,18 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [20.x]
     steps:
     - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci --ignore-scripts
-    - run: npm run build --if-present
-    - run: npm test
+        cache: 'pnpm'
+    - run: pnpm install
+    - run: pnpm run build
+    - run: pnpm test
       env:
         CI: true
