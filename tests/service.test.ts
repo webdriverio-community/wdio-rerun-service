@@ -235,7 +235,10 @@ describe('wdio-rerun-service', () => {
                                                 name: 'Scenario inside rule',
                                                 description: '',
                                                 keyword: 'Scenario',
-                                                location: { line: 10, column: 3 },
+                                                location: {
+                                                    line: 10,
+                                                    column: 3,
+                                                },
                                                 tags: [],
                                                 steps: [],
                                                 examples: [],
@@ -260,7 +263,9 @@ describe('wdio-rerun-service', () => {
             service.afterScenario(worldWithRuleNoMatch)
             // No scenario found => scenarioLineNumber = 0, location ends with :0
             expect(service.nonPassingItems.length).toBe(1)
-            expect(service.nonPassingItems[0]?.location.endsWith(':0')).toBe(true)
+            expect(service.nonPassingItems[0]?.location.endsWith(':0')).toBe(
+                true,
+            )
         })
 
         it('should handle missing feature gracefully (no scenario match)', () => {
