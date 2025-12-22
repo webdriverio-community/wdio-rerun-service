@@ -13,7 +13,7 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
-## v2.1.0 (2024-12-22)
+## v2.1.0 (2025-12-22)
 #### :rocket: New Feature
 * Support for Cucumber scenarios nested inside `Rule:` blocks - line numbers are now correctly extracted for reruns
 
