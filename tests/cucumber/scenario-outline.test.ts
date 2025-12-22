@@ -1,4 +1,4 @@
-import { describe, expect, it } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import * as fs from 'fs'
 import RerunService from '../../src'
 

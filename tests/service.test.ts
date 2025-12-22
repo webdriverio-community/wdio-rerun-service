@@ -1,6 +1,6 @@
 import type { ITestCaseHookParameter } from '@cucumber/cucumber'
 import { TestStepResultStatus } from '@cucumber/messages'
-import { describe, expect, it } from '@jest/globals'
+import { describe, expect, it } from 'vitest'
 import minimist from 'minimist'
 import { readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
