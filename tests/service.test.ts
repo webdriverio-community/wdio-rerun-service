@@ -18,7 +18,7 @@ describe('wdio-rerun-service', () => {
         { location: 'tests/sample1.test.ts', failure: 'some error' },
         { location: 'tests/sample2.test.ts', failure: 'another error' },
     ]
-    const capabilities = { browser: 'chrome' }
+    const capabilities = { browserName: 'chrome' } as WebdriverIO.Capabilities
     const specFile = ['features/sample.feature']
 
     const world = {
@@ -120,6 +120,24 @@ describe('wdio-rerun-service', () => {
             expect(service.customParameters).toEqual('')
         })
 
+        it('uses win32 defaults when platformName is provided', async () => {
+            const service = new RerunService({ platformName: 'win32' })
+            await expect(
+                service.before({}, ['features/sample.feature']),
+            ).resolves.toBeUndefined()
+            expect(service.rerunScriptPath).toEqual('rerun.bat')
+        })
+
+        it('should return early when DISABLE_RERUN is set (before hook)', async () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            await expect(
+                service.before(capabilities, ['features/sample.feature']),
+            ).resolves.toBeUndefined()
+            expect(service.specFile).toEqual('')
+            process.env['DISABLE_RERUN'] = undefined
+        })
+
         it('can configure customParameters', async () => {
             const service = new RerunService({ customParameters: '--foobar' })
             await expect(
@@ -157,6 +175,93 @@ describe('wdio-rerun-service', () => {
             const service = new RerunService()
             global.browser = cucumberBrowser
             expect(() => service.afterScenario(world)).not.toThrow()
+        })
+
+        it('should return early if service is disabled', () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            service.afterScenario(world)
+            expect(service.nonPassingItems).toEqual([])
+            process.env['DISABLE_RERUN'] = undefined
+        })
+
+        it('should return early if framework is not cucumber', () => {
+            const service = new RerunService()
+            global.browser = mochaBrowser
+            service.afterScenario(world)
+            expect(service.nonPassingItems).toEqual([])
+        })
+
+        it('should return undefined when scenario is not found', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const invalidWorld = {
+                ...world,
+                pickle: {
+                    ...pickle,
+                    astNodeIds: ['non-existent-id'],
+                },
+            }
+            service.afterScenario(invalidWorld)
+            expect(service.nonPassingItems).toEqual([])
+        })
+
+        it('should handle missing feature gracefully (no scenario match)', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const worldMissingFeature: ITestCaseHookParameter = {
+                ...world,
+                gherkinDocument: {},
+            } as unknown as ITestCaseHookParameter
+            service.afterScenario(worldMissingFeature)
+            expect(service.nonPassingItems.length).toBe(0)
+        })
+
+        it('should handle feature without children', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const worldWithoutChildren: ITestCaseHookParameter = {
+                ...world,
+                gherkinDocument: { feature: {} as any, comments: [] },
+                result: {
+                    ...world.result,
+                    status: TestStepResultStatus.FAILED,
+                },
+            }
+            service.afterScenario(worldWithoutChildren)
+            expect(service.nonPassingItems.length).toBe(1)
+            expect(service.nonPassingItems[0]?.location.endsWith(':0')).toBe(
+                true,
+            )
+        })
+
+        it('should return early for PASSED status string', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const passedWorld = {
+                ...world,
+                result: {
+                    ...world.result,
+                    status: 'PASSED',
+                },
+            } as ITestCaseHookParameter
+            service.afterScenario(passedWorld)
+            expect(service.nonPassingItems).toEqual([])
+        })
+
+        it('should return early for SKIPPED status string', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const skippedWorld = {
+                ...world,
+                result: {
+                    ...world.result,
+                    status: 'SKIPPED',
+                },
+            } as ITestCaseHookParameter
+            service.afterScenario(skippedWorld)
+            expect(service.nonPassingItems).toEqual([])
         })
 
         for (const status of [
@@ -255,6 +360,53 @@ describe('wdio-rerun-service', () => {
             ).not.toThrow()
         })
 
+        it('should return early if service is disabled', () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            global.browser = mochaBrowser
+            service.afterTest({} as any, 'context', {
+                error: { message: 'This test has failed.' },
+                result: 'result',
+                duration: 24213,
+                passed: false,
+                retries: { limit: 0, attempts: 0 },
+                exception: '',
+                status: 'status',
+            })
+            expect(service.nonPassingItems).toEqual([])
+            process.env['DISABLE_RERUN'] = undefined
+        })
+
+        it('should return early if test passed', () => {
+            const service = new RerunService()
+            global.browser = mochaBrowser
+            service.afterTest({} as any, 'context', {
+                error: { message: 'This test has failed.' },
+                result: 'result',
+                duration: 24213,
+                passed: true,
+                retries: { limit: 0, attempts: 0 },
+                exception: '',
+                status: 'status',
+            })
+            expect(service.nonPassingItems).toEqual([])
+        })
+
+        it('should return early if framework is cucumber', () => {
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            service.afterTest({} as any, 'context', {
+                error: { message: 'This test has failed.' },
+                result: 'result',
+                duration: 24213,
+                passed: false,
+                retries: { limit: 0, attempts: 0 },
+                exception: '',
+                status: 'status',
+            })
+            expect(service.nonPassingItems).toEqual([])
+        })
+
         it('should not throw an exception when parameters are given but no error.message', () => {
             const service = new RerunService()
             global.browser = mochaBrowser
@@ -321,6 +473,20 @@ describe('wdio-rerun-service', () => {
             ).resolves.toBeUndefined()
             await expect(service.after()).resolves.toBeUndefined()
         })
+
+        it('should return early if service is disabled', async () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            service.nonPassingItems = nonPassingItemsCucumber
+            await expect(service.after()).resolves.toBeUndefined()
+            process.env['DISABLE_RERUN'] = undefined
+        })
+
+        it('should return early if no non-passing items', async () => {
+            const service = new RerunService()
+            await service.before(capabilities, specFile)
+            await expect(service.after()).resolves.toBeUndefined()
+        })
     })
 
     describe('onComplete', () => {
@@ -342,6 +508,35 @@ describe('wdio-rerun-service', () => {
             const service = new RerunService()
             service.serviceWorkerId = '123'
             await expect(service.onComplete()).resolves.toBeUndefined()
+        })
+
+        it('should build rerun script on win32 with args and prefix', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-win32')
+            const rerunScriptPath = join(rerunDataDir, 'rerun.bat')
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+                commandPrefix: 'PREFIX=true',
+                platformName: 'win32',
+            })
+
+            const originalArgv = [...argv]
+            argv.splice(0, argv.length, 'node', 'wdio', 'run')
+
+            try {
+                await service.before({}, ['tests/sample1.test.ts'])
+                service.nonPassingItems = nonPassingItemsMocha
+                await service.after()
+                await service.onComplete()
+
+                const rerunScript = await readFile(rerunScriptPath, 'utf8')
+                expect(rerunScript).toMatch(
+                    /^PREFIX=true set DISABLE_RERUN=true && npx wdio run\s+--spec=tests\/sample1\.test\.ts/,
+                )
+            } finally {
+                await rm(rerunDataDir, { recursive: true, force: true })
+                argv.splice(0, argv.length, ...originalArgv)
+            }
         })
     })
 
@@ -387,6 +582,34 @@ describe('wdio-rerun-service', () => {
             expect(err).toBeDefined()
             expect(err?.code).toBe('ENOENT')
             expect(rerunScript).toBeUndefined()
+        })
+
+        it('should return early if service is disabled', async () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            await expect(service.onComplete()).resolves.toBeUndefined()
+            process.env['DISABLE_RERUN'] = undefined
+        })
+
+        it('should return early if no rerun files exist', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-empty')
+            const service = new RerunService({ rerunDataDir })
+            await service.before({}, [])
+            await expect(service.onComplete()).resolves.toBeUndefined()
+        })
+
+        it('should handle errors in onComplete gracefully', async () => {
+            const service = new RerunService({
+                rerunDataDir: '/invalid/path/that/does/not/exist',
+            })
+            await expect(service.onComplete()).resolves.toBeUndefined()
+        })
+
+        it('should hit catch block when rerunDataDir is invalid', async () => {
+            const service = new RerunService({
+                rerunDataDir: '/invalid/path/that/should/error',
+            })
+            await expect(service.onComplete()).resolves.toBeUndefined()
         })
     })
 })

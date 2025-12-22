@@ -24,6 +24,7 @@ interface RerunServiceOptions {
     rerunScriptPath?: string
     commandPrefix?: string
     customParameters?: string
+    platformName?: NodeJS.Platform
 }
 
 export default class RerunService implements Services.ServiceInstance {
@@ -36,6 +37,7 @@ export default class RerunService implements Services.ServiceInstance {
     customParameters: string
     specFile: string
     disabled: boolean
+    platformName: NodeJS.Platform
     log: Logger
 
     constructor(options: RerunServiceOptions = {}) {
@@ -45,13 +47,16 @@ export default class RerunService implements Services.ServiceInstance {
             rerunScriptPath,
             commandPrefix,
             customParameters,
+            platformName,
         } = options
         this.nonPassingItems = []
         this.serviceWorkerId = ''
         this.ignoredTags = ignoredTags ?? []
         this.rerunDataDir = rerunDataDir ?? './results/rerun'
+        this.platformName = platformName ?? platform
         this.rerunScriptPath =
-            rerunScriptPath ?? (platform === 'win32' ? 'rerun.bat' : 'rerun.sh')
+            rerunScriptPath ??
+            (this.platformName === 'win32' ? 'rerun.bat' : 'rerun.sh')
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
@@ -59,10 +64,7 @@ export default class RerunService implements Services.ServiceInstance {
         this.log = logger('@wdio/wdio-rerun-service')
     }
 
-    async before(
-        _capabilities: WebdriverIO.Capabilities,
-        specs: string[],
-    ) {
+    async before(_capabilities: WebdriverIO.Capabilities, specs: string[]) {
         if (this.disabled) {
             return
         }
@@ -103,7 +105,7 @@ export default class RerunService implements Services.ServiceInstance {
     }
 
     // Executed after a Cucumber scenario ends.
-    async afterScenario(world: World) {
+    afterScenario(world: World) {
         if (this.disabled) {
             return
         }
@@ -117,9 +119,9 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
 
-        const { gherkinDocument, pickle } = world;
-        const featureChildren = gherkinDocument.feature?.children ?? [];
-        
+        const { gherkinDocument, pickle } = world
+        const featureChildren = gherkinDocument.feature?.children ?? []
+
         // Locate the matching scenario by searching feature children
         // Scenarios can be at top-level OR nested within Rule blocks
         const findMatchingScenario = () => {
@@ -127,22 +129,24 @@ export default class RerunService implements Services.ServiceInstance {
                 // Direct scenario under feature
                 if (featureChild.scenario) {
                     if (pickle.astNodeIds.includes(featureChild.scenario.id)) {
-                        return featureChild.scenario;
+                        return featureChild.scenario
                     }
                 }
                 // Scenario nested inside a Rule block
                 if (featureChild.rule?.children) {
                     const ruleScenario = featureChild.rule.children.find(
-                        (rc) => rc.scenario && pickle.astNodeIds.includes(rc.scenario.id)
-                    )?.scenario;
-                    if (ruleScenario) return ruleScenario;
+                        (ruleChild) =>
+                            ruleChild.scenario &&
+                            pickle.astNodeIds.includes(ruleChild.scenario.id),
+                    )?.scenario
+                    if (ruleScenario) return ruleScenario
                 }
             }
-            return undefined;
-        };
-        
-        const scenario = findMatchingScenario();
-        let scenarioLineNumber = scenario?.location?.line ?? 0
+            return undefined
+        }
+
+        const scenario = findMatchingScenario()
+        let scenarioLineNumber = scenario?.location.line ?? 0
 
         if (scenario && scenario.examples.length > 0) {
             let exampleLineNumber = 0
@@ -203,7 +207,7 @@ export default class RerunService implements Services.ServiceInstance {
             const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
             const disableRerun =
-                platform === 'win32'
+                this.platformName === 'win32'
                     ? 'set DISABLE_RERUN=true &&'
                     : 'DISABLE_RERUN=true'
             let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`

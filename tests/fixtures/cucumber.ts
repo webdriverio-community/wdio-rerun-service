@@ -13,8 +13,22 @@ import type {
 } from '@cucumber/messages'
 import { TestStepResultStatus } from '@cucumber/messages'
 
-/*
- * Copied from @wdio/cucumber-framework (8.0.13)
+/**
+ * Shared TypeScript fixture for service unit tests
+ *
+ * This file provides typed Cucumber message objects used by service.test.ts
+ * for testing the main RerunService functionality. It contains example data
+ * structures representing a complete Cucumber test scenario with a Rule,
+ * including gherkinDocument, pickle, testCase, and various test lifecycle events.
+ *
+ * These objects represent the structure of Cucumber's internal message protocol
+ * that WebdriverIO's Cucumber framework passes to service hooks.
+ *
+ * Originally copied from @wdio/cucumber-framework (8.0.13) and adapted for testing
+ * scenarios under Rules - which is critical for proper line number extraction.
+ *
+ * Note: For Cucumber-specific integration tests testing various Gherkin patterns,
+ * see /tests/cucumber/*.test.ts which use JSON fixtures from /tests/cucumber/fixtures/*.world.json
  */
 
 export const source: Source = {

@@ -1,0 +1,111 @@
+{
+    "gherkinDocument": {
+        "comments": [],
+        "feature": {
+            "location": {
+                "line": 2,
+                "column": 1
+            },
+            "tags": [
+                {
+                    "location": {
+                        "line": 1,
+                        "column": 1
+                    },
+                    "name": "@feature-tag",
+                    "id": "1"
+                }
+            ],
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Generate line number for Scenarios nested under Rules",
+            "description": "  As a rerun service user\n  I want to generate line numbers for scenarios inside Rule blocks\n  So that I can rerun failing cases that use the Rule keyword",
+            "children": [
+                {
+                    "rule": {
+                        "location": {
+                            "line": 7,
+                            "column": 3
+                        },
+                        "keyword": "Rule",
+                        "name": "Business validation rule",
+                        "description": "",
+                        "tags": [],
+                        "id": "2",
+                        "children": [
+                            {
+                                "scenario": {
+                                    "location": {
+                                        "line": 8,
+                                        "column": 5
+                                    },
+                                    "tags": [],
+                                    "keyword": "Scenario",
+                                    "name": "This scenario is inside a Rule",
+                                    "description": "",
+                                    "steps": [
+                                        {
+                                            "location": {
+                                                "line": 9,
+                                                "column": 7
+                                            },
+                                            "keyword": "Given ",
+                                            "text": "I am testing rule scenarios",
+                                            "id": "3"
+                                        },
+                                        {
+                                            "location": {
+                                                "line": 10,
+                                                "column": 7
+                                            },
+                                            "keyword": "And ",
+                                            "text": "I fail the test",
+                                            "id": "4"
+                                        }
+                                    ],
+                                    "examples": [],
+                                    "id": "5"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "uri": "tests/scenario.rule.feature"
+    },
+    "pickle": {
+        "id": "6",
+        "uri": "tests/scenario.rule.feature",
+        "name": "This scenario is inside a Rule",
+        "language": "en",
+        "steps": [
+            {
+                "text": "I am testing rule scenarios",
+                "id": "7",
+                "astNodeIds": ["3"]
+            },
+            {
+                "text": "I fail the test",
+                "id": "8",
+                "astNodeIds": ["4"]
+            }
+        ],
+        "tags": [
+            {
+                "name": "@feature-tag",
+                "astNodeId": "1"
+            }
+        ],
+        "astNodeIds": ["5"]
+    },
+    "result": {
+        "status": 2,
+        "duration": {
+            "seconds": 2,
+            "nanos": 500000000
+        },
+        "message": "Test failed"
+    },
+    "testCaseStartedId": "rule-test-id"
+}
