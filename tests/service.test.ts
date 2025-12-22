@@ -128,6 +128,14 @@ describe('wdio-rerun-service', () => {
             expect(service.rerunScriptPath).toEqual('rerun.bat')
         })
 
+        it('uses unix defaults when platformName is linux', async () => {
+            const service = new RerunService({ platformName: 'linux' })
+            await expect(
+                service.before({}, ['features/sample.feature']),
+            ).resolves.toBeUndefined()
+            expect(service.rerunScriptPath).toEqual('rerun.sh')
+        })
+
         it('should return early when DISABLE_RERUN is set (before hook)', async () => {
             process.env['DISABLE_RERUN'] = 'true'
             const service = new RerunService()
