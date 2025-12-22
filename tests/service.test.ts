@@ -571,6 +571,35 @@ describe('wdio-rerun-service', () => {
             await expect(service.onComplete()).resolves.toBeUndefined()
         })
 
+        it('should build rerun script on unix with args and prefix', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-unix')
+            const rerunScriptPath = join(rerunDataDir, 'rerun.sh')
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+                commandPrefix: 'PREFIX=true',
+                platformName: 'linux',
+            })
+
+            const originalArgv = [...argv]
+            argv.splice(0, argv.length, 'node', 'wdio', 'run')
+
+            try {
+                await service.before({}, ['tests/sample1.test.ts'])
+                service.nonPassingItems = nonPassingItemsMocha
+                await service.after()
+                await service.onComplete()
+
+                const rerunScript = await readFile(rerunScriptPath, 'utf8')
+                expect(rerunScript).toMatch(
+                    /^PREFIX=true DISABLE_RERUN=true npx wdio run\s+--spec=tests\/sample1\.test\.ts/,
+                )
+            } finally {
+                await rm(rerunDataDir, { recursive: true, force: true })
+                argv.splice(0, argv.length, ...originalArgv)
+            }
+        })
+
         it('should build rerun script on win32 with args and prefix', async () => {
             const rerunDataDir = join(tmpdir(), 'rerun-data-win32')
             const rerunScriptPath = join(rerunDataDir, 'rerun.bat')
