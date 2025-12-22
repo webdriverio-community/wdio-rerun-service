@@ -13,6 +13,24 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v2.1.0 (2024-12-22)
+#### :rocket: New Feature
+* Support for Cucumber scenarios nested inside `Rule:` blocks - line numbers are now correctly extracted for reruns
+
+#### :bug: Bug Fix
+* Fixed WebdriverIO v9 compatibility - updated `@cucumber/messages` enum comparison to work with both v8 and v9
+
+#### :house: Internal
+* Migrated from Jest to Vitest - faster test execution, no experimental flags needed
+* Switched to pnpm for development (enforced via `packageManager` field)
+* Updated all dependencies to latest versions
+* Removed deprecated `@types/uuid` - uuid v13 includes its own types
+* Achieved 100% test coverage with 56 tests
+* Node.js 18+ required (compatible with both WDIO v8 and v9)
+
+#### Committers: 1
+- [@esaari](https://github.com/esaari)
+
 ## v2.0.7 (2023-7-24)
 #### :bug: Bug Fix
 * [[#67]](https://github.com/webdriverio-community/wdio-rerun-service/pull/67) Update some dependencies ([@esaari](https://github.com/esaari))

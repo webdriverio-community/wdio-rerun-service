@@ -8,7 +8,23 @@ WebdriverIO Re-run Service
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
-_NOTE_: Users running WebdriverIO `7.x.x`, use version `1.7.x` version of this service. If you are on the latest major version of `8.x.x`, use the latest `2.x.x` version of this service.
+## Features
+
+- 🔄 Re-run failed Mocha, Jasmine, or Cucumber tests after the main test run completes
+- 🥒 Full Cucumber support including scenarios inside `Rule:` blocks
+- 🏷️ Filter out scenarios with specific tags from re-runs
+- 🪟 Cross-platform support (generates `rerun.sh` on Unix, `rerun.bat` on Windows)
+- ⚙️ Configurable command prefix and custom parameters
+
+## Compatibility
+
+| wdio-rerun-service | WebdriverIO |
+|--------------------|-------------|
+| `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` |
+| `^2.0.0`           | `^8.0.0` |
+| `^1.7.0`           | `^7.0.0` |
+
+**Note:** Version `2.1.0` is backward compatible with WebdriverIO v8 and adds support for v9. All users on v8 or v9 should use the latest `2.x.x` version.
 
 ## Re-run vs. Retry
 
@@ -33,10 +49,16 @@ Using `npm`:
 npm install wdio-rerun-service
 ```
 
-or using `yarn`:
+Using `yarn`:
 
 ```bash
 yarn add wdio-rerun-service
+```
+
+Using `pnpm`:
+
+```bash
+pnpm add wdio-rerun-service
 ```
 
 After package installation is complete, add it to `services` array in `wdio.conf.js`:
@@ -46,29 +68,39 @@ After package installation is complete, add it to `services` array in `wdio.conf
 import RerunService from 'wdio-rerun-service';
 export const config = {
     // ...
-    services: [RerunService, {
-        // ...
-    }]
+    services: [
+        [RerunService, {
+            // Re-run service options here...
+        }]
+    ],
+    // ...
 };
 ```
 
 Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted.html)
 
 ## Usage
+
 By design, this service does not automatically re-run failed tests.
 
-After WebDriver.IO has completed execution, if failures or unstable tests/scenarios are found a file will be at **rerunScriptPath** or by default `./rerun.sh` (see Configuration).
+After WebdriverIO has completed execution, if failures are found, a re-run script will be generated at **rerunScriptPath** (default: `./rerun.sh` on Unix, `./rerun.bat` on Windows).
+
+You can then execute this script manually or integrate it into your CI pipeline.
+
+### Disabling Re-run
+
+Set the environment variable `DISABLE_RERUN=true` to disable the service (useful during re-run execution to prevent infinite loops).
 
 ### Conditional Re-run
 Every teams re-run needs will differ execution could be based on any number of factors, this is an example of how to accomplish a conditional re-run based on # of failures.
 
 ##### attemptRerun.sh
-Executes `./rerun.sh` if less than 25 failures have been found in last execution of WebDriver.IO.
+Executes `./rerun.sh` if less than 25 failures have been found in the last execution of WebdriverIO.
 ```sh
 #!/usr/bin/env bash
 MAX_TO_RERUN=${MAX_TO_RERUN:=25}
 if [ -f "rerun.sh" ]; then
-  echo "[rerun.sh] file exits, checking total failures."
+  echo "[rerun.sh] file exists, checking total failures."
   NUMBER_OF_FAILURES=$(grep "\-\-spec" -o rerun.sh | wc -l | xargs)
 	if [ "$MAX_TO_RERUN" -gt "$NUMBER_OF_FAILURES" ]; then
     echo "Re-running $NUMBER_OF_FAILURES failed scenarios!"
@@ -77,7 +109,7 @@ if [ -f "rerun.sh" ]; then
     echo "Skipping re-run, expected < $MAX_TO_RERUN failures to qualify execution for re-run, got $NUMBER_OF_FAILURES failures."
 	fi
 else
-  echo "No [rerun.sh] file exits, skipping re-run!"
+  echo "No [rerun.sh] file exists, skipping re-run!"
 fi
 ```
 ##### Bash Re-run Command
@@ -136,11 +168,11 @@ export const config = {
 ```
 
 ### rerunScriptPath
-Path to write re-run Bash script.
+Path to write the re-run script.
 
 Type: `String`
 
-Default: `./rerun.sh`
+Default: `./rerun.sh` (Unix) or `./rerun.bat` (Windows)
 
 Example:
 ```js
