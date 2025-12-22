@@ -1,0 +1,105 @@
+{
+    "gherkinDocument": {
+        "feature": {
+            "tags": [],
+            "location": {
+                "line": 1,
+                "column": 1
+            },
+            "language": "en",
+            "keyword": "Feature",
+            "name": "Ignored tag scenario test",
+            "description": "  Test that scenarios with ignored tags are not added to re-run",
+            "children": [
+                {
+                    "scenario": {
+                        "id": "scenario-with-skip-tag",
+                        "tags": [
+                            {
+                                "location": {
+                                    "line": 4,
+                                    "column": 3
+                                },
+                                "name": "@skip",
+                                "id": "tag-skip"
+                            }
+                        ],
+                        "location": {
+                            "line": 5,
+                            "column": 3
+                        },
+                        "keyword": "Scenario",
+                        "name": "This scenario should be ignored",
+                        "description": "",
+                        "steps": [
+                            {
+                                "id": "step-1",
+                                "location": {
+                                    "line": 6,
+                                    "column": 5
+                                },
+                                "keyword": "Given ",
+                                "text": "I have a scenario with @skip tag"
+                            },
+                            {
+                                "id": "step-2",
+                                "location": {
+                                    "line": 7,
+                                    "column": 5
+                                },
+                                "keyword": "When ",
+                                "text": "the test fails"
+                            },
+                            {
+                                "id": "step-3",
+                                "location": {
+                                    "line": 8,
+                                    "column": 5
+                                },
+                                "keyword": "Then ",
+                                "text": "it should NOT be added to nonPassingItems"
+                            }
+                        ],
+                        "examples": []
+                    }
+                }
+            ]
+        },
+        "comments": [],
+        "uri": "tests/ignored-tag-scenario.feature"
+    },
+    "pickle": {
+        "id": "pickle-ignored",
+        "uri": "tests/ignored-tag-scenario.feature",
+        "name": "This scenario should be ignored",
+        "language": "en",
+        "steps": [
+            {
+                "astNodeIds": ["step-1"],
+                "id": "pickle-step-1",
+                "text": "I have a scenario with @skip tag"
+            },
+            {
+                "astNodeIds": ["step-2"],
+                "id": "pickle-step-2",
+                "text": "the test fails"
+            },
+            {
+                "astNodeIds": ["step-3"],
+                "id": "pickle-step-3",
+                "text": "it should NOT be added to nonPassingItems"
+            }
+        ],
+        "tags": [
+            {
+                "name": "@skip",
+                "astNodeId": "tag-skip"
+            }
+        ],
+        "astNodeIds": ["scenario-with-skip-tag"]
+    },
+    "result": {
+        "status": "FAILED",
+        "message": "Test failed but should be ignored due to @skip tag"
+    }
+}
