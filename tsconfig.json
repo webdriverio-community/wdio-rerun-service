@@ -2,6 +2,8 @@
     "extends": "@tsconfig/node18-strictest-esm/tsconfig.json",
     "compilerOptions": {
         "noEmit": true,
+        "importsNotUsedAsValues": null,
+        "verbatimModuleSyntax": true,
         "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"]
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"]

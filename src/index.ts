@@ -110,7 +110,7 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         const config = browser.options as Options.Testrunner
-        const status = world.result?.status
+        const status = world.result?.status as string | undefined
         if (
             config.framework !== 'cucumber' ||
             status === 'PASSED' ||

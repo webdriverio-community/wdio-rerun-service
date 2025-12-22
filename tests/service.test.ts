@@ -207,6 +207,62 @@ describe('wdio-rerun-service', () => {
             expect(service.nonPassingItems).toEqual([])
         })
 
+        it('should handle Rule with children but no matching scenario', () => {
+            // This tests the falsy branch of `if (ruleScenario)` at line 142
+            // where we iterate through Rule children but find no match
+            const service = new RerunService()
+            global.browser = cucumberBrowser
+            const worldWithRuleNoMatch: ITestCaseHookParameter = {
+                ...world,
+                gherkinDocument: {
+                    ...gherkinDocument,
+                    feature: {
+                        ...gherkinDocument.feature!,
+                        children: [
+                            {
+                                // Rule with children, but none match the astNodeIds
+                                rule: {
+                                    keyword: 'Rule',
+                                    location: { line: 5, column: 1 },
+                                    tags: [],
+                                    id: 'rule-1',
+                                    name: 'Some rule',
+                                    description: '',
+                                    children: [
+                                        {
+                                            scenario: {
+                                                id: 'scenario-in-rule-that-wont-match',
+                                                name: 'Scenario inside rule',
+                                                description: '',
+                                                keyword: 'Scenario',
+                                                location: { line: 10, column: 3 },
+                                                tags: [],
+                                                steps: [],
+                                                examples: [],
+                                            },
+                                        },
+                                    ],
+                                },
+                            },
+                        ],
+                    },
+                },
+                pickle: {
+                    ...pickle,
+                    // astNodeIds that won't match any scenario inside the Rule
+                    astNodeIds: ['non-matching-id'],
+                },
+                result: {
+                    ...world.result,
+                    status: TestStepResultStatus.FAILED,
+                },
+            }
+            service.afterScenario(worldWithRuleNoMatch)
+            // No scenario found => scenarioLineNumber = 0, location ends with :0
+            expect(service.nonPassingItems.length).toBe(1)
+            expect(service.nonPassingItems[0]?.location.endsWith(':0')).toBe(true)
+        })
+
         it('should handle missing feature gracefully (no scenario match)', () => {
             const service = new RerunService()
             global.browser = cucumberBrowser
