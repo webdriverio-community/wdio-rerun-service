@@ -102,6 +102,8 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^11.2.0",
+    "@cucumber/messages": "^27.0.0",
     "@tsconfig/node16": "^16.1.8",
     "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@types/minimist": "^1.2.5",
