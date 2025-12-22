@@ -30,6 +30,7 @@
   "engines": {
     "node": ">=22.19.0"
   },
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
@@ -37,7 +38,7 @@
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "generate:cjs:package": "shx echo \"{\\\"type\\\":\\\"commonjs\\\"}\" > ./build/cjs/package.json",
-    "prepare": "npm run build",
+    "prepare": "pnpm run build",
     "test": "run-s test:*",
     "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat",
     "test:eslint": "eslint src tests",
