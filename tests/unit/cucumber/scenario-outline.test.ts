@@ -1,30 +1,30 @@
 import { describe, expect, it } from 'vitest'
 import fs from 'fs'
-import RerunService from '../../src'
+import RerunService from '../../../src'
 
 const world = JSON.parse(
     fs
         .readFileSync(
-            './tests/cucumber/fixtures/background-under-rule.world.json',
+            './tests/unit/cucumber/fixtures/scenario-outline.world.json',
         )
         .toString(),
 )
 
-describe('wdio-rerun-service - Background in Rules', () => {
+describe('wdio-rerun-service', () => {
     const capabilities = { browserName: 'chrome' } as WebdriverIO.Capabilities
-    const specFile = ['tests/background.rule.feature']
+    const specFile = ['tests/scenario.outline.feature']
 
     const cucumberBrowser: WebdriverIO.Browser = {
         options: { framework: 'cucumber' },
     } as WebdriverIO.Browser
 
-    it('should generate line number for scenario with background steps in a Rule', async () => {
+    it('should generate line number at the row of example data', async () => {
         const service = new RerunService()
         global.browser = cucumberBrowser
         await service.before(capabilities, specFile)
         service.afterScenario(world)
         expect(service?.nonPassingItems[0]?.location).toEqual(
-            'tests/background.rule.feature:14',
+            'tests/scenario.outline.feature:12',
         )
     })
 })

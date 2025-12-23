@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { argv, platform } from 'node:process'
 import RerunService from '../src/index.js'
-import { gherkinDocument, pickle } from './fixtures/cucumber.js'
+import { gherkinDocument, pickle } from './unit/fixtures/cucumber.js'
 
 describe('wdio-rerun-service', () => {
     const nonPassingItemsCucumber = [

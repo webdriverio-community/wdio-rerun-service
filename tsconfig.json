@@ -6,5 +6,6 @@
         "verbatimModuleSyntax": true,
         "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"]
     },
-    "include": ["src/**/*.ts", "tests/**/*.ts"]
+    "include": ["src/**/*.ts", "tests/**/*.ts"],
+    "exclude": ["tests/integration/**/*"]
 }

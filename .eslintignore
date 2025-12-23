@@ -1,4 +1,4 @@
 build/
 results/
 coverage/
-tests/cucumber/features/
+**/*/cucumber/features/
