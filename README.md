@@ -1,5 +1,4 @@
-WebdriverIO Re-run Service
-==========================
+# WebdriverIO Re-run Service
 
 [![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
 ![Coverage](https://img.shields.io/badge/unit%20test%20coverage-100%25-brightgreen)
@@ -29,16 +28,18 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 
 ## Re-run vs. Retry
 
-The `retry` logic built into WebdriverIO for Cucumber and Mocha/Jasmine is helpful for handling flaky steps in Cucumber and Mocha/Jasmine. Retrying in each framework has caveats: 
-* Cucumber: It does not take into account that some steps may not be able to be retried in the middle of a test. Running a step twice may break the rest of the Scenario or it may not be possible in the test context. 
-* Mocha/Jasmine: The `retry` logic may be applied to an individual test, however, this is still done in real-time and perhaps does not account for temporal issues or network connectivity problems.
+The `retry` logic built into WebdriverIO for Cucumber and Mocha/Jasmine is helpful for handling flaky steps in Cucumber and Mocha/Jasmine. Retrying in each framework has caveats:
+
+- **Cucumber:** It does not take into account that some steps may not be able to be retried in the middle of a test. Running a step twice may break the rest of the Scenario or it may not be possible in the test context.
+- **Mocha/Jasmine:** The `retry` logic may be applied to an individual test, however, this is still done in real-time and perhaps does not account for temporal issues or network connectivity problems.
 
 The main distinctions of the `re-run`:
-* Will re-run an entire individual Cucumber Scenario and not just a single step
-* Enables an entire spec file to be re-run after a main test execution is complete
-* May be copied and executed locally (`retry` cannot)
-* Can still be used in conjunction with `retry` methods
-* Does not require any code change to apply `retry` logic to flaky or problematic tests
+
+- Will re-run an entire individual Cucumber Scenario and not just a single step
+- Enables an entire spec file to be re-run after a main test execution is complete
+- May be copied and executed locally (`retry` cannot)
+- Can still be used in conjunction with `retry` methods
+- Does not require any code change to apply `retry` logic to flaky or problematic tests
 
 It is recommended to take some time to evaluate the options available. A hybrid solution may be the best solution to provide the best real and actionable test results.
 
@@ -78,7 +79,7 @@ export const config = {
 };
 ```
 
-Instructions on how to install `WebdriverIO` can be found [here.](https://webdriver.io/docs/gettingstarted.html)
+Instructions on how to install `WebdriverIO` can be found in the [official documentation](https://webdriver.io/docs/gettingstarted.html).
 
 ## Usage
 
@@ -93,38 +94,51 @@ You can then execute this script manually or integrate it into your CI pipeline.
 Set the environment variable `DISABLE_RERUN=true` to disable the service (useful during re-run execution to prevent infinite loops).
 
 ### Conditional Re-run
-Every teams re-run needs will differ execution could be based on any number of factors, this is an example of how to accomplish a conditional re-run based on # of failures.
 
-##### attemptRerun.sh
+Every team's re-run needs will differ—execution could be based on any number of factors. This is an example of how to accomplish a conditional re-run based on number of failures.
+
+#### attemptRerun.sh
+
 Executes `./rerun.sh` if less than 25 failures have been found in the last execution of WebdriverIO.
+
 ```sh
 #!/usr/bin/env bash
 MAX_TO_RERUN=${MAX_TO_RERUN:=25}
 if [ -f "rerun.sh" ]; then
   echo "[rerun.sh] file exists, checking total failures."
   NUMBER_OF_FAILURES=$(grep "\-\-spec" -o rerun.sh | wc -l | xargs)
-	if [ "$MAX_TO_RERUN" -gt "$NUMBER_OF_FAILURES" ]; then
+  if [ "$MAX_TO_RERUN" -gt "$NUMBER_OF_FAILURES" ]; then
     echo "Re-running $NUMBER_OF_FAILURES failed scenarios!"
     . ./rerun.sh
-	else
-    echo "Skipping re-run, expected < $MAX_TO_RERUN failures to qualify execution for re-run, got $NUMBER_OF_FAILURES failures."
-	fi
+  else
+    echo "Skipping re-run, expected < $MAX_TO_RERUN failures."
+    echo "Got $NUMBER_OF_FAILURES failures."
+  fi
 else
   echo "No [rerun.sh] file exists, skipping re-run!"
 fi
 ```
-##### Bash Re-run Command
-Execute in shell
+
+#### Bash Re-run Command
+
+Execute in shell:
+
 ```sh
 . ./attemptRerun.sh
 ```
-##### Integrate with NPM
-Add task in `package.json`
-```sh
+
+#### Integrate with NPM
+
+Add task in `package.json`:
+
+```json
 "attempt-rerun": ". ./attemptRerun.sh"
-````
-##### NPM Re-run Command
-Execute in shell
+```
+
+#### NPM Re-run Command
+
+Execute in shell:
+
 ```sh
 npm run attempt-rerun
 ```
@@ -148,6 +162,7 @@ export const config = {
 ```
 
 ### rerunDataDir
+
 Directory where all the re-run JSON data will be kept during execution.
 
 Type: `String`
@@ -155,6 +170,7 @@ Type: `String`
 Default: `./results/rerun`
 
 Example:
+
 ```js
 import RerunService from 'wdio-rerun-service';
 export const config = {
@@ -169,6 +185,7 @@ export const config = {
 ```
 
 ### rerunScriptPath
+
 Path to write the re-run script.
 
 Type: `String`
@@ -176,6 +193,7 @@ Type: `String`
 Default: `./rerun.sh` (Unix) or `./rerun.bat` (Windows)
 
 Example:
+
 ```js
 import RerunService from 'wdio-rerun-service';
 export const config = {
@@ -190,6 +208,7 @@ export const config = {
 ```
 
 ### ignoredTags
+
 (Cucumber-only) Set of Cucumber tags to exclude. If scenario contains a tag, the re-run service will skip analysis.
 
 Type: `Array`
@@ -197,6 +216,7 @@ Type: `Array`
 Default: `[]`
 
 Example:
+
 ```js
 import RerunService from 'wdio-rerun-service';
 export const config = {
@@ -211,6 +231,7 @@ export const config = {
 ```
 
 ### commandPrefix
+
 Prefix which will be added to the re-run command that is generated.
 
 Type: `String`
@@ -218,6 +239,7 @@ Type: `String`
 Default: `''`
 
 Example:
+
 ```js
 import RerunService from 'wdio-rerun-service';
 export const config = {
@@ -232,6 +254,7 @@ export const config = {
 ```
 
 ### customParameters
+
 Parameters which will be added to the re-run command that is generated.
 Can be used with `commandPrefix`.
 
@@ -240,6 +263,7 @@ Type: `String`
 Default: `''`
 
 Example:
+
 ```js
 import RerunService from 'wdio-rerun-service';
 export const config = {
@@ -252,5 +276,3 @@ export const config = {
     // ...
 }
 ```
-----
-
