@@ -140,7 +140,8 @@ describe('RerunService Mocha Integration Tests', () => {
             expect(rerunContent).toContain('npx wdio')
         })
 
-        it('should be executable (chmod +x)', () => {
+        // Skip on Windows - Unix file permissions don't apply
+        it.skipIf(process.platform === 'win32')('should be executable (chmod +x)', () => {
             runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             const stats = statSync(RERUN_SCRIPT)

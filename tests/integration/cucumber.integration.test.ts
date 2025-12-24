@@ -488,7 +488,8 @@ describe('RerunService Cucumber Integration Tests', () => {
             expect(rerunContent).not.toMatch(/\\/)
         })
 
-        it('should be executable (chmod +x)', async () => {
+        // Skip on Windows - Unix file permissions don't apply
+        it.skipIf(process.platform === 'win32')('should be executable (chmod +x)', async () => {
             runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
             const { statSync } = await import('node:fs')

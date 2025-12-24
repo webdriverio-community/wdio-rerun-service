@@ -50,13 +50,12 @@ jobs:
         CI: true
 
   integration:
-    name: Integration Tests (${{ matrix.framework }}, ${{ matrix.os }})
+    name: Integration Tests (${{ matrix.os }})
     needs: unit
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        framework: [cucumber, jasmine, mocha]
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - uses: actions/checkout@v4
@@ -73,7 +72,7 @@ jobs:
       run: pnpm --dir tests/integration install
     - name: Type check integration tests
       run: pnpm run test:tsc:integration
-    - name: Run ${{ matrix.framework }} integration tests
-      run: pnpm --dir tests/integration test -- --testNamePattern="${{ matrix.framework }}"
+    - name: Run integration tests
+      run: pnpm --dir tests/integration test
       env:
         CI: true
