@@ -4,7 +4,7 @@ export const config: WebdriverIO.Config = {
     runner: 'local',
     tsConfigPath: './tsconfig.json',
 
-    specs: ['./mocha/**/*.spec.ts'],
+    specs: ['./jasmine/**/*.spec.ts'],
     exclude: [],
 
     maxInstances: 1,
@@ -39,11 +39,10 @@ export const config: WebdriverIO.Config = {
         ],
     ],
 
-    framework: 'mocha',
+    framework: 'jasmine',
     reporters: ['spec'],
 
-    mochaOpts: {
-        ui: 'bdd',
-        timeout: 10000,
+    jasmineOpts: {
+        defaultTimeoutInterval: 10000,
     },
 }

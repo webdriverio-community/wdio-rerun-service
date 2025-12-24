@@ -13,6 +13,7 @@
             "mocha",
             "@wdio/globals/types",
             "@wdio/mocha-framework",
+            "@wdio/jasmine-framework",
             "@wdio/cucumber-framework"
         ]
     },
