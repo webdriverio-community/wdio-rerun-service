@@ -489,13 +489,18 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         // Skip on Windows - Unix file permissions don't apply
-        it.skipIf(process.platform === 'win32')('should be executable (chmod +x)', async () => {
-            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
+        it.skipIf(process.platform === 'win32')(
+            'should be executable (chmod +x)',
+            async () => {
+                runWdio('cucumber', [
+                    './cucumber/features/basic-failing.feature',
+                ])
 
-            const { statSync } = await import('node:fs')
-            const stats = statSync(RERUN_SCRIPT)
-            const isExecutable = (stats.mode & 0o111) !== 0
-            expect(isExecutable).toBe(true)
-        })
+                const { statSync } = await import('node:fs')
+                const stats = statSync(RERUN_SCRIPT)
+                const isExecutable = (stats.mode & 0o111) !== 0
+                expect(isExecutable).toBe(true)
+            },
+        )
     })
 })

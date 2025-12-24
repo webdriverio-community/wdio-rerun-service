@@ -145,12 +145,15 @@ describe('RerunService Jasmine Integration Tests', () => {
         })
 
         // Skip on Windows - Unix file permissions don't apply
-        it.skipIf(process.platform === 'win32')('should be executable (chmod +x)', () => {
-            runWdio('jasmine', ['./jasmine/failing.spec.ts'])
+        it.skipIf(process.platform === 'win32')(
+            'should be executable (chmod +x)',
+            () => {
+                runWdio('jasmine', ['./jasmine/failing.spec.ts'])
 
-            const stats = statSync(RERUN_SCRIPT)
-            const isExecutable = (stats.mode & 0o111) !== 0
-            expect(isExecutable).toBe(true)
-        })
+                const stats = statSync(RERUN_SCRIPT)
+                const isExecutable = (stats.mode & 0o111) !== 0
+                expect(isExecutable).toBe(true)
+            },
+        )
     })
 })

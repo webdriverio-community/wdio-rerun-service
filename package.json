@@ -107,16 +107,15 @@
   "devDependencies": {
     "@cucumber/cucumber": "^12.4.0",
     "@cucumber/messages": "^31.1.0",
+    "@eslint/js": "^9.39.2",
     "@tsconfig/node16": "^16.1.8",
     "@tsconfig/node18-strictest-esm": "^1.0.1",
     "@types/minimist": "^1.2.5",
     "@types/node": "^25.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.50.1",
-    "@typescript-eslint/parser": "^8.50.1",
     "@vitest/coverage-v8": "^4.0.16",
     "@wdio/cucumber-framework": "^9.22.0",
     "@wdio/globals": "^9.17.0",
-    "eslint": "^8.30.0",
+    "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "npm-run-all": "4.1.5",
@@ -127,6 +126,7 @@
     "rimraf": "^6.1.2",
     "shx": "^0.4.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.33.1",
     "vitest": "^4.0.16"
   }
 }
