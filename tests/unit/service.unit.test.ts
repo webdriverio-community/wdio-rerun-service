@@ -1,11 +1,11 @@
 import type { ITestCaseHookParameter } from '@cucumber/cucumber'
 import { TestStepResultStatus } from '@cucumber/messages'
 import { describe, expect, it } from 'vitest'
-import minimist from 'minimist'
 import { readFile, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { argv, platform } from 'node:process'
+import { parseArgs } from 'node:util'
 import RerunService from '../../src/index.js'
 import { gherkinDocument, pickle } from './fixtures/cucumber.js'
 
@@ -652,8 +652,12 @@ describe('wdio-rerun-service', () => {
                     ? 'set DISABLE_RERUN=true &&'
                     : 'DISABLE_RERUN=true'
             const rerunScript = await readFile(rerunScriptPath, 'utf8')
-            const parsedArgs = minimist(argv.slice(2))
-            const args = parsedArgs._[0] ?? ''
+            const { positionals } = parseArgs({
+                args: argv.slice(2),
+                allowPositionals: true,
+                strict: false,
+            })
+            const args = positionals[0] ?? ''
             expect(rerunScript).toBe(
                 `${disableRerun} npx wdio ${args} --spec=tests/sample1.test.ts --spec=tests/sample2.test.ts`,
             )

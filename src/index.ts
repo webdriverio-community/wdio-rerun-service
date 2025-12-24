@@ -1,11 +1,11 @@
 import type { Logger } from '@wdio/logger'
 import logger from '@wdio/logger'
 import type { Frameworks, Options, Services } from '@wdio/types'
-import minimist from 'minimist'
+import { randomUUID } from 'node:crypto'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { argv, env, platform } from 'node:process'
-import { v4 as uuidv4 } from 'uuid'
+import { parseArgs } from 'node:util'
 
 type AfterScenario = NonNullable<
     WebdriverIO.HookFunctionExtension['afterScenario']
@@ -73,7 +73,7 @@ export default class RerunService implements Services.ServiceInstance {
             `Re-run service is activated. Data directory: ${this.rerunDataDir}`,
         )
         await mkdir(this.rerunDataDir, { recursive: true })
-        this.serviceWorkerId = uuidv4()
+        this.serviceWorkerId = randomUUID()
     }
 
     afterTest(
@@ -203,8 +203,12 @@ export default class RerunService implements Services.ServiceInstance {
             if (rerunFiles.length === 0) {
                 return
             }
-            const parsedArgs = minimist(argv.slice(2))
-            const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
+            const { positionals } = parseArgs({
+                args: argv.slice(2),
+                allowPositionals: true,
+                strict: false,
+            })
+            const args = positionals[0] ? positionals[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
             const disableRerun =
                 this.platformName === 'win32'

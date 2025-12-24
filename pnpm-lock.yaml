@@ -14,12 +14,6 @@ importers:
       '@wdio/types':
         specifier: ^9.20.0
         version: 9.20.0
-      minimist:
-        specifier: ^1.2.8
-        version: 1.2.8
-      uuid:
-        specifier: ^13.0.0
-        version: 13.0.0
     devDependencies:
       '@cucumber/cucumber':
         specifier: ^12.4.0
@@ -36,9 +30,6 @@ importers:
       '@tsconfig/node18-strictest-esm':
         specifier: ^1.0.1
         version: 1.0.1
-      '@types/minimist':
-        specifier: ^1.2.5
-        version: 1.2.5
       '@types/node':
         specifier: ^25.0.3
         version: 25.0.3
@@ -865,9 +856,6 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
-
-  '@types/minimist@1.2.5':
-    resolution: {integrity: sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==}
 
   '@types/node@20.19.27':
     resolution: {integrity: sha512-N2clP5pJhB2YnZJ3PIHFk5RkygRX5WO/5f0WC08tp0wd+sv0rsJk3MqWn3CbNmT2J505a5336jaQj4ph1AdMug==}
@@ -3464,10 +3452,6 @@ packages:
     resolution: {integrity: sha512-508e6IcKLrhxKdBbcA2b4KQZlLVp2+J5UwQ6F7Drckkc5N9ZJwFa4TgWtsww9UG8fGHbm6gbV19TdM5pQ4GaIA==}
     hasBin: true
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
-    hasBin: true
-
   uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
@@ -4474,8 +4458,6 @@ snapshots:
       '@types/istanbul-lib-report': 3.0.3
 
   '@types/json-schema@7.0.15': {}
-
-  '@types/minimist@1.2.5': {}
 
   '@types/node@20.19.27':
     dependencies:
@@ -7405,8 +7387,6 @@ snapshots:
   uuid@10.0.0: {}
 
   uuid@11.0.5: {}
-
-  uuid@13.0.0: {}
 
   uuid@9.0.1: {}
 
