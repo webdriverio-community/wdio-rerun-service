@@ -23,8 +23,8 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
-  test:
-    name: Test (${{ matrix.os }}, Node ${{ matrix.node-version }})
+  unit:
+    name: Unit Tests (${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -42,6 +42,36 @@ jobs:
         cache: 'pnpm'
     - run: pnpm install
     - run: pnpm run build
-    - run: pnpm test
+    - name: Lint & Type Check
+      run: pnpm run test:eslint && pnpm run test:tsc
+    - name: Unit Tests
+      run: pnpm run test:unit
+      env:
+        CI: true
+
+  integration:
+    name: Integration Tests (${{ matrix.framework }}, ${{ matrix.os }})
+    needs: unit
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        framework: [cucumber, jasmine, mocha]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22.x
+        cache: 'pnpm'
+    - run: pnpm install
+    - run: pnpm run build
+    - name: Install integration test dependencies
+      run: pnpm --dir tests/integration install
+    - name: Run ${{ matrix.framework }} integration tests
+      run: pnpm --dir tests/integration test -- --testNamePattern="${{ matrix.framework }}"
       env:
         CI: true

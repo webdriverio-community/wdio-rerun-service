@@ -1,45 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach, afterAll } from 'vitest'
-import { execSync } from 'node:child_process'
-import { readFile, rm, readdir } from 'node:fs/promises'
+import { readFile, readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
+import {
+    cleanRerunArtifacts,
+    getFrameworkPaths,
+    runWdio,
+} from './test-utils.js'
 
-const INTEGRATION_DIR = join(import.meta.dirname, '.')
-const CUCUMBER_DIR = join(INTEGRATION_DIR, 'cucumber')
-const RERUN_SCRIPT = join(CUCUMBER_DIR, 'rerun.sh')
-const RERUN_BAT = join(CUCUMBER_DIR, 'rerun.bat')
-const RESULTS_DIR = join(CUCUMBER_DIR, 'results')
-const RERUN_DATA_DIR = join(RESULTS_DIR, 'rerun')
-
-async function cleanRerunArtifacts() {
-    await rm(RERUN_SCRIPT, { force: true })
-    await rm(RERUN_BAT, { force: true })
-    await rm(RESULTS_DIR, { recursive: true, force: true })
-}
-
-function runWdio(specs: string[]): {
-    exitCode: number
-    output: string
-    stderr: string
-} {
-    const specsArg = specs.map((s) => `--spec=${s}`).join(' ')
-    const cmd = `pnpm wdio:cucumber ${specsArg}`
-
-    try {
-        const output = execSync(cmd, {
-            cwd: INTEGRATION_DIR,
-            encoding: 'utf8',
-            stdio: ['pipe', 'pipe', 'pipe'],
-        })
-        return { exitCode: 0, output, stderr: '' }
-    } catch (error: any) {
-        return {
-            exitCode: error.status ?? 1,
-            output: error.stdout ?? '',
-            stderr: error.stderr ?? '',
-        }
-    }
-}
+const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
+    getFrameworkPaths('cucumber')
 
 /**
  * Integration tests for wdio-rerun-service with Cucumber
@@ -53,15 +23,15 @@ function runWdio(specs: string[]): {
  */
 describe('RerunService Cucumber Integration Tests', () => {
     beforeEach(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('cucumber')
     })
 
     afterEach(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('cucumber')
     })
 
     afterAll(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('cucumber')
     })
 
     // =========================================================================
@@ -69,7 +39,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Passing Scenarios', () => {
         it('should NOT generate rerun.sh when all scenarios pass', () => {
-            const { exitCode } = runWdio([
+            const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/passing.feature',
             ])
 
@@ -78,7 +48,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT create rerun JSON files when all scenarios pass', async () => {
-            runWdio(['./cucumber/features/passing.feature'])
+            runWdio('cucumber', ['./cucumber/features/passing.feature'])
 
             if (existsSync(RERUN_DATA_DIR)) {
                 const files = await readdir(RERUN_DATA_DIR)
@@ -103,14 +73,14 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 3
 
         it('should generate rerun.sh when scenario fails', () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
             expect(existsSync(RERUN_SCRIPT)).toBe(true)
         })
 
         it(`should include basic-failing.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
@@ -119,7 +89,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should write failure data to JSON with correct line number', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const files = await readdir(RERUN_DATA_DIR)
             const jsonFile = files.find((f) => f.endsWith('.json'))
@@ -152,7 +122,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 9
 
         it(`should include scenario-outline.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
             expect(existsSync(RERUN_SCRIPT)).toBe(true)
@@ -164,7 +134,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT point to Scenario Outline line (line 3)', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain('scenario-outline.feature:3')
@@ -194,7 +164,7 @@ describe('RerunService Cucumber Integration Tests', () => {
             './cucumber/features/scenario-outline-multiple-examples.feature'
 
         it('should include both example rows: lines 9 and 13', async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -225,7 +195,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 5
 
         it(`should include scenario-under-rule.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -258,7 +228,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 11
 
         it(`should include scenario-outline-under-rule.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -269,7 +239,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT point to Scenario Outline line (line 5)', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain(
@@ -300,7 +270,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const FEATURE = './cucumber/features/multiple-rules.feature'
 
         it('should include both scenarios: lines 5 and 11', async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -329,7 +299,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 8
 
         it(`should include background-under-rule.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -340,7 +310,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT point to Background line (line 5)', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain(
@@ -372,7 +342,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const EXPECTED_LINE = 11
 
         it(`should include background-with-feature-background.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -383,7 +353,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT point to either Background line', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain(
@@ -412,7 +382,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Ignored Tags (@skip-rerun)', () => {
         it('should include untagged scenario (line 3) in rerun.sh', async () => {
-            const { exitCode } = runWdio([
+            const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/ignored-tag.feature',
             ])
 
@@ -423,14 +393,14 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should NOT include @skip-rerun tagged scenario (line 8) in rerun.sh', async () => {
-            runWdio(['./cucumber/features/ignored-tag.feature'])
+            runWdio('cucumber', ['./cucumber/features/ignored-tag.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain('ignored-tag.feature:8')
         })
 
         it('should NOT generate rerun.sh when only @skip-rerun scenarios fail', () => {
-            const { exitCode } = runWdio([
+            const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/only-ignored-tag.feature',
             ])
 
@@ -457,7 +427,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         const FEATURE = './cucumber/features/multiple-failures.feature'
 
         it('should include both scenarios: lines 3 and 7', async () => {
-            const { exitCode } = runWdio([FEATURE])
+            const { exitCode } = runWdio('cucumber', [FEATURE])
 
             expect(exitCode).not.toBe(0)
 
@@ -467,7 +437,7 @@ describe('RerunService Cucumber Integration Tests', () => {
         })
 
         it('should have exactly 2 --spec= entries for 2 failures', async () => {
-            runWdio([FEATURE])
+            runWdio('cucumber', [FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             const specMatches = rerunContent.match(/--spec=/g) || []
@@ -480,7 +450,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Mixed Passing and Failing Features', () => {
         it('should only include failing feature in rerun.sh', async () => {
-            const { exitCode } = runWdio([
+            const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/passing.feature',
                 './cucumber/features/basic-failing.feature',
             ])
@@ -498,28 +468,28 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Rerun Script Format', () => {
         it('should include DISABLE_RERUN=true to prevent infinite loops', async () => {
-            runWdio(['./cucumber/features/basic-failing.feature'])
+            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('DISABLE_RERUN=true')
         })
 
         it('should include npx wdio command', async () => {
-            runWdio(['./cucumber/features/basic-failing.feature'])
+            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('npx wdio')
         })
 
         it('should use forward slashes in file paths (cross-platform)', async () => {
-            runWdio(['./cucumber/features/basic-failing.feature'])
+            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toMatch(/\\/)
         })
 
         it('should be executable (chmod +x)', async () => {
-            runWdio(['./cucumber/features/basic-failing.feature'])
+            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
             const { statSync } = await import('node:fs')
             const stats = statSync(RERUN_SCRIPT)

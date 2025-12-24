@@ -1,45 +1,15 @@
 import { describe, it, expect, beforeEach, afterEach, afterAll } from 'vitest'
-import { execSync } from 'node:child_process'
-import { readFile, rm, readdir } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { readFile, readdir } from 'node:fs/promises'
+import { existsSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import {
+    cleanRerunArtifacts,
+    getFrameworkPaths,
+    runWdio,
+} from './test-utils.js'
 
-const INTEGRATION_DIR = join(import.meta.dirname, '.')
-const MOCHA_DIR = join(INTEGRATION_DIR, 'mocha')
-const RERUN_SCRIPT = join(MOCHA_DIR, 'rerun.sh')
-const RERUN_BAT = join(MOCHA_DIR, 'rerun.bat')
-const RESULTS_DIR = join(MOCHA_DIR, 'results')
-const RERUN_DATA_DIR = join(RESULTS_DIR, 'rerun')
-
-async function cleanRerunArtifacts() {
-    await rm(RERUN_SCRIPT, { force: true })
-    await rm(RERUN_BAT, { force: true })
-    await rm(RESULTS_DIR, { recursive: true, force: true })
-}
-
-function runWdioMocha(specs: string[]): {
-    exitCode: number
-    output: string
-    stderr: string
-} {
-    const specsArg = specs.map((s) => `--spec=${s}`).join(' ')
-    const cmd = `pnpm wdio:mocha ${specsArg}`
-
-    try {
-        const output = execSync(cmd, {
-            cwd: INTEGRATION_DIR,
-            encoding: 'utf8',
-            stdio: ['pipe', 'pipe', 'pipe'],
-        })
-        return { exitCode: 0, output, stderr: '' }
-    } catch (error: any) {
-        return {
-            exitCode: error.status ?? 1,
-            output: error.stdout ?? '',
-            stderr: error.stderr ?? '',
-        }
-    }
-}
+const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
+    getFrameworkPaths('mocha')
 
 /**
  * Integration tests for wdio-rerun-service with Mocha
@@ -49,15 +19,15 @@ function runWdioMocha(specs: string[]): {
  */
 describe('RerunService Mocha Integration Tests', () => {
     beforeEach(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('mocha')
     })
 
     afterEach(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('mocha')
     })
 
     afterAll(async () => {
-        await cleanRerunArtifacts()
+        await cleanRerunArtifacts('mocha')
     })
 
     // =========================================================================
@@ -65,14 +35,14 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     describe('Passing Specs', () => {
         it('should NOT generate rerun.sh when all tests pass', () => {
-            const { exitCode } = runWdioMocha(['./mocha/passing.spec.ts'])
+            const { exitCode } = runWdio('mocha', ['./mocha/passing.spec.ts'])
 
             expect(exitCode).toBe(0)
             expect(existsSync(RERUN_SCRIPT)).toBe(false)
         })
 
         it('should NOT create rerun JSON files when all tests pass', async () => {
-            runWdioMocha(['./mocha/passing.spec.ts'])
+            runWdio('mocha', ['./mocha/passing.spec.ts'])
 
             if (existsSync(RERUN_DATA_DIR)) {
                 const files = await readdir(RERUN_DATA_DIR)
@@ -87,21 +57,21 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     describe('Failing Specs', () => {
         it('should generate rerun.sh when test fails', () => {
-            const { exitCode } = runWdioMocha(['./mocha/failing.spec.ts'])
+            const { exitCode } = runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             expect(exitCode).not.toBe(0)
             expect(existsSync(RERUN_SCRIPT)).toBe(true)
         })
 
         it('should include failing.spec.ts in rerun.sh', async () => {
-            runWdioMocha(['./mocha/failing.spec.ts'])
+            runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('failing.spec.ts')
         })
 
         it('should write failure data to JSON file', async () => {
-            runWdioMocha(['./mocha/failing.spec.ts'])
+            runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             const files = await readdir(RERUN_DATA_DIR)
             const jsonFile = files.find((f) => f.endsWith('.json'))
@@ -119,7 +89,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     describe('Mixed Passing and Failing Specs', () => {
         it('should only include failing spec in rerun.sh', async () => {
-            const { exitCode } = runWdioMocha([
+            const { exitCode } = runWdio('mocha', [
                 './mocha/passing.spec.ts',
                 './mocha/failing.spec.ts',
             ])
@@ -138,7 +108,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     describe('Multiple Failures in Same File', () => {
         it('should include spec file only once in rerun.sh', async () => {
-            const { exitCode } = runWdioMocha([
+            const { exitCode } = runWdio('mocha', [
                 './mocha/multiple-failures.spec.ts',
             ])
 
@@ -157,23 +127,22 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     describe('Rerun Script Format', () => {
         it('should include DISABLE_RERUN=true to prevent infinite loops', async () => {
-            runWdioMocha(['./mocha/failing.spec.ts'])
+            runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('DISABLE_RERUN=true')
         })
 
         it('should include npx wdio command', async () => {
-            runWdioMocha(['./mocha/failing.spec.ts'])
+            runWdio('mocha', ['./mocha/failing.spec.ts'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('npx wdio')
         })
 
-        it('should be executable (chmod +x)', async () => {
-            runWdioMocha(['./mocha/failing.spec.ts'])
+        it('should be executable (chmod +x)', () => {
+            runWdio('mocha', ['./mocha/failing.spec.ts'])
 
-            const { statSync } = await import('node:fs')
             const stats = statSync(RERUN_SCRIPT)
             const isExecutable = (stats.mode & 0o111) !== 0
             expect(isExecutable).toBe(true)

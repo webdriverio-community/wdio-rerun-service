@@ -1,7 +1,8 @@
 # WebdriverIO Re-run Service
 
 [![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
-![Coverage](https://img.shields.io/badge/unit%20test%20coverage-100%25-brightgreen)
+![Unit Test Coverage](https://img.shields.io/badge/unit%20coverage-100%25-brightgreen)
+![Integration Tests](https://img.shields.io/badge/integration%20tests-46%20passed-brightgreen)
 ![npm](https://img.shields.io/npm/dm/wdio-rerun-service)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/wdio-rerun-service)
 ![GitHub issues](https://img.shields.io/github/issues/webdriverio-community/wdio-rerun-service)
