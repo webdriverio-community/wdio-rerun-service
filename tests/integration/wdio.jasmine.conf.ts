@@ -33,8 +33,8 @@ export const config: WebdriverIO.Config = {
         [
             RerunService,
             {
-                rerunDataDir: './results/rerun',
-                rerunScriptPath: './rerun.sh',
+                rerunDataDir: './jasmine/results/rerun',
+                rerunScriptPath: './jasmine/rerun.sh',
             },
         ],
     ],

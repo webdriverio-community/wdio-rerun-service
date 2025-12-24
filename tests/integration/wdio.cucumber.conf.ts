@@ -33,8 +33,8 @@ export const config: WebdriverIO.Config = {
         [
             RerunService,
             {
-                rerunDataDir: './results/rerun',
-                rerunScriptPath: './rerun.sh',
+                rerunDataDir: './cucumber/results/rerun',
+                rerunScriptPath: './cucumber/rerun.sh',
                 ignoredTags: ['@skip-rerun'],
             },
         ],

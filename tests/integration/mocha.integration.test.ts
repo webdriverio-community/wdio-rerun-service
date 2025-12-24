@@ -5,9 +5,10 @@ import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 const INTEGRATION_DIR = join(import.meta.dirname, '.')
-const RERUN_SCRIPT = join(INTEGRATION_DIR, 'rerun.sh')
-const RERUN_BAT = join(INTEGRATION_DIR, 'rerun.bat')
-const RESULTS_DIR = join(INTEGRATION_DIR, 'results')
+const MOCHA_DIR = join(INTEGRATION_DIR, 'mocha')
+const RERUN_SCRIPT = join(MOCHA_DIR, 'rerun.sh')
+const RERUN_BAT = join(MOCHA_DIR, 'rerun.bat')
+const RESULTS_DIR = join(MOCHA_DIR, 'results')
 const RERUN_DATA_DIR = join(RESULTS_DIR, 'rerun')
 
 async function cleanRerunArtifacts() {
@@ -43,8 +44,8 @@ function runWdioMocha(specs: string[]): {
 /**
  * Integration tests for wdio-rerun-service with Mocha
  *
- * Unlike Cucumber, Mocha tests don't have line numbers in rerun.sh.
- * The rerun service captures the spec file path only.
+ * Mocha tests capture the spec file path without line numbers.
+ * The rerun service generates a rerun.sh script for failed specs.
  */
 describe('RerunService Mocha Integration Tests', () => {
     beforeEach(async () => {
@@ -129,6 +130,25 @@ describe('RerunService Mocha Integration Tests', () => {
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain('failing.spec.ts')
             expect(rerunContent).not.toContain('passing.spec.ts')
+        })
+    })
+
+    // =========================================================================
+    // MULTIPLE FAILURES IN SAME FILE
+    // =========================================================================
+    describe('Multiple Failures in Same File', () => {
+        it('should include spec file only once in rerun.sh', async () => {
+            const { exitCode } = runWdioMocha([
+                './mocha/multiple-failures.spec.ts',
+            ])
+
+            expect(exitCode).not.toBe(0)
+            expect(existsSync(RERUN_SCRIPT)).toBe(true)
+
+            const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
+            const matches =
+                rerunContent.match(/multiple-failures\.spec\.ts/g) || []
+            expect(matches.length).toBe(1)
         })
     })
 

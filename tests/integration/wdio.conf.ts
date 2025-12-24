@@ -33,8 +33,8 @@ export const config: WebdriverIO.Config = {
         [
             RerunService,
             {
-                rerunDataDir: './results/rerun',
-                rerunScriptPath: './rerun.sh',
+                rerunDataDir: './mocha/results/rerun',
+                rerunScriptPath: './mocha/rerun.sh',
             },
         ],
     ],

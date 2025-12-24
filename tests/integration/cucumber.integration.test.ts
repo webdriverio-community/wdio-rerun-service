@@ -1,13 +1,14 @@
 import { describe, it, expect, beforeEach, afterEach, afterAll } from 'vitest'
 import { execSync } from 'node:child_process'
-import { readFile, rm, readdir, stat } from 'node:fs/promises'
+import { readFile, rm, readdir } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 const INTEGRATION_DIR = join(import.meta.dirname, '.')
-const RERUN_SCRIPT = join(INTEGRATION_DIR, 'rerun.sh')
-const RERUN_BAT = join(INTEGRATION_DIR, 'rerun.bat')
-const RESULTS_DIR = join(INTEGRATION_DIR, 'results')
+const CUCUMBER_DIR = join(INTEGRATION_DIR, 'cucumber')
+const RERUN_SCRIPT = join(CUCUMBER_DIR, 'rerun.sh')
+const RERUN_BAT = join(CUCUMBER_DIR, 'rerun.bat')
+const RESULTS_DIR = join(CUCUMBER_DIR, 'results')
 const RERUN_DATA_DIR = join(RESULTS_DIR, 'rerun')
 
 async function cleanRerunArtifacts() {
@@ -148,7 +149,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Scenario Outline (example row on line 9)', () => {
         const FEATURE = './cucumber/features/scenario-outline.feature'
-        const EXPECTED_LINE = 9 // Points to example data row, NOT Scenario Outline line
+        const EXPECTED_LINE = 9
 
         it(`should include scenario-outline.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
             const { exitCode } = runWdio([FEATURE])
@@ -191,21 +192,18 @@ describe('RerunService Cucumber Integration Tests', () => {
     describe('Scenario Outline with Multiple Examples (lines 9 and 13)', () => {
         const FEATURE =
             './cucumber/features/scenario-outline-multiple-examples.feature'
-        const FIRST_EXAMPLE_LINE = 9
-        const SECOND_EXAMPLE_LINE = 13
 
-        it(`should include both example rows: lines ${FIRST_EXAMPLE_LINE} and ${SECOND_EXAMPLE_LINE}`, async () => {
+        it('should include both example rows: lines 9 and 13', async () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
-                `scenario-outline-multiple-examples.feature:${FIRST_EXAMPLE_LINE}`,
+                'scenario-outline-multiple-examples.feature:9',
             )
             expect(rerunContent).toContain(
-                `scenario-outline-multiple-examples.feature:${SECOND_EXAMPLE_LINE}`,
+                'scenario-outline-multiple-examples.feature:13',
             )
         })
     })
@@ -230,7 +228,6 @@ describe('RerunService Cucumber Integration Tests', () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
@@ -264,7 +261,6 @@ describe('RerunService Cucumber Integration Tests', () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
@@ -302,22 +298,15 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Multiple Rules (lines 5 and 11)', () => {
         const FEATURE = './cucumber/features/multiple-rules.feature'
-        const FIRST_RULE_SCENARIO_LINE = 5
-        const SECOND_RULE_SCENARIO_LINE = 11
 
-        it(`should include both scenarios: lines ${FIRST_RULE_SCENARIO_LINE} and ${SECOND_RULE_SCENARIO_LINE}`, async () => {
+        it('should include both scenarios: lines 5 and 11', async () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).toContain(
-                `multiple-rules.feature:${FIRST_RULE_SCENARIO_LINE}`,
-            )
-            expect(rerunContent).toContain(
-                `multiple-rules.feature:${SECOND_RULE_SCENARIO_LINE}`,
-            )
+            expect(rerunContent).toContain('multiple-rules.feature:5')
+            expect(rerunContent).toContain('multiple-rules.feature:11')
         })
     })
 
@@ -337,27 +326,25 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Background Under Rule (scenario on line 8, NOT background line 5)', () => {
         const FEATURE = './cucumber/features/background-under-rule.feature'
-        const SCENARIO_LINE = 8
-        const BACKGROUND_LINE = 5
+        const EXPECTED_LINE = 8
 
-        it(`should include background-under-rule.feature:${SCENARIO_LINE} in rerun.sh`, async () => {
+        it(`should include background-under-rule.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
-                `background-under-rule.feature:${SCENARIO_LINE}`,
+                `background-under-rule.feature:${EXPECTED_LINE}`,
             )
         })
 
-        it(`should NOT point to Background line (line ${BACKGROUND_LINE})`, async () => {
+        it('should NOT point to Background line (line 5)', async () => {
             runWdio([FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain(
-                `background-under-rule.feature:${BACKGROUND_LINE}`,
+                'background-under-rule.feature:5',
             )
         })
     })
@@ -382,19 +369,16 @@ describe('RerunService Cucumber Integration Tests', () => {
     describe('Feature Background + Rule Background (scenario on line 11)', () => {
         const FEATURE =
             './cucumber/features/background-with-feature-background.feature'
-        const SCENARIO_LINE = 11
-        const FEATURE_BACKGROUND_LINE = 3
-        const RULE_BACKGROUND_LINE = 8
+        const EXPECTED_LINE = 11
 
-        it(`should include background-with-feature-background.feature:${SCENARIO_LINE} in rerun.sh`, async () => {
+        it(`should include background-with-feature-background.feature:${EXPECTED_LINE} in rerun.sh`, async () => {
             const { exitCode } = runWdio([FEATURE])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).toContain(
-                `background-with-feature-background.feature:${SCENARIO_LINE}`,
+                `background-with-feature-background.feature:${EXPECTED_LINE}`,
             )
         })
 
@@ -403,10 +387,10 @@ describe('RerunService Cucumber Integration Tests', () => {
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
             expect(rerunContent).not.toContain(
-                `background-with-feature-background.feature:${FEATURE_BACKGROUND_LINE}`,
+                'background-with-feature-background.feature:3',
             )
             expect(rerunContent).not.toContain(
-                `background-with-feature-background.feature:${RULE_BACKGROUND_LINE}`,
+                'background-with-feature-background.feature:8',
             )
         })
     })
@@ -427,26 +411,22 @@ describe('RerunService Cucumber Integration Tests', () => {
     //  10:     Then the page title should be "Also will not match"
     // =========================================================================
     describe('Ignored Tags (@skip-rerun)', () => {
-        const FEATURE = './cucumber/features/ignored-tag.feature'
-        const UNTAGGED_SCENARIO_LINE = 3
-        const TAGGED_SCENARIO_LINE = 8
+        it('should include untagged scenario (line 3) in rerun.sh', async () => {
+            const { exitCode } = runWdio([
+                './cucumber/features/ignored-tag.feature',
+            ])
 
-        it(`should include untagged scenario (line ${UNTAGGED_SCENARIO_LINE}) in rerun.sh`, async () => {
-            runWdio([FEATURE])
+            expect(exitCode).not.toBe(0)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).toContain(
-                `ignored-tag.feature:${UNTAGGED_SCENARIO_LINE}`,
-            )
+            expect(rerunContent).toContain('ignored-tag.feature:3')
         })
 
-        it(`should NOT include @skip-rerun tagged scenario (line ${TAGGED_SCENARIO_LINE}) in rerun.sh`, async () => {
-            runWdio([FEATURE])
+        it('should NOT include @skip-rerun tagged scenario (line 8) in rerun.sh', async () => {
+            runWdio(['./cucumber/features/ignored-tag.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).not.toContain(
-                `ignored-tag.feature:${TAGGED_SCENARIO_LINE}`,
-            )
+            expect(rerunContent).not.toContain('ignored-tag.feature:8')
         })
 
         it('should NOT generate rerun.sh when only @skip-rerun scenarios fail', () => {
@@ -475,27 +455,23 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     describe('Multiple Failures in Same Feature (lines 3 and 7)', () => {
         const FEATURE = './cucumber/features/multiple-failures.feature'
-        const FIRST_SCENARIO_LINE = 3
-        const SECOND_SCENARIO_LINE = 7
 
-        it(`should include both scenarios: lines ${FIRST_SCENARIO_LINE} and ${SECOND_SCENARIO_LINE}`, async () => {
-            runWdio([FEATURE])
+        it('should include both scenarios: lines 3 and 7', async () => {
+            const { exitCode } = runWdio([FEATURE])
+
+            expect(exitCode).not.toBe(0)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).toContain(
-                `multiple-failures.feature:${FIRST_SCENARIO_LINE}`,
-            )
-            expect(rerunContent).toContain(
-                `multiple-failures.feature:${SECOND_SCENARIO_LINE}`,
-            )
+            expect(rerunContent).toContain('multiple-failures.feature:3')
+            expect(rerunContent).toContain('multiple-failures.feature:7')
         })
 
         it('should have exactly 2 --spec= entries for 2 failures', async () => {
             runWdio([FEATURE])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            const matches = rerunContent.match(/--spec=/g)
-            expect(matches?.length).toBe(2)
+            const specMatches = rerunContent.match(/--spec=/g) || []
+            expect(specMatches.length).toBe(2)
         })
     })
 
@@ -510,10 +486,9 @@ describe('RerunService Cucumber Integration Tests', () => {
             ])
 
             expect(exitCode).not.toBe(0)
-            expect(existsSync(RERUN_SCRIPT)).toBe(true)
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).toContain('basic-failing.feature:3')
+            expect(rerunContent).toContain('basic-failing.feature')
             expect(rerunContent).not.toContain('passing.feature')
         })
     })
@@ -540,14 +515,16 @@ describe('RerunService Cucumber Integration Tests', () => {
             runWdio(['./cucumber/features/basic-failing.feature'])
 
             const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
-            expect(rerunContent).not.toMatch(/--spec=.*\\/)
+            expect(rerunContent).not.toMatch(/\\/)
         })
 
         it('should be executable (chmod +x)', async () => {
             runWdio(['./cucumber/features/basic-failing.feature'])
 
-            const { mode } = await stat(RERUN_SCRIPT)
-            expect(mode & 0o111).not.toBe(0)
+            const { statSync } = await import('node:fs')
+            const stats = statSync(RERUN_SCRIPT)
+            const isExecutable = (stats.mode & 0o111) !== 0
+            expect(isExecutable).toBe(true)
         })
     })
 })
