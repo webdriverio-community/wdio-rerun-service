@@ -23,7 +23,7 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 ## Quality & Reliability
 
 - ✅ **100% test coverage** — comprehensive unit and integration tests
-- 🧪 **46 integration tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
+- 🧪 **Integration tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
 - 🖥️ **Cross-platform CI** — tested on macOS, Windows, and Linux
 - 📦 **Zero dependencies** — only WebdriverIO peer dependencies, minimal footprint
 - 🔷 **100% TypeScript** — fully typed for great IDE support
