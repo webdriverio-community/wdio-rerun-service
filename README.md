@@ -1,11 +1,14 @@
 # WebdriverIO Re-run Service
 
-[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
-![Unit Test Coverage](https://img.shields.io/badge/unit%20coverage-100%25-brightgreen)
-![Integration Tests](https://img.shields.io/badge/integration%20tests-46%20passed-brightgreen)
-![npm](https://img.shields.io/npm/dm/wdio-rerun-service)
-![npm bundle size](https://img.shields.io/bundlephobia/min/wdio-rerun-service)
-![GitHub issues](https://img.shields.io/github/issues/webdriverio-community/wdio-rerun-service)
+[![CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
+![Unit Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![Integration Tests](https://img.shields.io/badge/integration-46%20tests-brightgreen)
+![npm](https://img.shields.io/npm/v/wdio-rerun-service)
+![npm downloads](https://img.shields.io/npm/dm/wdio-rerun-service)
+![node](https://img.shields.io/node/v/wdio-rerun-service)
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)
+![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+![License](https://img.shields.io/github/license/webdriverio-community/wdio-rerun-service)
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
