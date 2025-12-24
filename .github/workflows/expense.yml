@@ -1,4 +1,4 @@
-name: Expense Contribution
+name: 💰 Expense Contribution
 
 on:
   workflow_dispatch:

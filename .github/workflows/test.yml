@@ -1,7 +1,7 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Test
+name: 🧪 Test
 
 on:
   push:
@@ -24,13 +24,20 @@ permissions:
 
 jobs:
   unit:
-    name: Unit Tests (${{ matrix.os }}, Node ${{ matrix.node-version }})
+    name: 🔬 Unit (${{ matrix.emoji }} ${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         node-version: [20.x, 22.x, 24.x]
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            emoji: 🐧
+          - os: windows-latest
+            emoji: 🪟
+          - os: macos-latest
+            emoji: 🍎
     steps:
     - uses: actions/checkout@v4
     - name: Install pnpm
@@ -50,13 +57,20 @@ jobs:
         CI: true
 
   integration:
-    name: Integration Tests (${{ matrix.os }})
+    name: 🌐 Integration (${{ matrix.emoji }} ${{ matrix.os }})
     needs: unit
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            emoji: 🐧
+          - os: windows-latest
+            emoji: 🪟
+          - os: macos-latest
+            emoji: 🍎
     steps:
     - uses: actions/checkout@v4
     - name: Install pnpm

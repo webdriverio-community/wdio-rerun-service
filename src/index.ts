@@ -70,7 +70,7 @@ export default class RerunService implements Services.ServiceInstance {
         }
         this.specFile = specs[0] ?? ''
         this.log.debug(
-            `Re-run service is activated. Data directory: ${this.rerunDataDir}`,
+            `🔄 Re-run service activated. Data directory: ${this.rerunDataDir}`,
         )
         await mkdir(this.rerunDataDir, { recursive: true })
         this.serviceWorkerId = randomUUID()
@@ -89,8 +89,8 @@ export default class RerunService implements Services.ServiceInstance {
         if (passed || config.framework === 'cucumber') {
             return
         }
-        this.log.debug(`Re-run service is inspecting non-passing test.`)
-        this.log.debug(`Test location: ${this.specFile}`)
+        this.log.debug(`🔍 Inspecting non-passing test.`)
+        this.log.debug(`📍 Test location: ${this.specFile}`)
         const error = results.error as Error | undefined
         if (error?.message) {
             this.nonPassingItems.push({
@@ -99,7 +99,7 @@ export default class RerunService implements Services.ServiceInstance {
             })
         } else {
             this.log.debug(
-                'The non-passing test did not contain any error message, it could not be added for re-run.',
+                '⚠️ Non-passing test did not contain an error message, skipping.',
             )
         }
     }
@@ -183,7 +183,7 @@ export default class RerunService implements Services.ServiceInstance {
         }
         if (this.nonPassingItems.length === 0) {
             this.log.debug(
-                'Re-run service did not detect any non-passing scenarios or tests.',
+                '✅ No non-passing scenarios or tests detected.',
             )
             return
         }
@@ -229,13 +229,11 @@ export default class RerunService implements Services.ServiceInstance {
             })
             await writeFile(this.rerunScriptPath, rerunCommand, { mode: 0o755 })
             this.log.debug(
-                `Re-run script has been generated @ ${this.rerunScriptPath}`,
+                `📝 Re-run script generated: ${this.rerunScriptPath}`,
             )
         } catch (err) {
             this.log.debug(
-                `Re-run service failed to generate re-run script: ${JSON.stringify(
-                    err,
-                )}`,
+                `❌ Failed to generate re-run script: ${JSON.stringify(err)}`,
             )
         }
     }
