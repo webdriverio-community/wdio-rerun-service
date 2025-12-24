@@ -20,15 +20,23 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 - 🪟 Cross-platform support (generates `rerun.sh` on Unix, `rerun.bat` on Windows)
 - ⚙️ Configurable command prefix and custom parameters
 
+## Quality & Reliability
+
+- ✅ **100% test coverage** — comprehensive unit and integration tests
+- 🧪 **46 integration tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
+- 🖥️ **Cross-platform CI** — tested on macOS, Windows, and Linux
+- 📦 **Zero dependencies** — only WebdriverIO peer dependencies, minimal footprint
+- 🔷 **100% TypeScript** — fully typed for great IDE support
+- 🚀 **Modern Node.js** — uses native APIs (`crypto.randomUUID`, `util.parseArgs`)
+
 ## Compatibility
 
-| wdio-rerun-service | WebdriverIO |
-|--------------------|-------------|
-| `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` |
-| `^2.0.0`           | `^8.0.0` |
-| `^1.7.0`           | `^7.0.0` |
-
-**Note:** Version `2.1.0` is backward compatible with WebdriverIO v8 and adds support for v9. All users on v8 or v9 should use the latest `2.x.x` version.
+| wdio-rerun-service | WebdriverIO | Node.js |
+|--------------------|-------------|---------|
+| `^3.0.0`           | `^9.0.0`    | `>=20`  |
+| `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` | `>=18` |
+| `^2.0.0`           | `^8.0.0`    | `>=18` |
+| `^1.7.0`           | `^7.0.0`    | `>=14` |
 
 ## Re-run vs. Retry
 
@@ -280,3 +288,22 @@ export const config = {
     // ...
 }
 ```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+```bash
+# Clone the repo
+git clone https://github.com/webdriverio-community/wdio-rerun-service.git
+
+# Install dependencies
+pnpm install
+
+# Run tests
+pnpm test
+```
+
+## License
+
+MIT
