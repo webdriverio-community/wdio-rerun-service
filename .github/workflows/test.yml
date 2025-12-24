@@ -71,6 +71,8 @@ jobs:
     - run: pnpm run build
     - name: Install integration test dependencies
       run: pnpm --dir tests/integration install
+    - name: Type check integration tests
+      run: pnpm run test:tsc:integration
     - name: Run ${{ matrix.framework }} integration tests
       run: pnpm --dir tests/integration test -- --testNamePattern="${{ matrix.framework }}"
       env:
