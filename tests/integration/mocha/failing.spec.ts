@@ -1,7 +1,13 @@
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
+
+const TEST_PAGE = pathToFileURL(
+    join(import.meta.dirname, '../test-page.html'),
+).href
+
 describe('Failing Tests', () => {
     it('should fail - intentional failure for rerun service', async () => {
-        const testPage = `file://${process.cwd()}/test-page.html`
-        await browser.url(testPage)
+        await browser.url(TEST_PAGE)
         const title = await browser.getTitle()
         // Intentionally fail to trigger rerun service
         expect(title).toBe('This will not match')
