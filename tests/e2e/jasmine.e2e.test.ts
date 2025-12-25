@@ -12,12 +12,12 @@ const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
     getFrameworkPaths('jasmine')
 
 /**
- * Integration tests for wdio-rerun-service with Jasmine
+ * E2E tests for wdio-rerun-service with Jasmine
  *
  * Like Mocha, Jasmine tests don't have line numbers in rerun.sh.
  * The rerun service captures the spec file path only.
  */
-describe('RerunService Jasmine Integration Tests', () => {
+describe('💎 RerunService Jasmine E2E Tests', () => {
     beforeEach(async () => {
         await cleanRerunArtifacts('jasmine')
     })
@@ -33,7 +33,7 @@ describe('RerunService Jasmine Integration Tests', () => {
     // =========================================================================
     // PASSING SPECS - Should NOT generate rerun.sh
     // =========================================================================
-    describe('Passing Specs', () => {
+    describe('✅ Passing Specs', () => {
         it('should NOT generate rerun.sh when all tests pass', () => {
             const { exitCode } = runWdio('jasmine', [
                 './jasmine/passing.spec.ts',
@@ -57,7 +57,7 @@ describe('RerunService Jasmine Integration Tests', () => {
     // =========================================================================
     // FAILING SPECS - Should generate rerun.sh with spec file path
     // =========================================================================
-    describe('Failing Specs', () => {
+    describe('❌ Failing Specs', () => {
         it('should generate rerun.sh when test fails', () => {
             const { exitCode } = runWdio('jasmine', [
                 './jasmine/failing.spec.ts',
@@ -91,7 +91,7 @@ describe('RerunService Jasmine Integration Tests', () => {
     // =========================================================================
     // MIXED PASSING AND FAILING
     // =========================================================================
-    describe('Mixed Passing and Failing Specs', () => {
+    describe('🔀 Mixed Passing and Failing Specs', () => {
         it('should only include failing spec in rerun.sh', async () => {
             const { exitCode } = runWdio('jasmine', [
                 './jasmine/passing.spec.ts',
@@ -110,7 +110,7 @@ describe('RerunService Jasmine Integration Tests', () => {
     // =========================================================================
     // MULTIPLE FAILURES IN SAME FILE
     // =========================================================================
-    describe('Multiple Failures in Same File', () => {
+    describe('📊 Multiple Failures in Same File', () => {
         it('should include spec file only once in rerun.sh', async () => {
             const { exitCode } = runWdio('jasmine', [
                 './jasmine/multiple-failures.spec.ts',
@@ -129,7 +129,7 @@ describe('RerunService Jasmine Integration Tests', () => {
     // =========================================================================
     // RERUN SCRIPT FORMAT VALIDATION
     // =========================================================================
-    describe('Rerun Script Format', () => {
+    describe('📜 Rerun Script Format', () => {
         it('should include DISABLE_RERUN=true to prevent infinite loops', async () => {
             runWdio('jasmine', ['./jasmine/failing.spec.ts'])
 

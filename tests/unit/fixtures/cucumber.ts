@@ -27,7 +27,7 @@ import { TestStepResultStatus } from '@cucumber/messages'
  * Originally copied from @wdio/cucumber-framework (8.0.13) and adapted for testing
  * scenarios under Rules - which is critical for proper line number extraction.
  *
- * Note: For Cucumber-specific integration tests testing various Gherkin patterns,
+ * Note: For Cucumber-specific E2E tests testing various Gherkin patterns,
  * see /tests/cucumber/*.test.ts which use JSON fixtures from /tests/cucumber/fixtures/*.world.json
  */
 

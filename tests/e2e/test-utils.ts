@@ -1,11 +1,11 @@
 /**
- * Shared test utilities for integration tests
+ * Shared test utilities for E2E tests
  */
 import { execSync } from 'node:child_process'
 import { rm } from 'node:fs/promises'
 import { join } from 'node:path'
 
-export const INTEGRATION_DIR = join(import.meta.dirname, '.')
+export const E2E_DIR = join(import.meta.dirname, '.')
 
 export interface WdioResult {
     exitCode: number
@@ -19,7 +19,7 @@ export type Framework = 'cucumber' | 'jasmine' | 'mocha'
  * Get paths for a framework's rerun artifacts
  */
 export function getFrameworkPaths(framework: Framework) {
-    const frameworkDir = join(INTEGRATION_DIR, framework)
+    const frameworkDir = join(E2E_DIR, framework)
     return {
         dir: frameworkDir,
         rerunScript: join(frameworkDir, 'rerun.sh'),
@@ -48,7 +48,7 @@ export function runWdio(framework: Framework, specs: string[]): WdioResult {
 
     try {
         const output = execSync(cmd, {
-            cwd: INTEGRATION_DIR,
+            cwd: E2E_DIR,
             encoding: 'utf8',
             stdio: ['pipe', 'pipe', 'pipe'],
         })

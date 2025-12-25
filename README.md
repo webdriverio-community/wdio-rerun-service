@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
 ![Unit Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
-![Integration Tests](https://img.shields.io/badge/integration-46%20tests-brightgreen)
+![E2E Tests](https://img.shields.io/badge/e2e-46%20tests-brightgreen)
 ![npm](https://img.shields.io/npm/v/wdio-rerun-service)
 ![npm downloads](https://img.shields.io/npm/dm/wdio-rerun-service)
 ![node](https://img.shields.io/node/v/wdio-rerun-service)
@@ -22,8 +22,8 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 
 ## Quality & Reliability
 
-- ✅ **100% test coverage** — comprehensive unit and integration tests
-- 🧪 **Integration tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
+- ✅ **100% test coverage** — comprehensive unit and E2E tests
+- 🧪 **E2E tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
 - 🖥️ **Cross-platform CI** — tested on macOS, Windows, and Linux
 - 📦 **Zero dependencies** — only WebdriverIO peer dependencies, minimal footprint
 - 🔷 **100% TypeScript** — fully typed for great IDE support

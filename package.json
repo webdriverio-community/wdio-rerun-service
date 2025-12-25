@@ -40,13 +40,13 @@
     "compile:esm": "tsc -p tsconfig.esm.json",
     "generate:cjs:package": "shx echo \"{\\\"type\\\":\\\"commonjs\\\"}\" > ./build/cjs/package.json",
     "prepare": "pnpm run build",
-    "test": "run-s test:clean test:eslint test:tsc test:unit test:integration",
+    "test": "run-s test:clean test:eslint test:tsc test:unit test:e2e",
     "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat",
     "test:eslint": "eslint src tests",
     "test:tsc": "tsc -p tsconfig.json --noEmit",
-    "test:tsc:integration": "tsc -p tests/integration/tsconfig.json --noEmit",
+    "test:tsc:e2e": "tsc -p tests/e2e/tsconfig.json --noEmit",
     "test:unit": "vitest run --coverage",
-    "test:integration": "pnpm --dir tests/integration test",
+    "test:e2e": "pnpm --dir tests/e2e test",
     "watch": "npm-watch"
   },
   "watch": {

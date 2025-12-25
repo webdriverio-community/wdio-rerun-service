@@ -6,7 +6,7 @@ import eslintPluginPrettier from 'eslint-plugin-prettier'
 export default tseslint.config(
     // Global ignores
     {
-        ignores: ['build/**', 'coverage/**', 'results/**', 'node_modules/**', 'tests/integration/node_modules/**']
+        ignores: ['build/**', 'coverage/**', 'results/**', 'node_modules/**', 'tests/e2e/node_modules/**']
     },
 
     // Base config for all files

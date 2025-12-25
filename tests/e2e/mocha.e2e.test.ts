@@ -12,12 +12,12 @@ const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
     getFrameworkPaths('mocha')
 
 /**
- * Integration tests for wdio-rerun-service with Mocha
+ * E2E tests for wdio-rerun-service with Mocha
  *
  * Mocha tests capture the spec file path without line numbers.
  * The rerun service generates a rerun.sh script for failed specs.
  */
-describe('RerunService Mocha Integration Tests', () => {
+describe('☕ RerunService Mocha E2E Tests', () => {
     beforeEach(async () => {
         await cleanRerunArtifacts('mocha')
     })
@@ -33,7 +33,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     // PASSING SPECS - Should NOT generate rerun.sh
     // =========================================================================
-    describe('Passing Specs', () => {
+    describe('✅ Passing Specs', () => {
         it('should NOT generate rerun.sh when all tests pass', () => {
             const { exitCode } = runWdio('mocha', ['./mocha/passing.spec.ts'])
 
@@ -55,7 +55,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     // FAILING SPECS - Should generate rerun.sh with spec file path
     // =========================================================================
-    describe('Failing Specs', () => {
+    describe('❌ Failing Specs', () => {
         it('should generate rerun.sh when test fails', () => {
             const { exitCode } = runWdio('mocha', ['./mocha/failing.spec.ts'])
 
@@ -87,7 +87,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     // MIXED PASSING AND FAILING
     // =========================================================================
-    describe('Mixed Passing and Failing Specs', () => {
+    describe('🔀 Mixed Passing and Failing Specs', () => {
         it('should only include failing spec in rerun.sh', async () => {
             const { exitCode } = runWdio('mocha', [
                 './mocha/passing.spec.ts',
@@ -106,7 +106,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     // MULTIPLE FAILURES IN SAME FILE
     // =========================================================================
-    describe('Multiple Failures in Same File', () => {
+    describe('📊 Multiple Failures in Same File', () => {
         it('should include spec file only once in rerun.sh', async () => {
             const { exitCode } = runWdio('mocha', [
                 './mocha/multiple-failures.spec.ts',
@@ -125,7 +125,7 @@ describe('RerunService Mocha Integration Tests', () => {
     // =========================================================================
     // RERUN SCRIPT FORMAT VALIDATION
     // =========================================================================
-    describe('Rerun Script Format', () => {
+    describe('📜 Rerun Script Format', () => {
         it('should include DISABLE_RERUN=true to prevent infinite loops', async () => {
             runWdio('mocha', ['./mocha/failing.spec.ts'])
 

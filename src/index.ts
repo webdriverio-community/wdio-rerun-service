@@ -182,9 +182,7 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         if (this.nonPassingItems.length === 0) {
-            this.log.debug(
-                '✅ No non-passing scenarios or tests detected.',
-            )
+            this.log.debug('✅ No non-passing scenarios or tests detected.')
             return
         }
         await writeFile(

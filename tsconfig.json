@@ -7,5 +7,5 @@
         "types": ["node", "@wdio/globals/types", "@wdio/cucumber-framework"]
     },
     "include": ["src/**/*.ts", "tests/**/*.ts"],
-    "exclude": ["tests/integration/**/*"]
+    "exclude": ["tests/e2e/**/*"]
 }

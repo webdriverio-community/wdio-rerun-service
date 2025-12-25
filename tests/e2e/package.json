@@ -1,5 +1,5 @@
 {
-    "name": "wdio-rerun-service-integration-tests",
+    "name": "wdio-rerun-service-e2e-tests",
     "version": "1.0.0",
     "private": true,
     "type": "module",

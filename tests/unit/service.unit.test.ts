@@ -638,7 +638,7 @@ describe('wdio-rerun-service', () => {
         })
     })
 
-    describe('integration tests', () => {
+    describe('full flow tests', () => {
         it('should add failed specs to rerun script', async () => {
             const rerunDataDir = join(tmpdir(), 'rerun-data')
             const rerunScriptPath = join(rerunDataDir, rerunScriptFile)

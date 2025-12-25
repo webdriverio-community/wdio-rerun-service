@@ -56,8 +56,8 @@ jobs:
       env:
         CI: true
 
-  integration:
-    name: 🌐 Integration (${{ matrix.emoji }} ${{ matrix.os }})
+  e2e:
+    name: 🌐 E2E (${{ matrix.emoji }} ${{ matrix.os }})
     needs: unit
     runs-on: ${{ matrix.os }}
     strategy:
@@ -82,11 +82,11 @@ jobs:
         cache: 'pnpm'
     - run: pnpm install
     - run: pnpm run build
-    - name: Install integration test dependencies
-      run: pnpm --dir tests/integration install
-    - name: Type check integration tests
-      run: pnpm run test:tsc:integration
-    - name: Run integration tests
-      run: pnpm --dir tests/integration test
+    - name: Install E2E test dependencies
+      run: pnpm --dir tests/e2e install
+    - name: Type check E2E tests
+      run: pnpm run test:tsc:e2e
+    - name: Run E2E tests
+      run: pnpm --dir tests/e2e test
       env:
         CI: true

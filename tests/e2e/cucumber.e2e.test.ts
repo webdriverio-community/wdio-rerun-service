@@ -12,7 +12,7 @@ const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
     getFrameworkPaths('cucumber')
 
 /**
- * Integration tests for wdio-rerun-service with Cucumber
+ * E2E tests for wdio-rerun-service with Cucumber
  *
  * These tests verify that rerun.sh contains the correct spec file name
  * and LINE NUMBER of each failing scenario. Line numbers are critical
@@ -21,7 +21,7 @@ const { rerunScript: RERUN_SCRIPT, rerunDataDir: RERUN_DATA_DIR } =
  * Each test documents the expected line number in both the test name
  * and assertions.
  */
-describe('RerunService Cucumber Integration Tests', () => {
+describe('🥒 RerunService Cucumber E2E Tests', () => {
     beforeEach(async () => {
         await cleanRerunArtifacts('cucumber')
     })
@@ -37,7 +37,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     // PASSING SCENARIOS - Should NOT generate rerun.sh
     // =========================================================================
-    describe('Passing Scenarios', () => {
+    describe('✅ Passing Scenarios', () => {
         it('should NOT generate rerun.sh when all scenarios pass', () => {
             const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/passing.feature',
@@ -68,7 +68,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   4:     Given I am on Google
     //   5:     Then the page title should be "This will never match"
     // =========================================================================
-    describe('Basic Failing Scenario (line 3)', () => {
+    describe('❌ Basic Failing Scenario (line 3)', () => {
         const FEATURE = './cucumber/features/basic-failing.feature'
         const EXPECTED_LINE = 3
 
@@ -117,7 +117,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   8:       | expected            |
     //   9:       | This will not match |    <-- THIS LINE (example data row)
     // =========================================================================
-    describe('Scenario Outline (example row on line 9)', () => {
+    describe('📋 Scenario Outline (example row on line 9)', () => {
         const FEATURE = './cucumber/features/scenario-outline.feature'
         const EXPECTED_LINE = 9
 
@@ -159,7 +159,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //  12:       | expected       |
     //  13:       | Second failure |   <-- AND THIS LINE
     // =========================================================================
-    describe('Scenario Outline with Multiple Examples (lines 9 and 13)', () => {
+    describe('📋 Scenario Outline with Multiple Examples (lines 9 and 13)', () => {
         const FEATURE =
             './cucumber/features/scenario-outline-multiple-examples.feature'
 
@@ -190,7 +190,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   6:       Given I am on Google
     //   7:       Then the page title should be "This will not match"
     // =========================================================================
-    describe('Scenario Under Rule (line 5)', () => {
+    describe('📐 Scenario Under Rule (line 5)', () => {
         const FEATURE = './cucumber/features/scenario-under-rule.feature'
         const EXPECTED_LINE = 5
 
@@ -222,7 +222,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //  10:       | expected            |
     //  11:       | This will not match |    <-- THIS LINE
     // =========================================================================
-    describe('Scenario Outline Under Rule (example row on line 11)', () => {
+    describe('📐 Scenario Outline Under Rule (example row on line 11)', () => {
         const FEATURE =
             './cucumber/features/scenario-outline-under-rule.feature'
         const EXPECTED_LINE = 11
@@ -266,7 +266,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //  12:       Given I am on Google
     //  13:       Then the page title should be "Second rule failure"
     // =========================================================================
-    describe('Multiple Rules (lines 5 and 11)', () => {
+    describe('📐 Multiple Rules (lines 5 and 11)', () => {
         const FEATURE = './cucumber/features/multiple-rules.feature'
 
         it('should include both scenarios: lines 5 and 11', async () => {
@@ -294,7 +294,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   8:     Scenario: Failing scenario after background    <-- THIS LINE
     //   9:       Then the page title should be "This will not match"
     // =========================================================================
-    describe('Background Under Rule (scenario on line 8, NOT background line 5)', () => {
+    describe('🎭 Background Under Rule (scenario on line 8, NOT background line 5)', () => {
         const FEATURE = './cucumber/features/background-under-rule.feature'
         const EXPECTED_LINE = 8
 
@@ -336,7 +336,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //  11:     Scenario: Scenario with two backgrounds    <-- THIS LINE
     //  12:       Then the page title should be "This will not match"
     // =========================================================================
-    describe('Feature Background + Rule Background (scenario on line 11)', () => {
+    describe('🎭 Feature Background + Rule Background (scenario on line 11)', () => {
         const FEATURE =
             './cucumber/features/background-with-feature-background.feature'
         const EXPECTED_LINE = 11
@@ -380,7 +380,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   9:     Given I am on Google
     //  10:     Then the page title should be "Also will not match"
     // =========================================================================
-    describe('Ignored Tags (@skip-rerun)', () => {
+    describe('🚫 Ignored Tags (@skip-rerun)', () => {
         it('should include untagged scenario (line 3) in rerun.sh', async () => {
             const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/ignored-tag.feature',
@@ -423,7 +423,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     //   8:     Given I am on Google
     //   9:     Then the page title should be "Second failure"
     // =========================================================================
-    describe('Multiple Failures in Same Feature (lines 3 and 7)', () => {
+    describe('📊 Multiple Failures in Same Feature (lines 3 and 7)', () => {
         const FEATURE = './cucumber/features/multiple-failures.feature'
 
         it('should include both scenarios: lines 3 and 7', async () => {
@@ -448,7 +448,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     // MIXED PASSING AND FAILING
     // =========================================================================
-    describe('Mixed Passing and Failing Features', () => {
+    describe('🔀 Mixed Passing and Failing Features', () => {
         it('should only include failing feature in rerun.sh', async () => {
             const { exitCode } = runWdio('cucumber', [
                 './cucumber/features/passing.feature',
@@ -466,7 +466,7 @@ describe('RerunService Cucumber Integration Tests', () => {
     // =========================================================================
     // RERUN SCRIPT FORMAT VALIDATION
     // =========================================================================
-    describe('Rerun Script Format', () => {
+    describe('📜 Rerun Script Format', () => {
         it('should include DISABLE_RERUN=true to prevent infinite loops', async () => {
             runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 
