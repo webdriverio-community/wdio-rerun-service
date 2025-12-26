@@ -304,6 +304,10 @@ pnpm install
 pnpm test
 ```
 
+### 💰 Contributor Compensation
+
+This project participates in the [WebdriverIO Open Collective](https://opencollective.com/webdriverio) expense program. Contributors may be compensated for their work on accepted PRs. The amount is determined by the WebdriverIO Technical Steering Committee based on the scope and impact of the contribution.
+
 ## License
 
 MIT
