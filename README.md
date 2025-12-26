@@ -33,7 +33,7 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 
 | wdio-rerun-service | WebdriverIO | Node.js |
 |--------------------|-------------|---------|
-| `^3.0.0`           | `^9.0.0`    | `>=20`  |
+| `^3.0.0`           | `^8.0.0 \|\| ^9.0.0` | `>=20`  |
 | `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` | `>=18` |
 | `^2.0.0`           | `^8.0.0`    | `>=18` |
 | `^1.7.0`           | `^7.0.0`    | `>=14` |
