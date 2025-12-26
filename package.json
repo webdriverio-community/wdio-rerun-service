@@ -1,6 +1,6 @@
 {
   "name": "wdio-rerun-service",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A WebdriverIO service to track and stage for re-running failed or flaky Jasmine/Mocha tests or Cucumber Scenarios.",
   "author": "Eric Saari <esaari@gmail.com>",
   "contributors": [
@@ -8,6 +8,9 @@
   ],
   "homepage": "https://github.com/webdriverio-community/wdio-rerun-service",
   "license": "MIT",
+  "files": [
+    "build"
+  ],
   "publishConfig": {
     "access": "public"
   },

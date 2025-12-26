@@ -13,6 +13,16 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v3.0.1 (2025-12-25)
+
+#### :bug: Bug Fix
+* Fixed npm package to exclude dev files (test-output.log, eslint.config.js, vitest.config.ts)
+
+#### Committers: 1
+- [@esaari](https://github.com/esaari)
+
+---
+
 ## v3.0.0 (2025-12-25)
 
 #### :boom: Breaking Change
