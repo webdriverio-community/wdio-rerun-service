@@ -119,48 +119,8 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
 
-        const { gherkinDocument, pickle } = world
-        const featureChildren = gherkinDocument.feature?.children ?? []
-
-        // Locate the matching scenario by searching feature children
-        // Scenarios can be at top-level OR nested within Rule blocks
-        const findMatchingScenario = () => {
-            for (const featureChild of featureChildren) {
-                // Direct scenario under feature
-                if (featureChild.scenario) {
-                    if (pickle.astNodeIds.includes(featureChild.scenario.id)) {
-                        return featureChild.scenario
-                    }
-                }
-                // Scenario nested inside a Rule block
-                if (featureChild.rule?.children) {
-                    const ruleScenario = featureChild.rule.children.find(
-                        (ruleChild) =>
-                            ruleChild.scenario &&
-                            pickle.astNodeIds.includes(ruleChild.scenario.id),
-                    )?.scenario
-                    if (ruleScenario) return ruleScenario
-                }
-            }
-            return undefined
-        }
-
-        const scenario = findMatchingScenario()
-        let scenarioLineNumber = scenario?.location.line ?? 0
-
-        if (scenario && scenario.examples.length > 0) {
-            let exampleLineNumber = 0
-            scenario.examples.find((example) =>
-                example.tableBody.find((row) => {
-                    if (row.id === pickle.astNodeIds[1]) {
-                        exampleLineNumber = row.location.line
-                        return true
-                    }
-                    return false
-                }),
-            )
-            scenarioLineNumber = exampleLineNumber
-        }
+        const { pickle } = world
+        const scenarioLineNumber = this.locateScenarioLineNumber(world)
 
         const scenarioLocation = `${pickle.uri}:${scenarioLineNumber}`
         const tagsList = pickle.tags.map((tag) => tag.name)
@@ -213,15 +173,8 @@ export default class RerunService implements Services.ServiceInstance {
                     ? 'set DISABLE_RERUN=true &&'
                     : 'DISABLE_RERUN=true'
             let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`
-            const failureLocations = new Set<string>()
-            for (const file of rerunFiles) {
-                const json = JSON.parse(
-                    await readFile(join(this.rerunDataDir, file), 'utf8'),
-                ) as NonPassingItem[]
-                json.forEach((failure) => {
-                    failureLocations.add(failure.location.replace(/\\/g, '/'))
-                })
-            }
+            const failureLocations =
+                await this.collectFailureLocations(rerunFiles)
             failureLocations.forEach((failureLocation) => {
                 rerunCommand += ` --spec=${failureLocation}`
             })
@@ -234,5 +187,63 @@ export default class RerunService implements Services.ServiceInstance {
                 `❌ Failed to generate re-run script: ${JSON.stringify(err)}`,
             )
         }
+    }
+
+    private findMatchingScenario(world: World) {
+        const { gherkinDocument, pickle } = world
+        const featureChildren = gherkinDocument.feature?.children ?? []
+
+        for (const featureChild of featureChildren) {
+            // Direct scenario under feature
+            if (featureChild.scenario) {
+                if (pickle.astNodeIds.includes(featureChild.scenario.id)) {
+                    return featureChild.scenario
+                }
+            }
+            // Scenario nested inside a Rule block
+            if (featureChild.rule?.children) {
+                const ruleScenario = featureChild.rule.children.find(
+                    (ruleChild) =>
+                        ruleChild.scenario &&
+                        pickle.astNodeIds.includes(ruleChild.scenario.id),
+                )?.scenario
+                if (ruleScenario) return ruleScenario
+            }
+        }
+        return undefined
+    }
+
+    private async collectFailureLocations(
+        rerunFiles: string[],
+    ): Promise<Set<string>> {
+        const failureLocations = new Set<string>()
+        for (const file of rerunFiles) {
+            const json = JSON.parse(
+                await readFile(join(this.rerunDataDir, file), 'utf8'),
+            ) as NonPassingItem[]
+            for (const failure of json) {
+                failureLocations.add(failure.location.replace(/\\/g, '/'))
+            }
+        }
+        return failureLocations
+    }
+
+    private locateScenarioLineNumber(world: World): number {
+        const { pickle } = world
+        const scenario = this.findMatchingScenario(world)
+        const scenarioLineNumber = scenario?.location.line ?? 0
+
+        // For Scenario Outlines, use the specific example row's line number
+        if (scenario && scenario.examples.length > 0) {
+            for (const example of scenario.examples) {
+                for (const row of example.tableBody) {
+                    if (row.id === pickle.astNodeIds[1]) {
+                        return row.location.line
+                    }
+                }
+            }
+        }
+
+        return scenarioLineNumber
     }
 }
