@@ -1,0 +1,12 @@
+node_modules/
+
+# Framework-specific rerun output directories
+cucumber/results/
+cucumber/rerun.sh
+cucumber/rerun.bat
+jasmine/results/
+jasmine/rerun.sh
+jasmine/rerun.bat
+mocha/results/
+mocha/rerun.sh
+mocha/rerun.bat

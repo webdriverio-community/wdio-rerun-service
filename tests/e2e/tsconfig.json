@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "esModuleInterop": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "noEmit": true,
+        "types": [
+            "node",
+            "mocha",
+            "@wdio/globals/types",
+            "@wdio/mocha-framework",
+            "@wdio/jasmine-framework",
+            "@wdio/cucumber-framework"
+        ]
+    },
+    "include": ["./**/*.ts"]
+}

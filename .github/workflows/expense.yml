@@ -1,4 +1,4 @@
-name: Expense Contribution
+name: 💰 Expense Contribution
 
 on:
   workflow_dispatch:
@@ -39,7 +39,7 @@ jobs:
   authorize:
     runs-on: ubuntu-latest
     steps:
-      - uses: octokit/request-action@v2.1.9
+      - uses: octokit/request-action@v2
         with:
           route: GET /orgs/:organisation/teams/:team/memberships/${{ github.actor }}
           team: technical-steering-committee

@@ -1,10 +1,14 @@
 # WebdriverIO Re-run Service
 
-[![wdio-rerun-service CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
-![Coverage](https://img.shields.io/badge/unit%20test%20coverage-100%25-brightgreen)
-![npm](https://img.shields.io/npm/dm/wdio-rerun-service)
-![npm bundle size](https://img.shields.io/bundlephobia/min/wdio-rerun-service)
-![GitHub issues](https://img.shields.io/github/issues/webdriverio-community/wdio-rerun-service)
+[![CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
+![Unit Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![E2E Tests](https://img.shields.io/badge/e2e-46%20tests-brightgreen)
+![npm](https://img.shields.io/npm/v/wdio-rerun-service)
+![npm downloads](https://img.shields.io/npm/dm/wdio-rerun-service)
+![node](https://img.shields.io/node/v/wdio-rerun-service)
+![TypeScript](https://img.shields.io/badge/TypeScript-100%25-blue)
+![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)
+![License](https://img.shields.io/github/license/webdriverio-community/wdio-rerun-service)
 
 This service tracks failing Mocha or Jasmine tests and Cucumber scenarios executed within the [WebdriverIO](https://webdriver.io) test framework. It will allow failing or unstable tests or scenarios to be re-run.
 
@@ -16,15 +20,23 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 - 🪟 Cross-platform support (generates `rerun.sh` on Unix, `rerun.bat` on Windows)
 - ⚙️ Configurable command prefix and custom parameters
 
+## Quality & Reliability
+
+- ✅ **100% test coverage** — comprehensive unit and E2E tests
+- 🧪 **E2E tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
+- 🖥️ **Cross-platform CI** — tested on macOS, Windows, and Linux
+- 📦 **Zero dependencies** — only WebdriverIO peer dependencies, minimal footprint
+- 🔷 **100% TypeScript** — fully typed for great IDE support
+- 🚀 **Modern Node.js** — uses native APIs (`crypto.randomUUID`, `util.parseArgs`)
+
 ## Compatibility
 
-| wdio-rerun-service | WebdriverIO |
-|--------------------|-------------|
-| `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` |
-| `^2.0.0`           | `^8.0.0` |
-| `^1.7.0`           | `^7.0.0` |
-
-**Note:** Version `2.1.0` is backward compatible with WebdriverIO v8 and adds support for v9. All users on v8 or v9 should use the latest `2.x.x` version.
+| wdio-rerun-service | WebdriverIO | Node.js |
+|--------------------|-------------|---------|
+| `^3.0.0`           | `^8.0.0 \|\| ^9.0.0` | `>=20`  |
+| `^2.1.0`           | `^8.0.0 \|\| ^9.0.0` | `>=18` |
+| `^2.0.0`           | `^8.0.0`    | `>=18` |
+| `^1.7.0`           | `^7.0.0`    | `>=14` |
 
 ## Re-run vs. Retry
 
@@ -276,3 +288,22 @@ export const config = {
     // ...
 }
 ```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+```bash
+# Clone the repo
+git clone https://github.com/webdriverio-community/wdio-rerun-service.git
+
+# Install dependencies
+pnpm install
+
+# Run tests
+pnpm test
+```
+
+## License
+
+MIT

@@ -1,16 +1,16 @@
 # this workflow merges requests from Dependabot if tests are passing
-name: Merge me!
+name: 🤖 Auto-Merge
 
 on:
   workflow_run:
     workflows:
-      - Test
+      - 🧪 Test
     types:
       - completed
 
 jobs:
   merge-me:
-    name: Merge me!
+    name: 🤖 Auto-Merge Dependabot
     runs-on: ubuntu-latest
     steps:
       - name: Merge me!

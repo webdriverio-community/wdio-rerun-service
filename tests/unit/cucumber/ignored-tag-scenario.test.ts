@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import fs from 'fs'
-import RerunService from '../../src'
+import RerunService from '../../../src'
 
 const world = JSON.parse(
     fs
         .readFileSync(
-            './tests/cucumber/fixtures/ignored-tag-scenario.world.json',
+            './tests/unit/cucumber/fixtures/ignored-tag-scenario.world.json',
         )
         .toString(),
 )

@@ -1,11 +1,11 @@
 import type { Logger } from '@wdio/logger'
 import logger from '@wdio/logger'
 import type { Frameworks, Options, Services } from '@wdio/types'
-import minimist from 'minimist'
+import { randomUUID } from 'node:crypto'
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { argv, env, platform } from 'node:process'
-import { v4 as uuidv4 } from 'uuid'
+import { parseArgs } from 'node:util'
 
 type AfterScenario = NonNullable<
     WebdriverIO.HookFunctionExtension['afterScenario']
@@ -70,10 +70,10 @@ export default class RerunService implements Services.ServiceInstance {
         }
         this.specFile = specs[0] ?? ''
         this.log.debug(
-            `Re-run service is activated. Data directory: ${this.rerunDataDir}`,
+            `🔄 Re-run service activated. Data directory: ${this.rerunDataDir}`,
         )
         await mkdir(this.rerunDataDir, { recursive: true })
-        this.serviceWorkerId = uuidv4()
+        this.serviceWorkerId = randomUUID()
     }
 
     afterTest(
@@ -89,8 +89,8 @@ export default class RerunService implements Services.ServiceInstance {
         if (passed || config.framework === 'cucumber') {
             return
         }
-        this.log.debug(`Re-run service is inspecting non-passing test.`)
-        this.log.debug(`Test location: ${this.specFile}`)
+        this.log.debug(`🔍 Inspecting non-passing test.`)
+        this.log.debug(`📍 Test location: ${this.specFile}`)
         const error = results.error as Error | undefined
         if (error?.message) {
             this.nonPassingItems.push({
@@ -99,7 +99,7 @@ export default class RerunService implements Services.ServiceInstance {
             })
         } else {
             this.log.debug(
-                'The non-passing test did not contain any error message, it could not be added for re-run.',
+                '⚠️ Non-passing test did not contain an error message, skipping.',
             )
         }
     }
@@ -182,9 +182,7 @@ export default class RerunService implements Services.ServiceInstance {
             return
         }
         if (this.nonPassingItems.length === 0) {
-            this.log.debug(
-                'Re-run service did not detect any non-passing scenarios or tests.',
-            )
+            this.log.debug('✅ No non-passing scenarios or tests detected.')
             return
         }
         await writeFile(
@@ -203,8 +201,12 @@ export default class RerunService implements Services.ServiceInstance {
             if (rerunFiles.length === 0) {
                 return
             }
-            const parsedArgs = minimist(argv.slice(2))
-            const args = parsedArgs._[0] ? parsedArgs._[0] + ' ' : ''
+            const { positionals } = parseArgs({
+                args: argv.slice(2),
+                allowPositionals: true,
+                strict: false,
+            })
+            const args = positionals[0] ? positionals[0] + ' ' : ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
             const disableRerun =
                 this.platformName === 'win32'
@@ -225,13 +227,11 @@ export default class RerunService implements Services.ServiceInstance {
             })
             await writeFile(this.rerunScriptPath, rerunCommand, { mode: 0o755 })
             this.log.debug(
-                `Re-run script has been generated @ ${this.rerunScriptPath}`,
+                `📝 Re-run script generated: ${this.rerunScriptPath}`,
             )
         } catch (err) {
             this.log.debug(
-                `Re-run service failed to generate re-run script: ${JSON.stringify(
-                    err,
-                )}`,
+                `❌ Failed to generate re-run script: ${JSON.stringify(err)}`,
             )
         }
     }
