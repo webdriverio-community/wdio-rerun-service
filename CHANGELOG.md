@@ -13,6 +13,25 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 
 ---
 
+## v3.0.0 (2025-12-25)
+
+#### :boom: Breaking Change
+* **Node.js 20+ required** - Dropped support for Node.js 18 to leverage native APIs (`crypto.randomUUID()`, `util.parseArgs()`)
+
+#### :house: Internal
+* **Zero runtime dependencies** - Faster installs, smaller `node_modules`, no supply chain risk from transitive dependencies
+* **Comprehensive E2E test suite** - 46 tests covering Cucumber (26), Jasmine (10), and Mocha (10) scenarios running real WebdriverIO processes, ensuring the service works correctly in actual usage
+* **Cross-platform CI** - 12 GitHub Actions jobs testing Node 20/22/24 across macOS, Windows, and Linux, catching platform-specific bugs before release
+* **ESLint v9** - Migrated to flat config with typescript-eslint unified tooling for modern, maintainable linting
+
+#### :memo: Documentation
+* Updated README with quality badges (coverage, E2E tests, zero deps)
+
+#### Committers: 1
+- [@esaari](https://github.com/esaari)
+
+---
+
 ## v2.1.0 (2025-12-22)
 #### :rocket: New Feature
 * Support for Cucumber scenarios nested inside `Rule:` blocks - line numbers are now correctly extracted for reruns
@@ -25,7 +44,7 @@ _Note: Gaps between patch versions are faulty, broken or test releases._
 * Switched to pnpm for development (enforced via `packageManager` field)
 * Updated all dependencies to latest versions
 * Removed deprecated `@types/uuid` - uuid v13 includes its own types
-* Achieved 100% test coverage with 56 tests
+* Achieved 100% unit test coverage
 * Node.js 18+ required (compatible with both WDIO v8 and v9)
 
 #### Committers: 1
