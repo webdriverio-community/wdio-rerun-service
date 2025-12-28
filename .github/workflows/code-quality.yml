@@ -1,0 +1,41 @@
+name: 🔍 Code Quality
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint-typecheck:
+    name: 🔍 Lint, Format & Type Check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+    - name: Use Node.js (latest LTS)
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+        cache: 'pnpm'
+    - run: pnpm install
+    - name: ESLint (includes Prettier)
+      run: pnpm run test:eslint
+    - name: TypeScript Check
+      run: pnpm run test:tsc
+    - name: E2E TypeScript Check
+      run: pnpm run test:tsc:e2e

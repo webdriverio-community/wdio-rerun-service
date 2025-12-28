@@ -49,8 +49,6 @@ jobs:
         cache: 'pnpm'
     - run: pnpm install
     - run: pnpm run build
-    - name: Lint & Type Check
-      run: pnpm run test:eslint && pnpm run test:tsc
     - name: Unit Tests
       run: pnpm run test:unit
       env:
@@ -75,17 +73,15 @@ jobs:
     - uses: actions/checkout@v4
     - name: Install pnpm
       uses: pnpm/action-setup@v4
-    - name: Use Node.js 22.x
+    - name: Use Node.js (latest LTS)
       uses: actions/setup-node@v4
       with:
-        node-version: 22.x
+        node-version: 'lts/*'
         cache: 'pnpm'
     - run: pnpm install
     - run: pnpm run build
     - name: Install E2E test dependencies
       run: pnpm --dir tests/e2e install
-    - name: Type check E2E tests
-      run: pnpm run test:tsc:e2e
     - name: Run E2E tests
       run: pnpm --dir tests/e2e test
       env:
