@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   lint-typecheck:
-    name: 🔍 Lint, Format & Type Check
+    name: 🔷 Lint, Format & Type Check
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
