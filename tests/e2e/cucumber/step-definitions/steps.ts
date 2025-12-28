@@ -13,11 +13,9 @@ Given('I am on Google', async () => {
 })
 
 Then('the page title should contain {string}', async (text: string) => {
-    // eslint-disable-next-line @typescript-eslint/await-thenable
     await expect(browser).toHaveTitle(expect.stringContaining(text))
 })
 
 Then('the page title should be {string}', async (text: string) => {
-    // eslint-disable-next-line @typescript-eslint/await-thenable
     await expect(browser).toHaveTitle(text)
 })
