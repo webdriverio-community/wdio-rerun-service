@@ -37,5 +37,7 @@ jobs:
       run: pnpm run test:eslint
     - name: TypeScript Check
       run: pnpm run test:tsc
+    - name: Install E2E test dependencies
+      run: pnpm --dir tests/e2e install
     - name: E2E TypeScript Check
       run: pnpm run test:tsc:e2e

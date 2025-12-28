@@ -4,16 +4,15 @@
 name: 🧪 Test
 
 on:
-  push:
+  # Only run after Code Quality workflow completes successfully
+  workflow_run:
+    workflows: ["🔍 Code Quality"]
+    types:
+      - completed
     branches:
       - main
-    paths-ignore:
-      - '**/*.md'
-  pull_request:
-    branches:
-      - main
-    paths-ignore:
-      - '**/*.md'
+  # Allow manual trigger
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,9 +22,21 @@ permissions:
   contents: read # to fetch code (actions/checkout)
 
 jobs:
+  # Check if the triggering workflow succeeded
+  check-quality:
+    name: ✅ Verify Code Quality Passed
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'success' && github.event_name == 'workflow_run'
+    steps:
+      - name: Code Quality Failed
+        run: |
+          echo "Code Quality workflow failed or was cancelled. Skipping tests."
+          exit 1
+
   unit:
     name: 🔬 Unit (${{ matrix.emoji }} ${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     strategy:
       fail-fast: false
       matrix:

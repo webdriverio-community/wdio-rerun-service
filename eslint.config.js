@@ -60,6 +60,7 @@ export default tseslint.config(
             '@typescript-eslint/consistent-type-imports': 'warn',
             'eqeqeq': ['error', 'always'],
             'prettier/prettier': 'warn',
+            '@typescript-eslint/await-thenable': 'off',
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
             '@typescript-eslint/no-non-null-assertion': 'off',
