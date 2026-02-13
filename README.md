@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml/badge.svg)](https://github.com/webdriverio-community/wdio-rerun-service/actions/workflows/test.yml)
 ![Unit Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
-![E2E Tests](https://img.shields.io/badge/e2e-46%20tests-brightgreen)
+![E2E Tests](https://img.shields.io/badge/e2e-49%20tests-brightgreen)
 ![npm](https://img.shields.io/npm/v/wdio-rerun-service)
 ![npm downloads](https://img.shields.io/npm/dm/wdio-rerun-service)
 ![node](https://img.shields.io/node/v/wdio-rerun-service)
