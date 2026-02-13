@@ -143,7 +143,7 @@ describe('wdio-rerun-service', () => {
                 service.before(capabilities, ['features/sample.feature']),
             ).resolves.toBeUndefined()
             expect(service.specFile).toEqual('')
-            process.env['DISABLE_RERUN'] = undefined
+            delete process.env['DISABLE_RERUN']
         })
 
         it('can configure customParameters', async () => {
@@ -160,10 +160,10 @@ describe('wdio-rerun-service', () => {
     })
 
     describe('before', () => {
-        it('should throw an exception when no parameters are given', async () => {
+        it('should not throw when no parameters are given', async () => {
             const service = new RerunService()
             // @ts-expect-error - test invalid input
-            await expect(service.before()).rejects.toThrow()
+            await expect(service.before()).resolves.toBeUndefined()
         })
 
         it('should not throw an exception when empty specFile parameter', async () => {
@@ -191,7 +191,7 @@ describe('wdio-rerun-service', () => {
             global.browser = cucumberBrowser
             service.afterScenario(world)
             expect(service.nonPassingItems).toEqual([])
-            process.env['DISABLE_RERUN'] = undefined
+            delete process.env['DISABLE_RERUN']
         })
 
         it('should return early if framework is not cucumber', () => {
@@ -443,7 +443,7 @@ describe('wdio-rerun-service', () => {
                 status: 'status',
             })
             expect(service.nonPassingItems).toEqual([])
-            process.env['DISABLE_RERUN'] = undefined
+            delete process.env['DISABLE_RERUN']
         })
 
         it('should return early if test passed', () => {
@@ -548,7 +548,7 @@ describe('wdio-rerun-service', () => {
             const service = new RerunService()
             service.nonPassingItems = nonPassingItemsCucumber
             await expect(service.after()).resolves.toBeUndefined()
-            process.env['DISABLE_RERUN'] = undefined
+            delete process.env['DISABLE_RERUN']
         })
 
         it('should return early if no non-passing items', async () => {
@@ -658,8 +658,12 @@ describe('wdio-rerun-service', () => {
                 strict: false,
             })
             const args = positionals[0] ?? ''
+            const expectedParts = [disableRerun, 'npx', 'wdio', args].filter(
+                Boolean,
+            )
             expect(rerunScript).toBe(
-                `${disableRerun} npx wdio ${args} --spec=tests/sample1.test.ts --spec=tests/sample2.test.ts`,
+                expectedParts.join(' ') +
+                    ' --spec=tests/sample1.test.ts --spec=tests/sample2.test.ts',
             )
             await rm(rerunDataDir, { recursive: true, force: true })
         })
@@ -684,13 +688,14 @@ describe('wdio-rerun-service', () => {
             expect(err).toBeDefined()
             expect(err?.code).toBe('ENOENT')
             expect(rerunScript).toBeUndefined()
+            delete process.env['DISABLE_RERUN']
         })
 
         it('should return early if service is disabled', async () => {
             process.env['DISABLE_RERUN'] = 'true'
             const service = new RerunService()
             await expect(service.onComplete()).resolves.toBeUndefined()
-            process.env['DISABLE_RERUN'] = undefined
+            delete process.env['DISABLE_RERUN']
         })
 
         it('should return early if no rerun files exist', async () => {
@@ -712,6 +717,130 @@ describe('wdio-rerun-service', () => {
                 rerunDataDir: '/invalid/path/that/should/error',
             })
             await expect(service.onComplete()).resolves.toBeUndefined()
+        })
+    })
+
+    describe('DISABLE_RERUN live check', () => {
+        it('should respect DISABLE_RERUN set after construction', async () => {
+            const service = new RerunService()
+            // Service created without DISABLE_RERUN
+            process.env['DISABLE_RERUN'] = 'true'
+            await expect(
+                service.before(capabilities, specFile),
+            ).resolves.toBeUndefined()
+            // before() returned early due to live check
+            expect(service.specFile).toEqual('')
+            delete process.env['DISABLE_RERUN']
+        })
+
+        it('should resume working when DISABLE_RERUN is cleared', async () => {
+            process.env['DISABLE_RERUN'] = 'true'
+            const service = new RerunService()
+            await service.before(capabilities, specFile)
+            expect(service.specFile).toEqual('')
+            // Clear the env var
+            delete process.env['DISABLE_RERUN']
+            // Now before() should work
+            await service.before(capabilities, specFile)
+            expect(service.specFile).toEqual(specFile[0])
+        })
+    })
+
+    describe('exported types', () => {
+        it('should export RerunService as default', async () => {
+            const mod = await import('../../src/index.js')
+            expect(mod.default).toBe(RerunService)
+        })
+    })
+
+    describe('rerun command formatting', () => {
+        it('should not produce double spaces when no CLI args', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-no-args')
+            const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+            })
+
+            const originalArgv = [...argv]
+            // Simulate no positional args (just 'node' and 'wdio')
+            argv.splice(0, argv.length, 'node', 'wdio')
+
+            try {
+                await service.before({}, ['tests/sample1.test.ts'])
+                service.nonPassingItems = nonPassingItemsMocha
+                await service.after()
+                await service.onComplete()
+
+                const rerunScript = await readFile(rerunScriptPath, 'utf8')
+                // Should NOT contain double spaces
+                expect(rerunScript).not.toMatch(/ {2}/)
+                // Should contain single-spaced wdio --spec
+                expect(rerunScript).toMatch(/npx wdio --spec=/)
+            } finally {
+                await rm(rerunDataDir, { recursive: true, force: true })
+                argv.splice(0, argv.length, ...originalArgv)
+            }
+        })
+
+        it('should include args without extra spaces when CLI args present', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-with-args')
+            const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+                platformName: 'linux',
+            })
+
+            const originalArgv = [...argv]
+            argv.splice(0, argv.length, 'node', 'wdio', 'run')
+
+            try {
+                await service.before({}, ['tests/sample1.test.ts'])
+                service.nonPassingItems = nonPassingItemsMocha
+                await service.after()
+                await service.onComplete()
+
+                const rerunScript = await readFile(rerunScriptPath, 'utf8')
+                // Should NOT contain double spaces
+                expect(rerunScript).not.toMatch(/ {2}/)
+                expect(rerunScript).toMatch(
+                    /DISABLE_RERUN=true npx wdio run --spec=/,
+                )
+            } finally {
+                await rm(rerunDataDir, { recursive: true, force: true })
+                argv.splice(0, argv.length, ...originalArgv)
+            }
+        })
+
+        it('should include customParameters without extra spaces', async () => {
+            const rerunDataDir = join(tmpdir(), 'rerun-data-custom-params')
+            const rerunScriptPath = join(rerunDataDir, rerunScriptFile)
+            const service = new RerunService({
+                rerunDataDir,
+                rerunScriptPath,
+                customParameters: '--foobar',
+                platformName: 'linux',
+            })
+
+            const originalArgv = [...argv]
+            argv.splice(0, argv.length, 'node', 'wdio')
+
+            try {
+                await service.before({}, ['tests/sample1.test.ts'])
+                service.nonPassingItems = nonPassingItemsMocha
+                await service.after()
+                await service.onComplete()
+
+                const rerunScript = await readFile(rerunScriptPath, 'utf8')
+                expect(rerunScript).not.toMatch(/ {2}/)
+                expect(rerunScript).toMatch(
+                    /DISABLE_RERUN=true npx wdio --foobar --spec=/,
+                )
+            } finally {
+                await rm(rerunDataDir, { recursive: true, force: true })
+                argv.splice(0, argv.length, ...originalArgv)
+            }
         })
     })
 })

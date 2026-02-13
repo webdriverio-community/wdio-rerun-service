@@ -13,13 +13,13 @@ importers:
         version: 10.0.10
       '@wdio/cli':
         specifier: ^9.22.0
-        version: 9.22.0(@types/node@25.0.3)(expect-webdriverio@5.6.0)
+        version: 9.22.0(@types/node@25.0.3)(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))
       '@wdio/cucumber-framework':
         specifier: ^9.22.0
         version: 9.22.0
       '@wdio/jasmine-framework':
         specifier: ^9.22.0
-        version: 9.22.0(@wdio/runner@9.22.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0))(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+        version: 9.22.0(@wdio/runner@9.22.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0))(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/local-runner':
         specifier: ^9.22.0
         version: 9.22.0(@wdio/globals@9.17.0)(webdriverio@9.22.0)
@@ -43,7 +43,7 @@ importers:
         version: 4.0.16(@types/node@25.0.3)(tsx@4.21.0)(yaml@2.8.2)
       wdio-rerun-service:
         specifier: file:../..
-        version: file:../..
+        version: file:../..(@wdio/logger@9.18.0)(@wdio/types@9.20.0)
 
 packages:
 
@@ -2430,6 +2430,9 @@ packages:
   wdio-rerun-service@file:../..:
     resolution: {directory: ../.., type: directory}
     engines: {node: '>=20.0.0'}
+    peerDependencies:
+      '@wdio/logger': ^9.18.0
+      '@wdio/types': ^9.20.0
 
   webdriver@9.22.0:
     resolution: {integrity: sha512-jf4irPhIJAssrF3mqUrBZGZnzjRfM86Q24ePUOgFKWI04LtdvRsnc9SsWU05mrN/a6pTJzGps6GsvLpNhvcalg==}
@@ -3130,11 +3133,11 @@ snapshots:
       '@vitest/pretty-format': 4.0.16
       tinyrainbow: 3.0.3
 
-  '@wdio/cli@9.22.0(@types/node@25.0.3)(expect-webdriverio@5.6.0)':
+  '@wdio/cli@9.22.0(@types/node@25.0.3)(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))':
     dependencies:
       '@vitest/snapshot': 2.1.9
       '@wdio/config': 9.22.0
-      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/logger': 9.18.0
       '@wdio/protocols': 9.16.2
       '@wdio/types': 9.20.0
@@ -3201,17 +3204,17 @@ snapshots:
       '@wdio/types': 9.20.0
       chalk: 5.6.2
 
-  '@wdio/globals@9.17.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)':
+  '@wdio/globals@9.17.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)':
     dependencies:
       expect-webdriverio: 5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0)
       webdriverio: 9.22.0
 
-  '@wdio/jasmine-framework@9.22.0(@wdio/runner@9.22.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0))(expect-webdriverio@5.6.0)(webdriverio@9.22.0)':
+  '@wdio/jasmine-framework@9.22.0(@wdio/runner@9.22.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0))(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)':
     dependencies:
       '@types/node': 20.19.27
-      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/logger': 9.18.0
-      '@wdio/runner': 9.22.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/runner': 9.22.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/types': 9.20.0
       '@wdio/utils': 9.22.0
       jasmine: 5.13.0
@@ -3228,7 +3231,7 @@ snapshots:
       '@types/node': 20.19.27
       '@wdio/logger': 9.18.0
       '@wdio/repl': 9.16.2
-      '@wdio/runner': 9.22.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/runner': 9.22.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/types': 9.20.0
       '@wdio/xvfb': 9.20.0
       exit-hook: 4.0.0
@@ -3281,12 +3284,12 @@ snapshots:
       diff: 8.0.2
       object-inspect: 1.13.4
 
-  '@wdio/runner@9.22.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)':
+  '@wdio/runner@9.22.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)':
     dependencies:
       '@types/node': 20.19.27
       '@wdio/config': 9.22.0
       '@wdio/dot-reporter': 9.20.0
-      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/logger': 9.18.0
       '@wdio/types': 9.20.0
       '@wdio/utils': 9.22.0
@@ -3844,7 +3847,7 @@ snapshots:
   expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0):
     dependencies:
       '@vitest/snapshot': 4.0.16
-      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0)(webdriverio@9.22.0)
+      '@wdio/globals': 9.17.0(expect-webdriverio@5.6.0(@wdio/globals@9.17.0)(@wdio/logger@9.18.0)(webdriverio@9.22.0))(webdriverio@9.22.0)
       '@wdio/logger': 9.18.0
       deep-eql: 5.0.2
       expect: 30.2.0
@@ -5032,7 +5035,7 @@ snapshots:
       defaults: 1.0.4
     optional: true
 
-  wdio-rerun-service@file:../..:
+  wdio-rerun-service@file:../..(@wdio/logger@9.18.0)(@wdio/types@9.20.0):
     dependencies:
       '@wdio/logger': 9.18.0
       '@wdio/types': 9.20.0

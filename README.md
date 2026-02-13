@@ -25,9 +25,10 @@ This service tracks failing Mocha or Jasmine tests and Cucumber scenarios execut
 - ✅ **100% test coverage** — comprehensive unit and E2E tests
 - 🧪 **E2E tests** — real WebdriverIO runs across Cucumber, Mocha, and Jasmine
 - 🖥️ **Cross-platform CI** — tested on macOS, Windows, and Linux
-- 📦 **Zero dependencies** — only WebdriverIO peer dependencies, minimal footprint
+- 📦 **Zero runtime dependencies** — only WebdriverIO peer dependencies, minimal footprint
 - 🔷 **100% TypeScript** — fully typed for great IDE support
 - 🚀 **Modern Node.js** — uses native APIs (`crypto.randomUUID`, `util.parseArgs`)
+- 📤 **Exported types** — `RerunServiceOptions` interface exported for TypeScript consumers
 
 ## Compatibility
 

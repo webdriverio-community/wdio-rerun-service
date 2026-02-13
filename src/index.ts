@@ -18,7 +18,7 @@ interface NonPassingItem {
     failure?: string | undefined
 }
 
-interface RerunServiceOptions {
+export interface RerunServiceOptions {
     ignoredTags?: string[]
     rerunDataDir?: string
     rerunScriptPath?: string
@@ -36,7 +36,6 @@ export default class RerunService implements Services.ServiceInstance {
     commandPrefix: string
     customParameters: string
     specFile: string
-    disabled: boolean
     platformName: NodeJS.Platform
     log: Logger
 
@@ -60,15 +59,18 @@ export default class RerunService implements Services.ServiceInstance {
         this.commandPrefix = commandPrefix ?? ''
         this.customParameters = customParameters ?? ''
         this.specFile = ''
-        this.disabled = env['DISABLE_RERUN'] === 'true'
         this.log = logger('@wdio/wdio-rerun-service')
     }
 
-    async before(_capabilities: WebdriverIO.Capabilities, specs: string[]) {
+    private get disabled(): boolean {
+        return env['DISABLE_RERUN'] === 'true'
+    }
+
+    async before(_capabilities: WebdriverIO.Capabilities, specs?: string[]) {
         if (this.disabled) {
             return
         }
-        this.specFile = specs[0] ?? ''
+        this.specFile = specs?.[0] ?? ''
         this.log.debug(
             `🔄 Re-run service activated. Data directory: ${this.rerunDataDir}`,
         )
@@ -125,7 +127,6 @@ export default class RerunService implements Services.ServiceInstance {
         const scenarioLocation = `${pickle.uri}:${scenarioLineNumber}`
         const tagsList = pickle.tags.map((tag) => tag.name)
         if (
-            !Array.isArray(this.ignoredTags) ||
             !tagsList.some((ignoredTag) =>
                 this.ignoredTags.includes(ignoredTag),
             )
@@ -166,13 +167,20 @@ export default class RerunService implements Services.ServiceInstance {
                 allowPositionals: true,
                 strict: false,
             })
-            const args = positionals[0] ? positionals[0] + ' ' : ''
+            const args = positionals[0] ?? ''
             const prefix = this.commandPrefix ? this.commandPrefix + ' ' : ''
             const disableRerun =
                 this.platformName === 'win32'
                     ? 'set DISABLE_RERUN=true &&'
                     : 'DISABLE_RERUN=true'
-            let rerunCommand = `${prefix}${disableRerun} npx wdio ${args}${this.customParameters}`
+            const commandParts = [
+                prefix + disableRerun,
+                'npx',
+                'wdio',
+                args,
+                this.customParameters,
+            ].filter(Boolean)
+            let rerunCommand = commandParts.join(' ')
             const failureLocations =
                 await this.collectFailureLocations(rerunFiles)
             failureLocations.forEach((failureLocation) => {

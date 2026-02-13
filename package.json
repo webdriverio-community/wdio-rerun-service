@@ -37,19 +37,19 @@
   "scripts": {
     "build": "run-s clean compile",
     "clean": "rimraf ./build",
-    "clean:all": "rimraf ./build ./results ./coverage ./node_modules rerun.sh rerun.bat",
+    "clean:all": "rimraf ./build ./results ./coverage ./node_modules rerun.sh rerun.bat && pnpm --dir tests/e2e run clean:all",
     "compile": "run-s compile:esm compile:cjs generate:cjs:package",
     "compile:cjs": "tsc -p tsconfig.cjs.json",
     "compile:esm": "tsc -p tsconfig.esm.json",
     "generate:cjs:package": "shx echo \"{\\\"type\\\":\\\"commonjs\\\"}\" > ./build/cjs/package.json",
     "prepare": "pnpm run build",
     "test": "run-s test:clean test:eslint test:tsc test:unit test:e2e",
-    "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat",
+    "test:clean": "rimraf ./results ./coverage rerun.sh rerun.bat && pnpm --dir tests/e2e run clean",
     "test:eslint": "eslint src tests",
     "test:tsc": "tsc -p tsconfig.json --noEmit",
     "test:tsc:e2e": "tsc -p tests/e2e/tsconfig.json --noEmit",
     "test:unit": "vitest run --coverage",
-    "test:e2e": "pnpm --dir tests/e2e test",
+    "test:e2e": "pnpm --dir tests/e2e install && pnpm --dir tests/e2e test",
     "watch": "npm-watch"
   },
   "watch": {
@@ -101,7 +101,7 @@
   "bugs": {
     "url": "https://github.com/webdriverio-community/wdio-rerun-service/issues"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@wdio/logger": "^9.18.0",
     "@wdio/types": "^9.20.0"
   },
@@ -109,8 +109,8 @@
     "@cucumber/cucumber": "^12.4.0",
     "@cucumber/messages": "^31.1.0",
     "@eslint/js": "^9.39.2",
-    "@tsconfig/node16": "^16.1.8",
     "@tsconfig/node18-strictest-esm": "^1.0.1",
+    "@tsconfig/node20": "^20.1.4",
     "@types/node": "^25.0.3",
     "@vitest/coverage-v8": "^4.0.16",
     "@wdio/cucumber-framework": "^9.22.0",

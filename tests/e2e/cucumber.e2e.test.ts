@@ -481,6 +481,13 @@ describe('🥒 RerunService Cucumber E2E Tests', () => {
             expect(rerunContent).toContain('npx wdio')
         })
 
+        it('should not contain double spaces in the rerun command', async () => {
+            runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
+
+            const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
+            expect(rerunContent).not.toMatch(/ {2}/)
+        })
+
         it('should use forward slashes in file paths (cross-platform)', async () => {
             runWdio('cucumber', ['./cucumber/features/basic-failing.feature'])
 

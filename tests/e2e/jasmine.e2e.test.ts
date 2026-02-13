@@ -144,6 +144,13 @@ describe('💎 RerunService Jasmine E2E Tests', () => {
             expect(rerunContent).toContain('npx wdio')
         })
 
+        it('should not contain double spaces in the rerun command', async () => {
+            runWdio('jasmine', ['./jasmine/failing.spec.ts'])
+
+            const rerunContent = await readFile(RERUN_SCRIPT, 'utf8')
+            expect(rerunContent).not.toMatch(/ {2}/)
+        })
+
         // Skip on Windows - Unix file permissions don't apply
         it.skipIf(process.platform === 'win32')(
             'should be executable (chmod +x)',
